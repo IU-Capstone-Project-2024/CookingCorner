@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from auth.base_config import fastapi_users, auth_backend
-from auth.schemas import UserRead, UserCreate
+from src.auth.base_config import fastapi_users, auth_backend
+from src.auth.schemas import UserRead, UserCreate
 
 app = FastAPI(
     title="Cooking Corner API"

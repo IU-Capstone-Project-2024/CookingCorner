@@ -9,7 +9,7 @@ class UserRead(schemas.BaseUser[int]):
     username: str
     name: str
     surname: str
-    cooking_experience = int
+    cooking_experience: int
     is_superuser: bool = False
 
     class Config:
@@ -22,5 +22,5 @@ class UserCreate(schemas.BaseUserCreate):
     surname: str
     email: str
     password: str
-    cooking_experience = int
+    cooking_experience: int
     is_superuser: Optional[bool] = False

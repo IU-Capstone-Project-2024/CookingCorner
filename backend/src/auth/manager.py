@@ -4,9 +4,9 @@ from urllib.request import Request
 from fastapi import Depends
 from fastapi_users import IntegerIDMixin, BaseUserManager, schemas, models, exceptions
 
-from backend.src.auth.models import User
-from backend.src.auth.utils import get_user_db
-from backend.src.config import SECRET_AUTH
+from src.auth.models import User
+from src.auth.utils import get_user_db
+from src.config import SECRET_AUTH
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
@@ -35,7 +35,6 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         )
         password = user_dict.pop("password")
         user_dict["hashed_password"] = self.password_helper.hash(password)
-        user_dict["role_id"] = 1
 
         created_user = await self.user_db.create(user_dict)
 
