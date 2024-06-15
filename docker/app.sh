@@ -1,6 +1,6 @@
 #!/bin/bash
 
-alembic upgrade head
+#alembic upgrade head
 
 cd src
 

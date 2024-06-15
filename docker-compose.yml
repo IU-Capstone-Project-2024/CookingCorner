@@ -1,29 +1,31 @@
 version: "3.7"
+
+volumes:
+  postgres_data:
+  static_data:
+
 services:
   db:
     image: postgres:16
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    container_name: db_app
+    container_name: db
     ports:
       - "5432:5432"
     env_file:
-      - backend/.env
+      - .env
 
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/usr/src/app
-    env_file:
-      - backend/.env
+      - ./static:/static
     container_name: cooking_corner_app
-    command: ["/CookingCorner/docker/app.sh"]
+    command: uvicorn main:app --host 0.0.0.0 --workers 1
     ports:
       - "8000:8000"
     depends_on:
       - db
-
-volumes:
-  postgres_data:
+    env_file:
+      - .env
