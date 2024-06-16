@@ -9,4 +9,4 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(length=200), unique=True, nullable=False)
-    recipe = relationship('Recipe', back_populates="category")
+    recipe = relationship('Recipe', backref="category")
