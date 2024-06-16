@@ -3,7 +3,7 @@ from fastapi_users.authentication import (AuthenticationBackend,
                                           CookieTransport, JWTStrategy)
 
 from src.auth.manager import get_user_manager
-from src.auth.models import User
+from src.models.users import User
 from src.config import SECRET_AUTH
 
 cookie_transport = CookieTransport(cookie_name="cooking_corner_cookie", cookie_max_age=3600)
