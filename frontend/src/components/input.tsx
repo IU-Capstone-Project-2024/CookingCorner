@@ -1,13 +1,15 @@
+import { SignInFields } from "@/schemas/sign-in.schema";
+import { SignUpFields } from "@/schemas/sign-up.schema";
 import { InputHTMLAttributes } from "react";
-import { FieldError, FieldValues, UseFormRegister } from "react-hook-form";
+import { FieldError, UseFormRegister } from "react-hook-form";
 
 interface IFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   type: string;
   name: string;
   label: string;
-  error?: FieldError | undefined;
-  register: UseFormRegister<FieldValues>;
+  error: FieldError | undefined;
+  register: UseFormRegister<any>;
 }
 
 const FormInput = ({
@@ -21,14 +23,16 @@ const FormInput = ({
   return (
     <div className="flex flex-col text-xl">
       <input
-        {...register(label)}
+        {...register(name)}
         id={id}
         type={type}
         name={name}
         placeholder={label}
         className="border-b-[1px] border-black bg-transparent outline-none"
       />
-      {error && <div>{error.message}</div>}
+      {error && (
+        <div className="mt-2 text-sm text-rose-500">{error.message}</div>
+      )}
     </div>
   );
 };
