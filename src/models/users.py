@@ -2,8 +2,9 @@ from datetime import datetime
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean
+from sqlalchemy.orm import relationship
 
-from ..database import Base
+from src.database import Base
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
@@ -15,6 +16,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
     cooking_experience = Column(Integer)
+    tag = relationship('Tag', backref="user")
+    recipe = relationship('Recipe', backref="user")
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     hashed_password: str = Column(String(length=1024), nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)

@@ -4,7 +4,7 @@ from urllib.request import Request
 from fastapi import Depends
 from fastapi_users import IntegerIDMixin, BaseUserManager, schemas, models, exceptions
 
-from src.auth.models import User
+from src.models.users import User
 from src.auth.utils import get_user_db
 from src.config import SECRET_AUTH
 
