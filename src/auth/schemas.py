@@ -1,26 +1,24 @@
-from typing import Optional
-
-from fastapi_users import schemas
+from pydantic import BaseModel
 
 
-class UserRead(schemas.BaseUser[int]):
+class UserRead(BaseModel):
     id: int
     email: str
     username: str
     name: str
     surname: str
     cooking_experience: int
-    is_superuser: bool = False
 
     class Config:
         orm_mode = True
 
 
-class UserCreate(schemas.BaseUserCreate):
+class UserCreate(BaseModel):
     username: str
-    name: str
-    surname: str
-    email: str
     password: str
-    cooking_experience: int
-    is_superuser: Optional[bool] = False
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str

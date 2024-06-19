@@ -1,8 +1,8 @@
-"""Tags categories recipes
+"""Users categories tags recipes
 
-Revision ID: 8e3de3a1b39d
-Revises: b613a682858c
-Create Date: 2024-06-16 16:34:50.360135
+Revision ID: b038bd74d274
+Revises: 
+Create Date: 2024-06-19 23:38:35.133118
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8e3de3a1b39d'
-down_revision: Union[str, None] = 'b613a682858c'
+revision: str = 'b038bd74d274'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -25,6 +25,16 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=200), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
+    )
+    op.create_table('users',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(), nullable=False),
+    sa.Column('hashed_password', sa.String(length=1024), nullable=False),
+    sa.Column('email', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('surname', sa.String(), nullable=True),
+    sa.Column('cooking_experience', sa.Integer(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('recipe',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -51,7 +61,7 @@ def upgrade() -> None:
     sa.Column('video_link', sa.String(), nullable=True),
     sa.Column('source', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -59,7 +69,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -79,5 +89,6 @@ def downgrade() -> None:
     op.drop_table('recipe_tag')
     op.drop_table('tag')
     op.drop_table('recipe')
+    op.drop_table('users')
     op.drop_table('category')
     # ### end Alembic commands ###
