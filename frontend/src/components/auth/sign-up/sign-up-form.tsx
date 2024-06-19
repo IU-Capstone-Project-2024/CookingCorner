@@ -8,7 +8,6 @@ const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<SignUpFields>({
     mode: "onChange",

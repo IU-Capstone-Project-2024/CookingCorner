@@ -29,8 +29,11 @@ module.exports = {
         primary: {
           DEFAULT: "#FFEEDD",
         },
-        secondary: {
+        mainBlack: {
           DEFAULT: "#2B2B2B",
+        },
+        mainHover: {
+          DEFAULT: "#FE7F00",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

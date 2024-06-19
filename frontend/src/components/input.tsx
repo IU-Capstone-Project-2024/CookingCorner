@@ -1,5 +1,3 @@
-import { SignInFields } from "@/schemas/sign-in.schema";
-import { SignUpFields } from "@/schemas/sign-up.schema";
 import { InputHTMLAttributes } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 
