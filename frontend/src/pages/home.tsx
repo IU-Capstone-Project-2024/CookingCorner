@@ -23,7 +23,7 @@ const Home = () => {
         <Title className="mx-auto">Last recipes</Title>
         <div className="flex gap-2">
           {lastRecipes.length === 0 ? (
-            <p className="text-mainBlack font-inter font-semibold">
+            <p className="font-inter font-semibold text-mainBlack">
               You don't have any reviewed recipes yet!
             </p>
           ) : (

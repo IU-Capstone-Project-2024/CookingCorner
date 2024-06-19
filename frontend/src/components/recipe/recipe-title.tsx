@@ -1,13 +1,15 @@
+import { memo } from "react";
+
 interface RecipeTitleProps {
   children: React.ReactNode;
 }
 
-const RecipeTitle = ({ children }: RecipeTitleProps) => {
+const RecipeTitle = memo(({ children }: RecipeTitleProps) => {
   return (
-    <div className="text-mainBlack line-clamp-2 min-w-44 font-inter text-xl font-bold">
+    <div className="line-clamp-2 min-w-44 font-inter text-xl font-bold text-mainBlack">
       {children}
     </div>
   );
-};
+});
 
 export default RecipeTitle;

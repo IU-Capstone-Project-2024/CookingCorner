@@ -10,7 +10,7 @@ interface RecipeCardProps {
 
 const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
   return (
-    <div className="border-mainBlack flex min-h-64 max-w-44 flex-col justify-between gap-2 rounded-lg border-[3px] p-2">
+    <div className="flex min-h-64 max-w-44 flex-col justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2">
       <img src={recipe.img} alt={recipe.title} width={125} />
       <RecipeTitle>{recipe.title}</RecipeTitle>
       <RecipeDescription

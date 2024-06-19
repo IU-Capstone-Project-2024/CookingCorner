@@ -17,6 +17,7 @@ export type Recipe = {
   rating: number;
   cookingTime: number;
   author: User;
+  favourite: boolean;
 }
 
 export type User = {

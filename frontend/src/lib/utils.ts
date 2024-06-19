@@ -30,7 +30,8 @@ export async function getRecipes(): Promise<RecipeResponse> {
     },
     cookingTime: 20,
     rating: 4.5,
-    title: "Boiled shrimps"
+    title: "Boiled shrimps",
+    favourite: false
   },
   {
     img: "no_image.png",
@@ -43,7 +44,8 @@ export async function getRecipes(): Promise<RecipeResponse> {
     },
     cookingTime: 35,
     rating: 4.8,
-    title: "Chicken in soy sauce"
+    title: "Chicken in soy sauce",
+    favourite: false
   }].slice(0, 2)
 
   const recommendedRecipes: Recipe[] = [{
@@ -57,7 +59,8 @@ export async function getRecipes(): Promise<RecipeResponse> {
     },
     cookingTime: 20,
     rating: 4.5,
-    title: "Boiled shrimps"
+    title: "Boiled shrimps",
+    favourite: false
   }].slice(0, 2)
 
   return { lastRecipes, recommendedRecipes }
