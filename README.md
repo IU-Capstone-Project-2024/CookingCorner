@@ -1,3 +1,6 @@
-# CookingCorner
-## Summer Project
-Website where students can share their favorite recipes, add photos and cooking instructions.
+# Cooking Corner
+
+Main repository of project
+
+[Mobile app](https://github.com/IU-Capstone-Project-2024/CookingCorner-Mobile)
+
