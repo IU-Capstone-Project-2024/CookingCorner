@@ -7,8 +7,9 @@ from passlib.context import CryptContext
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.schemas import UserCreate
+from src.auth.schemas import UserCreate, UserRead
 from src.config import SECRET_AUTH
+from src.database import get_async_session
 from src.models import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -61,5 +62,26 @@ async def verify_token(token: str = Depends(oauth2_scheme)):
         if username is None:
             raise HTTPException(status_code=403, detail="Token is invalid or expired")
         return payload
+    except Exception:
+        raise HTTPException(status_code=403, detail="Token is invalid or expired")
+
+
+async def get_user_data(db: AsyncSession, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=403, detail="Token is invalid or expired")
+        query = select(User).where(User.username == username)
+        user = await db.execute(query)
+        user = user.first()[0]
+        return UserRead(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            name=user.name,
+            surname=user.surname,
+            cooking_experience=user.cooking_experience
+        )
     except Exception:
         raise HTTPException(status_code=403, detail="Token is invalid or expired")

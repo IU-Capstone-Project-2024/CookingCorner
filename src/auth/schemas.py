@@ -3,11 +3,11 @@ from pydantic import BaseModel
 
 class UserRead(BaseModel):
     id: int
-    email: str
+    email: str | None = None
     username: str
-    name: str
-    surname: str
-    cooking_experience: int
+    name: str | None = None
+    surname: str | None = None
+    cooking_experience: int | None = None
 
     class Config:
         orm_mode = True

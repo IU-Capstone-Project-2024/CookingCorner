@@ -6,7 +6,8 @@ from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import UserCreate, TokenSchema
-from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, verify_token
+from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, verify_token, \
+    get_user_data
 from src.database import get_async_session
 
 router = APIRouter()
@@ -50,3 +51,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def verify_user_token(token: str):
     await verify_token(token=token)
     return {"message": "Token is valid"}
+
+
+@router.post("/get_User/me")
+async def get_user_me(token: str, db: AsyncSession = Depends(get_async_session)):
+    return await get_user_data(token=token, db=db)
