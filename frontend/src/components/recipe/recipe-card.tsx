@@ -10,8 +10,8 @@ interface RecipeCardProps {
 
 const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
   return (
-    <div className="flex min-h-64 max-w-44 flex-col justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2">
-      <img src={recipe.img} alt={recipe.title} width={125} />
+    <div className="hover:bg-hover-secondary flex min-h-64 max-w-44 flex-col justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2">
+      <img src="image.png" alt={recipe.title} className="w-fit" />
       <RecipeTitle>{recipe.title}</RecipeTitle>
       <RecipeDescription
         rating={recipe.rating}
@@ -23,7 +23,7 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
         variant="recipeCard"
         onClick={() => action(recipe)}
       >
-        Add to my recipes
+        {recipe.favourite ? "Add to favourites" : "Add to my recipes"}
       </Button>
     </div>
   );

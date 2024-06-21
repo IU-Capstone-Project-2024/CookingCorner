@@ -18,6 +18,8 @@ COPY .env .env
 
 VOLUME /static
 
-COPY docker/entrypoint.sh ./
+# RUN chmod +x docker/entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+# COPY docker/entrypoint.sh ./
+
+# ENTRYPOINT ["./entrypoint.sh"]

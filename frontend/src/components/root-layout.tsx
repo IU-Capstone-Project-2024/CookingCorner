@@ -6,15 +6,15 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <div className="relative h-screen w-screen bg-primary">
-      <div className="hidden md:block">{children}</div>
-      <div className="md:hidden">
+    <main className="min-w-screen relative min-h-screen bg-primary pb-20">
+      <section className="hidden md:block">{children}</section>
+      <section className="md:hidden">
         {children}
-        <div className="absolute bottom-0 flex h-16 w-full items-center justify-evenly rounded-t-xl border-2 border-mainBlack bg-primary">
+        <nav className="fixed bottom-0 z-10 flex h-16 w-full items-center justify-evenly rounded-t-xl border-2 border-mainBlack bg-primary">
           <Navigation />
-        </div>
-      </div>
-    </div>
+        </nav>
+      </section>
+    </main>
   );
 };
 

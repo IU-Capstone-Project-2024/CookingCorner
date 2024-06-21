@@ -11,6 +11,14 @@ export type Page = {
   path: string;
 }
 
+export type Step = {
+  step_number: number;
+  step_img: string;
+  description: string;
+}
+
+export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert"
+
 export type Recipe = {
   img: string;
   title: string;
@@ -18,6 +26,9 @@ export type Recipe = {
   cookingTime: number;
   author: User;
   favourite: boolean;
+  starred: boolean;
+  category: Category;
+  steps: Step[],
 }
 
 export type User = {

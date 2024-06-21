@@ -6,6 +6,7 @@ import Root from "../pages/root";
 import Profile from "@/pages/profile";
 import Recipes from "@/pages/recipe";
 import Home from "@/pages/home";
+import { loader as recipeLoader, action as recipeAction } from "@/pages/recipe";
 import { loader as homeLoader, action as homeAction } from "@/pages/home";
 
 const routes: RouteObject[] = [
@@ -23,6 +24,8 @@ const routes: RouteObject[] = [
       {
         path: "recipes",
         element: <Recipes />,
+        loader: recipeLoader,
+        action: recipeAction,
       },
       {
         path: "recipes/:recipeId",

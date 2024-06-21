@@ -1,16 +1,16 @@
 import { Page } from "@/modules/types";
-import { FaHouse, FaBook, FaUser } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaBook, FaUser } from "react-icons/fa6";
 
 export const pages: Page[] = [
   {
-    icon: FaHouse,
-    description: "Home",
-    path: "/home",
+    icon: FaMagnifyingGlass,
+    description: "Search",
+    path: "/recipes",
   },
   {
     icon: FaBook,
-    description: "Recipes",
-    path: "/recipes",
+    description: "Home",
+    path: "/home",
   },
   {
     icon: FaUser,
