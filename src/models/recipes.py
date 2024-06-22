@@ -32,6 +32,7 @@ class Recipe(Base):
     video_link = Column(String)
     source = Column(String)
 
+
 class Tag(Base):
     __tablename__ = 'tag'
 
@@ -39,6 +40,7 @@ class Tag(Base):
     name = Column(String, unique=True, nullable=False)
     user_id = Column(ForeignKey('users.id'))
     recipe = relationship('Recipe', secondary='recipe_tag', back_populates='tag')
+
 
 class RecipeTag(Base):
     __tablename__ = 'recipe_tag'
