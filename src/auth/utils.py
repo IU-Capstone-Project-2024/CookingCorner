@@ -1,8 +1,8 @@
 from datetime import timedelta, datetime
 
 import jwt
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +16,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ALGORITHM = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+security = HTTPBearer()
 
 
 async def get_user_by_username(db: AsyncSession, username: str):
@@ -55,7 +55,7 @@ async def create_access_token(data: dict, expires_delta: timedelta | None = None
     return encoded_jwt
 
 
-async def verify_token(token: str = Depends(oauth2_scheme)):
+async def verify_token(token: str = Depends(security)):
     try:
         payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -66,7 +66,7 @@ async def verify_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=403, detail="Token is invalid or expired")
 
 
-async def get_user_data(db: AsyncSession, token: str = Depends(oauth2_scheme)):
+async def get_user_data(db: AsyncSession, token: str = Depends(security)):
     try:
         payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -84,4 +84,20 @@ async def get_user_data(db: AsyncSession, token: str = Depends(oauth2_scheme)):
             cooking_experience=user.cooking_experience
         )
     except Exception:
+        raise HTTPException(status_code=403, detail="Token is invalid or expired")
+
+
+async def get_current_user(authorization: HTTPAuthorizationCredentials = Security(security)) -> User:
+    try:
+        token = authorization.credentials
+        payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=403, detail="Token is invalid or expired")
+        query = select(User).where(User.username == username)
+        db: AsyncSession = Depends(get_async_session)
+        user = await db.execute(query)
+        user = user.first()[0]
+        return user
+    except HTTPException:
         raise HTTPException(status_code=403, detail="Token is invalid or expired")
