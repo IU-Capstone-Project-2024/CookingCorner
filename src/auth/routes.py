@@ -8,14 +8,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.schemas import UserCreate, TokenSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, verify_token, \
     get_user_data
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
 
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
 
 
 @router.post("/register")
