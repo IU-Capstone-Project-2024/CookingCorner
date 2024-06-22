@@ -12,17 +12,17 @@ const RecipeDescription = memo(
   ({ rating, cookingTime, author }: RecipeDescriptionProps) => {
     return (
       <div className="flex flex-col">
-        <div className="flex flex-col gap-2 font-inter font-semibold">
-          <div className="flex items-center gap-1">
-            <FaStar />
+        <div className="grid grid-cols-2 gap-1 font-inter font-semibold">
+          <div className="flex items-center gap-1 truncate text-wrap">
+            <FaStar className="text-hover" />
             {rating}
           </div>
-          <div className="flex items-center gap-1">
-            <FaClock />
+          <div className="flex items-center gap-1 truncate text-wrap">
+            <FaClock className="text-hover" />
             {cookingTime + " min"}
           </div>
-          <div className="flex items-center gap-1">
-            <FaUser />
+          <div className="flex items-center gap-1 truncate text-wrap">
+            <FaUser className="text-hover" />
             {author.username}
           </div>
         </div>

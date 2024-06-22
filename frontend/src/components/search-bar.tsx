@@ -15,7 +15,7 @@ const SearchBar = ({ setSearch }: SearchBarProps) => {
   }
 
   return (
-    <div
+    <section
       className="mt-2 flex h-8 w-80 items-center gap-2 rounded-lg border-2 border-mainBlack px-2"
       onClick={handleClick}
     >
@@ -27,7 +27,7 @@ const SearchBar = ({ setSearch }: SearchBarProps) => {
         placeholder="Filter your recipes"
         onChange={(e) => setSearch(e.target.value.toLowerCase())}
       />
-    </div>
+    </section>
   );
 };
 

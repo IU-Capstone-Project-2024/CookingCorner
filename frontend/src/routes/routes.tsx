@@ -4,10 +4,12 @@ import SignIn from "../pages/sign-in";
 import SignUp from "../pages/sign-up";
 import Root from "../pages/root";
 import Profile from "@/pages/profile";
-import Recipes from "@/pages/recipe";
+import Recipes from "@/pages/search";
 import Home from "@/pages/home";
-import { loader as recipeLoader, action as recipeAction } from "@/pages/recipe";
+import { loader as recipeLoader, action as recipeAction } from "@/pages/search";
 import { loader as homeLoader, action as homeAction } from "@/pages/home";
+import { action as signUpAction } from "@/pages/sign-up";
+import { loader as profileLoader } from "@/pages/profile";
 
 const routes: RouteObject[] = [
   {
@@ -34,6 +36,7 @@ const routes: RouteObject[] = [
       {
         path: "profile",
         element: <Profile />,
+        loader: profileLoader,
       },
     ],
   },
@@ -46,6 +49,7 @@ const routes: RouteObject[] = [
     path: "/sign-up",
     element: <SignUp />,
     errorElement: <ErrorPage />,
+    action: signUpAction,
   },
 ];
 

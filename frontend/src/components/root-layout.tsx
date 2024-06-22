@@ -6,7 +6,7 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <main className="min-w-screen relative min-h-screen bg-primary pb-20">
+    <main className="min-w-screen relative min-h-screen bg-primary pb-20 pt-10">
       <section className="hidden md:block">{children}</section>
       <section className="md:hidden">
         {children}

@@ -1,10 +1,14 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import FormInput from "../../input";
 import { Button } from "../../ui/button";
 import { SignUpFields, SignUpSchema } from "@/schemas/sign-up.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const SignUpForm = () => {
+interface SignUpFormProps {
+  action: (data: SignUpFields) => void;
+}
+
+const SignUpForm = ({ action }: SignUpFormProps) => {
   const {
     register,
     handleSubmit,
@@ -19,13 +23,9 @@ const SignUpForm = () => {
     },
   });
 
-  const processSignUp: SubmitHandler<SignUpFields> = (data) => {
-    console.log(data);
-  };
-
   return (
     <form
-      onSubmit={handleSubmit(processSignUp)}
+      onSubmit={handleSubmit(action)}
       className="flex w-full max-w-[360px] flex-col gap-4 px-4"
     >
       <FormInput

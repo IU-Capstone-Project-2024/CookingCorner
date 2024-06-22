@@ -20,7 +20,7 @@ export type Step = {
 export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert"
 
 export type Recipe = {
-  img: string;
+  img: string | null;
   title: string;
   rating: number;
   cookingTime: number;
@@ -32,6 +32,7 @@ export type Recipe = {
 }
 
 export type User = {
+  img: string | null;
   username: string;
   name: string;
   surname: string;

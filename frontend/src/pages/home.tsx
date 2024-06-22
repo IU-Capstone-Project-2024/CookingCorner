@@ -1,3 +1,4 @@
+import Settings from "@/components/home/settings";
 import RecipeCard from "@/components/recipe/recipe-card";
 import SearchBar from "@/components/search-bar";
 import { addFavouriteRecipe, getMyRecipes } from "@/lib/utils";
@@ -22,6 +23,7 @@ const Home = () => {
   return (
     <section className="flex flex-col items-center gap-2">
       <SearchBar setSearch={setSearch} />
+      <Settings />
       <div className="grid grid-cols-2 gap-2">
         {recipes
           .filter((recipe) => recipe.title.toLowerCase().startsWith(search))

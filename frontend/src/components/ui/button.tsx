@@ -15,14 +15,14 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-4 py-2",
-        recipeCard: "h-8",
+        recipeCard: "h-8 px-4 py-2 max-w-full",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "recipeCard",
+      size: "recipeCard",
     },
   },
 );

@@ -1,9 +1,11 @@
-import { Recipe, RecipeResponse } from "@/modules/types"
+import { Recipe, RecipeResponse, User } from "@/modules/types"
+import { SignInFields } from "@/schemas/sign-in.schema"
+import { SignUpFields } from "@/schemas/sign-up.schema"
 import axios from "axios"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL
+const BASE_URL = "http://localhost:8000/"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,6 +26,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
     {
       img: "no_image.png",
       author: {
+        img: "no_image.png",
         username: "dsae",
         name: "Jack",
         surname: "Davidson",
@@ -32,7 +35,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
       },
       cookingTime: 20,
       rating: 4.5,
-      title: "Boiled shrimps",
+      title: "Boiled shrimps ",
       favourite: true,
       starred: false,
       category: "warm_dishes",
@@ -57,6 +60,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
     {
       img: "no_image.png",
       author: {
+        img: "no_image.png",
         username: "dsae",
         name: "Jack",
         surname: "Davidson",
@@ -65,7 +69,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
       },
       cookingTime: 20,
       rating: 4.5,
-      title: "Easy Lasagna",
+      title: "Easy Lasagna Lasagna Lasagna Lasagna",
       favourite: true,
       starred: false,
       category: "warm_dishes",
@@ -90,6 +94,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
     {
       img: "no_image.png",
       author: {
+        img: "no_image.png",
         username: "ronin",
         name: "Daniel",
         surname: "Jordan",
@@ -123,6 +128,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
     {
       img: "no_image.png",
       author: {
+        img: "no_image.png",
         username: "ronin",
         name: "Daniel",
         surname: "Jordan",
@@ -156,6 +162,7 @@ export async function getMyRecipes(): Promise<Recipe[]> {
     {
       img: "no_image.png",
       author: {
+        img: "no_image.png",
         username: "ronin",
         name: "Daniel",
         surname: "Jordan",
@@ -197,8 +204,9 @@ export async function getRecipes(): Promise<RecipeResponse> {
 
   const lastRecipes: Recipe[] = [
     {
-    img: "no_image.png",
+    img: "image.png",
     author: {
+      img: "no_image.png",
       username: "dsae",
       name: "Jack",
       surname: "Davidson",
@@ -230,8 +238,9 @@ export async function getRecipes(): Promise<RecipeResponse> {
     ]
   },
   {
-    img: "no_image.png",
+    img: null,
     author: {
+      img: "no_image.png",
       username: "ronin",
       name: "Daniel",
       surname: "Jordan",
@@ -263,8 +272,9 @@ export async function getRecipes(): Promise<RecipeResponse> {
     ]
   },
   {
-    img: "no_image.png",
+    img: "image.png",
     author: {
+      img: "no_image.png",
       username: "ronin",
       name: "Daniel",
       surname: "Jordan",
@@ -298,8 +308,9 @@ export async function getRecipes(): Promise<RecipeResponse> {
 ]
 
   const recommendedRecipes: Recipe[] = [{
-    img: "no_image.png",
+    img: "image.png",
     author: {
+      img: "no_image.png",
       username: "dsae",
       name: "Jack",
       surname: "Davidson",
@@ -334,12 +345,45 @@ export async function getRecipes(): Promise<RecipeResponse> {
   return { lastRecipes, recommendedRecipes }
 }
 
+export async function register(data: SignUpFields): Promise<void> {
+  await API.post("/register", data).then(res => console.log(res)).catch(err => console.error(err))
+}
+
+export async function getUser() {
+  // const response = await API.post('/get_User/me') as User;
+
+  const userData: User = {
+    img: null,
+    username: "dsae",
+    name: "Jack",
+    surname: "Davidson",
+    email: "jdavid@gmail.com",
+    experience: 3,
+  }
+
+  return userData;
+}
+
+function getAccessTokenFromCookies() {
+  const cookies = document.cookie.split(';')
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'token') {
+       return value;
+    }
+ }
+
+ return '';
+}
+
 export const API = axios.create({
+  withCredentials: true,
   baseURL: BASE_URL,
 });
 
 API.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem("accessToken")
+  const accessToken = getAccessTokenFromCookies();
+
   config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : ''
   return config;
 })

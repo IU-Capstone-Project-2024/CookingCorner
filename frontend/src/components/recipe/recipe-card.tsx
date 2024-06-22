@@ -10,8 +10,12 @@ interface RecipeCardProps {
 
 const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
   return (
-    <div className="hover:bg-hover-secondary flex min-h-64 max-w-44 flex-col justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2">
-      <img src="image.png" alt={recipe.title} className="w-fit" />
+    <div className="flex min-h-64 max-w-44 flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary">
+      <img
+        src={recipe.img === null ? "no_image.png" : recipe.img}
+        alt={recipe.title}
+        className="w-fit"
+      />
       <RecipeTitle>{recipe.title}</RecipeTitle>
       <RecipeDescription
         rating={recipe.rating}
