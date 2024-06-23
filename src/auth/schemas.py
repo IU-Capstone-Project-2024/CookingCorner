@@ -1,10 +1,9 @@
 from pydantic import BaseModel
 
 
-class UserRead(BaseModel):
-    id: int
+class UserSchema(BaseModel):
     email: str | None = None
-    username: str
+    username: str | None = None
     name: str | None = None
     surname: str | None = None
     cooking_experience: int | None = None
