@@ -3,13 +3,15 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
+from sqlalchemy import update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.schemas import UserCreate, TokenSchema
+from src.auth.schemas import UserCreate, TokenSchema, UserSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, verify_token, \
-    get_user_data
+    get_user_data, get_current_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
+from src.models import User
 
 router = APIRouter()
 
@@ -52,5 +54,28 @@ async def verify_user_token(token: str):
 
 
 @router.post("/get_User/me")
-async def get_user_me(token: str, db: AsyncSession = Depends(get_async_session)):
-    return await get_user_data(token=token, db=db)
+async def get_user_me(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
+    return await get_user_data(current_user=current_user)
+
+
+@router.post("/edit_user_data")
+async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_session),
+                         current_user: User = Depends(get_current_user)):
+    if body.username is not None:
+        if current_user.username != body.username:
+            query = select(User).where(User.username == body.username)
+            user = await db.execute(query)
+            if user.first() is not None:
+                raise HTTPException(status_code=400, detail="Username already exists")
+    username = body.username if body.username else current_user.username
+    query = update(User).where(User.id == current_user.id).values(
+        email=body.email,
+        username=username,
+        name=body.name,
+        surname=body.surname,
+        cooking_experience=body.cooking_experience
+    )
+    await db.execute(query)
+    await db.commit()
+    return {"status": "success"}
+
