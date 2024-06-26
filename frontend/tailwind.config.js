@@ -14,12 +14,15 @@ module.exports = {
     },
     container: {
       center: true,
-      padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "sm": "390px",
+        "md": "764px",
       },
     },
     extend: {
+      dropShadow: {
+        '3xl': '0 8px 8px 0 rgba(0, 0, 0, 1)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

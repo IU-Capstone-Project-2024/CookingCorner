@@ -4,12 +4,14 @@ import SignIn from "../pages/sign-in";
 import SignUp from "../pages/sign-up";
 import Root from "../pages/root";
 import Profile from "@/pages/profile";
-import Recipes from "@/pages/search";
+import Search from "@/pages/search";
 import Home from "@/pages/home";
-import { loader as recipeLoader, action as recipeAction } from "@/pages/search";
+import { loader as searchLoader, action as searchAction } from "@/pages/search";
 import { loader as homeLoader, action as homeAction } from "@/pages/home";
 import { action as signUpAction } from "@/pages/sign-up";
 import { loader as profileLoader } from "@/pages/profile";
+import { loader as recipeLoader } from "@/pages/recipe";
+import Recipe from "@/pages/recipe";
 
 const routes: RouteObject[] = [
   {
@@ -25,13 +27,14 @@ const routes: RouteObject[] = [
       },
       {
         path: "recipes",
-        element: <Recipes />,
-        loader: recipeLoader,
-        action: recipeAction,
+        element: <Search />,
+        loader: searchLoader,
+        action: searchAction,
       },
       {
         path: "recipes/:recipeId",
-        element: <Recipes />,
+        element: <Recipe />,
+        loader: recipeLoader,
       },
       {
         path: "profile",

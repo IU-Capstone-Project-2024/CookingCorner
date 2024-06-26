@@ -1,5 +1,5 @@
 import { API } from "@/lib/utils";
-import { Recipe } from "@/modules/types";
+import { Recipe } from "@/typings/types";
 import { useEffect, useState } from "react";
 
 const useRecipes = () => {

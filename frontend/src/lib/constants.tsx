@@ -1,4 +1,4 @@
-import { Page } from "@/modules/types";
+import { Page } from "@/typings/types";
 import { FaMagnifyingGlass, FaBook, FaUser } from "react-icons/fa6";
 
 export const pages: Page[] = [

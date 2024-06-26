@@ -1,7 +1,8 @@
-import { Recipe } from "@/modules/types";
-import RecipeTitle from "./recipe-title";
-import RecipeDescription from "./recipe-description";
+import { Recipe } from "@/typings/types";
+import RecipeTitle from "./recipe-card-title";
+import RecipeDescription from "./recipe-card-description";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -9,8 +10,13 @@ interface RecipeCardProps {
 }
 
 const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex min-h-64 max-w-44 flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary">
+    <div
+      className="flex min-h-64 max-w-44 flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
+      onClick={() => navigate(`/recipes/${recipe.id}`)}
+    >
       <img
         src={recipe.img === null ? "no_image.png" : recipe.img}
         alt={recipe.title}

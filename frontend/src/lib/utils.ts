@@ -1,4 +1,4 @@
-import { Recipe, RecipeResponse, User } from "@/modules/types"
+import { Recipe, RecipeResponse, User } from "@/typings/types"
 import { SignInFields } from "@/schemas/sign-in.schema"
 import { SignUpFields } from "@/schemas/sign-up.schema"
 import axios from "axios"
@@ -198,12 +198,58 @@ export async function getMyRecipes(): Promise<Recipe[]> {
   return recipes;
 }
 
+export async function getRecipe(id: number) {
+
+  console.log(id)
+  const recipe: Recipe = 
+    {
+      id: 1,
+      img: "image2.png",
+      author: {
+        img: "no_image.png",
+        username: "dsae",
+        name: "Jack",
+        surname: "Davidson",
+        email: "jdavid@gmail.com",
+        experience: 3,
+      },
+      cookingTime: 20,
+      preparationTime: 5,
+      portions: 5,
+      rating: 4.5,
+      title: "Boiled shrimps ",
+      favourite: true,
+      starred: false,
+      category: "warm_dishes",
+      steps: [
+        {
+          step_number: 1,
+          step_img: "image.png",
+          description: "TextTextTextTextTextTextTextTextText"
+        },
+        {
+          step_number: 2,
+          step_img: "image.png",
+          description: "TextTextTextTextTextTextTextTextText"
+        },
+        {
+          step_number: 3,
+          step_img: "image.png",
+          description: "TextTextTextTextTextTextTextTextText"
+        }
+      ]
+    }
+  
+  return recipe;
+}
+
 export async function getRecipes(): Promise<RecipeResponse> {
   // const lastRecipes = await API.get('/recipes/last') as Recipe[];
   // const recommendedRecipes = await API.get('/recipes/recommended') as Recipe[];
 
   const lastRecipes: Recipe[] = [
     {
+      id: 1,
     img: "image.png",
     author: {
       img: "no_image.png",
@@ -238,6 +284,7 @@ export async function getRecipes(): Promise<RecipeResponse> {
     ]
   },
   {
+    id: 2,
     img: null,
     author: {
       img: "no_image.png",
@@ -272,6 +319,7 @@ export async function getRecipes(): Promise<RecipeResponse> {
     ]
   },
   {
+    id: 3,
     img: "image.png",
     author: {
       img: "no_image.png",
@@ -308,6 +356,7 @@ export async function getRecipes(): Promise<RecipeResponse> {
 ]
 
   const recommendedRecipes: Recipe[] = [{
+    id: 4,
     img: "image.png",
     author: {
       img: "no_image.png",
@@ -355,7 +404,7 @@ export async function getUser() {
   const userData: User = {
     img: null,
     username: "dsae",
-    name: "Jack",
+    name: null,
     surname: "Davidson",
     email: "jdavid@gmail.com",
     experience: 3,

@@ -2,7 +2,7 @@ import ProfileDescription from "@/components/profile/profile-description";
 import ProfileImage from "@/components/profile/profile-image";
 import { Button } from "@/components/ui/button";
 import { getUser } from "@/lib/utils";
-import { User } from "@/modules/types";
+import { User } from "@/typings/types";
 import { useLoaderData } from "react-router-dom";
 
 export async function loader() {

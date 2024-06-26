@@ -24,20 +24,23 @@ export type Recipe = {
   title: string;
   rating: number;
   cookingTime: number;
+  preparationTime: number;
+  portions: number;
   author: User;
   favourite: boolean;
   starred: boolean;
   category: Category;
   steps: Step[],
+  id: number;
 }
 
 export type User = {
   img: string | null;
   username: string;
-  name: string;
-  surname: string;
-  email: string;
-  experience: number;
+  name: string | null;
+  surname: string | null;
+  email: string | null;
+  experience: number | null;
 }
 
 export type RecipeResponse = {

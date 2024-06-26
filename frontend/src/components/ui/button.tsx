@@ -11,13 +11,14 @@ const buttonVariants = cva(
       variant: {
         default: "bg-mainBlack text-white hover:bg-mainBlack/90 font-inter",
         recipeCard:
-          "border-[3px] border-mainBlack font-inter font-semibold drop-shadow-2xl bg-primary",
+          "border-[3px] border-mainBlack font-inter font-semibold drop-shadow-xl bg-primary",
+        icon: "rounded-full border-2 border-mainBlack p-1 drop-shadow-xl",
       },
       size: {
         default: "h-10 px-4 py-2",
         recipeCard: "h-8 px-4 py-2 max-w-full",
         lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        icon: "h-8 w-8",
       },
     },
     defaultVariants: {

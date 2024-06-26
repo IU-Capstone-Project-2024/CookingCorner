@@ -1,14 +1,14 @@
 import Settings from "@/components/home/settings";
-import RecipeCard from "@/components/recipe/recipe-card";
+import RecipeCard from "@/components/search/recipe-card";
 import SearchBar from "@/components/search-bar";
 import { addFavouriteRecipe, getMyRecipes } from "@/lib/utils";
-import { Recipe } from "@/modules/types";
-import { useState } from "react";
+import { Recipe } from "@/typings/types";
+import { memo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 export async function action(recipe: Recipe) {
   const recipes = await addFavouriteRecipe(recipe);
-  return recipes;
+  return { recipes };
 }
 
 export async function loader() {
@@ -16,7 +16,7 @@ export async function loader() {
   return recipes;
 }
 
-const Home = () => {
+const Home = memo(() => {
   const recipes = useLoaderData() as Recipe[];
   const [search, setSearch] = useState("");
 
@@ -37,6 +37,6 @@ const Home = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Home;
