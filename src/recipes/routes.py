@@ -11,7 +11,7 @@ from src.tags.schemas import RecipeSchema
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
 
 
-@recipe_router.post("/get_by_id")
+@recipe_router.get("/get_by_id/{recipe_id}")
 async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                            current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=recipe_id):
@@ -21,7 +21,7 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     return recipe.first()[0]
 
 
-@recipe_router.post("/get_all")
+@recipe_router.get("/get_all")
 async def get_all(db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
     query = select(Recipe)
@@ -68,14 +68,14 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.post("/update")
+@recipe_router.put("/update")
 async def update_recipe(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=current_user.id):
         raise HTTPException(status_code=404, detail="Recipe not found")
     return
 
 
-@recipe_router.post("/delete")
+@recipe_router.delete("/delete")
 async def delete_recipe(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db):

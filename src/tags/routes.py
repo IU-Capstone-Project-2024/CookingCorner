@@ -10,7 +10,7 @@ from src.tags.schemas import TagSchema, TagUpdateSchema
 tag_router = APIRouter(prefix="/tags", tags=["Tag"])
 
 
-@tag_router.post("/get_all")
+@tag_router.get("/get_all")
 async def get_tags(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     query = select(Tag).where(Tag.user_id == current_user.id).order_by(Tag.name)
     tags = await db.execute(query)
@@ -31,7 +31,7 @@ async def create_tag(body: TagSchema, db: AsyncSession = Depends(get_async_sessi
     return {"status": "success"}
 
 
-@tag_router.post("/update")
+@tag_router.put("/update")
 async def update_tag(body: TagUpdateSchema, db: AsyncSession = Depends(get_async_session),
                      current_user: User = Depends(get_current_user)):
     query = select(Tag).where(Tag.user_id == current_user.id).where(Tag.name == body.old_name)
@@ -45,7 +45,7 @@ async def update_tag(body: TagUpdateSchema, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@tag_router.post("/delete")
+@tag_router.delete("/delete")
 async def delete_tag(body: TagSchema, db: AsyncSession = Depends(get_async_session),
                      current_user: User = Depends(get_current_user)):
     query = select(Tag).where(Tag.user_id == current_user.id).where(Tag.name == body.name)

@@ -9,7 +9,7 @@ from src.models import Category, User
 category_router = APIRouter(prefix="/categories", tags=["Category"])
 
 
-@category_router.post("/get_all")
+@category_router.get("/get_all")
 async def get_categories(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     query = select(Category).order_by(Category.name)
     categories = await db.execute(query)
