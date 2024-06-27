@@ -7,18 +7,20 @@ from src.models import Category, Tag, Recipe
 async def get_category(db: AsyncSession, category_name: str) -> Category | None:
     query = select(Category).where(Category.name == category_name)
     category = await db.execute(query)
-    if category.first() is None:
+    category = category.first()
+    if category is None:
         return
-    category = category.first()[0]
+    category = category[0]
     return category
 
 
 async def get_tag(db: AsyncSession, user_id: int, tag_name: str) -> Tag | None:
     query = select(Tag).where(Tag.user_id == user_id).where(Tag.name == tag_name)
     tag = await db.execute(query)
-    if tag.first() is None:
+    tag = tag.first()
+    if tag is None:
         return
-    tag = tag.first()[0]
+    tag = tag[0]
     return tag
 
 

@@ -30,6 +30,32 @@ async def get_all(db: AsyncSession = Depends(get_async_session),
     return recipes
 
 
+@recipe_router.get("/get_by_tag/{tag_id}")
+async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session),
+                     current_user: User = Depends(get_current_user)):
+    tag = await get_tag(db=db, user_id=current_user.id, tag_name=tag_name)
+    if tag is None:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    query = select(Recipe).where(Recipe.tag_id == tag.id)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    recipes = [recipe[0] for recipe in recipes]
+    return recipes
+
+
+@recipe_router.get("/get_by_category/{category_id}")
+async def get_by_category(category_name: str, db: AsyncSession = Depends(get_async_session),
+                          current_user: User = Depends(get_current_user)):
+    category = await get_category(db=db, category_name=category_name)
+    if category is None:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    query = select(Recipe).where(Recipe.category_id == category.id)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    recipes = [recipe[0] for recipe in recipes]
+    return recipes
+
+
 @recipe_router.post("/create")
 async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):
@@ -46,6 +72,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         rating=body.rating,
         category_id=category.id,
         tag_id=tag.id,
+        user_id=current_user.id,
         preparing_time=body.preparing_time,
         cooking_time=body.cooking_time,
         waiting_time=body.waiting_time,
@@ -69,9 +96,14 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
 
 
 @recipe_router.put("/update")
-async def update_recipe(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
+async def update_recipe(body: RecipeSchema,
+                        db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=current_user.id):
         raise HTTPException(status_code=404, detail="Recipe not found")
+    query = select(Tag).where(Tag.user_id == current_user.id).where(Tag.name == body.old_name)
+    tag = await db.execute(query)
+    if tag.first() is None:
+        raise HTTPException(status_code=404, detail="Tag not found")
     return
 
 
