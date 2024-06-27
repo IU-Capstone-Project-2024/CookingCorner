@@ -30,7 +30,7 @@ async def get_all(db: AsyncSession = Depends(get_async_session),
     return recipes
 
 
-@recipe_router.get("/get_by_tag/{tag_id}")
+@recipe_router.get("/get_by_tag/{tag_name}")
 async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session),
                      current_user: User = Depends(get_current_user)):
     tag = await get_tag(db=db, user_id=current_user.id, tag_name=tag_name)
@@ -43,7 +43,7 @@ async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session
     return recipes
 
 
-@recipe_router.get("/get_by_category/{category_id}")
+@recipe_router.get("/get_by_category/{category_name}")
 async def get_by_category(category_name: str, db: AsyncSession = Depends(get_async_session),
                           current_user: User = Depends(get_current_user)):
     category = await get_category(db=db, category_name=category_name)
