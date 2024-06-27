@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.utils import get_current_user
 from src.database import get_async_session
 from src.models import User, Recipe
-from src.recipes.utils import get_category_id, get_tag_id, check_recipe_exists
+from src.recipes.utils import get_category, get_tag, check_recipe_exists
 from src.tags.schemas import RecipeSchema
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
@@ -33,18 +33,19 @@ async def get_all(db: AsyncSession = Depends(get_async_session),
 @recipe_router.post("/create")
 async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):
-    category_id = get_category_id(db=db, category_name=body.category_name)
-    if category_id == 0:
+    category = await get_category(db=db, category_name=body.category_name)
+    if category is None:
         raise HTTPException(status_code=404, detail="Category not found")
-    tag_id = get_tag_id(db=db, tag_name=body.tag_name, user_id=current_user.id)
-    if tag_id == 0:
+    tag = await get_tag(db=db, tag_name=body.tag_name, user_id=current_user.id)
+    if tag is None:
         raise HTTPException(status_code=404, detail="Tag not found")
     query = insert(Recipe).values(
         name=body.name,
         description=body.description,
         icon_path=body.icon_path,
         rating=body.rating,
-        category_id=category_id,
+        category_id=category.id,
+        tag_id=tag.id,
         preparing_time=body.preparing_time,
         cooking_time=body.cooking_time,
         waiting_time=body.waiting_time,
@@ -60,11 +61,10 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         carbohydrates_value=body.carbohydrates_value,
         dishes=body.dishes,
         video_link=body.video_link,
-        source_url=body.source_url
+        source=body.source
     )
     await db.execute(query)
     await db.commit()
-    # Додумать здесь насчет many to many
     return {"status": "success"}
 
 
