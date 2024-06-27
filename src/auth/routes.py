@@ -13,7 +13,7 @@ from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
 from src.models import User
 
-router = APIRouter()
+router = APIRouter(tags=["Auth"])
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -73,7 +73,8 @@ async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_
         username=username,
         name=body.name,
         surname=body.surname,
-        cooking_experience=body.cooking_experience
+        cooking_experience=body.cooking_experience,
+        image_path=body.image_path
     )
     await db.execute(query)
     await db.commit()
