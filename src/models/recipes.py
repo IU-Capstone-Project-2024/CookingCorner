@@ -12,9 +12,9 @@ class Recipe(Base):
     description = Column(Text, nullable=False)
     icon_path = Column(String)
     rating = Column(Float)
-    user_id = Column(ForeignKey('users.id'))
-    category_id = Column(ForeignKey('category.id'))
-    tag = relationship('Tag', secondary='recipe_tag', back_populates='recipe')
+    user_id = Column(ForeignKey('users.id'), nullable=False)
+    category_id = Column(ForeignKey('category.id'), nullable=False)
+    tag_id = Column(ForeignKey('tag.id'))
     preparing_time = Column(Integer)
     cooking_time = Column(Integer)
     waiting_time = Column(Integer)
@@ -39,12 +39,4 @@ class Tag(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     user_id = Column(ForeignKey('users.id'))
-    recipe = relationship('Recipe', secondary='recipe_tag', back_populates='tag')
-
-
-class RecipeTag(Base):
-    __tablename__ = 'recipe_tag'
-
-    id = Column(Integer, primary_key=True)
-    recipe_id = Column(ForeignKey('recipe.id'), nullable=False)
-    tag_id = Column(ForeignKey('tag.id'), nullable=False)
+    recipe = relationship('Recipe', backref='tag')

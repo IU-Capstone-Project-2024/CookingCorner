@@ -7,6 +7,7 @@ class UserSchema(BaseModel):
     name: str | None = None
     surname: str | None = None
     cooking_experience: int | None = None
+    image_path: str | None = None
 
     class Config:
         orm_mode = True

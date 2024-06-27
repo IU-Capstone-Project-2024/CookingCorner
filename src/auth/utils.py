@@ -36,9 +36,10 @@ async def create_user(db: AsyncSession, user: UserCreate):
 async def authenticate_user(username: str, password: str, db: AsyncSession):
     query = select(User).where(User.username == username)
     user = await db.execute(query)
-    user = user.first()[0]
-    if not user:
+    user = user.first()
+    if user is None:
         return False
+    user = user[0]
     if not pwd_context.verify(password, user.hashed_password):
         return False
     return user
