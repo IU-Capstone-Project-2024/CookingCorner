@@ -24,9 +24,21 @@ async def get_tag(db: AsyncSession, user_id: int, tag_name: str) -> Tag | None:
     return tag
 
 
-async def check_recipe_exists(db: AsyncSession, recipe_id: int) -> bool:
-    query = select(Recipe).where(Recipe.id == recipe_id)
+async def check_recipe_exists(db: AsyncSession, recipe_id: int, user_id: int | None = None) -> bool:
+    if user_id is not None:
+        query = select(Recipe).where(Recipe.id == recipe_id).where(Recipe.user_id == user_id)
+    else:
+        query = select(Recipe).where(Recipe.id == recipe_id)
     recipe = await db.execute(query)
     if recipe.first() is None:
         return False
     return True
+
+
+async def get_recipe(db: AsyncSession, user_id: int, recipe_id: int) -> Recipe | None:
+    query = select(Recipe).where(Recipe.id == recipe_id).where(Recipe.user_id == user_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()
+    if recipe is None:
+        return
+    return recipe[0]
