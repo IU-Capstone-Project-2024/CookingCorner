@@ -1,4 +1,4 @@
-import { Recipe } from "@/typings/types";
+import { Recipe } from "@/types/types";
 import RecipeTitle from "./recipe-card-title";
 import RecipeDescription from "./recipe-card-description";
 import { Button } from "../ui/button";
@@ -14,7 +14,7 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
 
   return (
     <div
-      className="flex min-h-64 max-w-44 flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
+      className="flex min-h-64 max-w-44 cursor-pointer flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img

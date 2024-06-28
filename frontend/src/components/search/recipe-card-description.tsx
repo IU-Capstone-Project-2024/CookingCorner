@@ -1,4 +1,4 @@
-import { User } from "@/typings/types";
+import { User } from "@/types/types";
 import { memo } from "react";
 import { FaStar, FaClock, FaUser } from "react-icons/fa6";
 

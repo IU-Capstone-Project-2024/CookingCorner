@@ -2,7 +2,7 @@ import Settings from "@/components/home/settings";
 import RecipeCard from "@/components/search/recipe-card";
 import SearchBar from "@/components/search-bar";
 import { addFavouriteRecipe, getMyRecipes } from "@/lib/utils";
-import { Recipe } from "@/typings/types";
+import { Recipe } from "@/types/types";
 import { memo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
@@ -21,7 +21,7 @@ const Home = memo(() => {
   const [search, setSearch] = useState("");
 
   return (
-    <section className="flex flex-col items-center gap-2">
+    <section className="container flex flex-col items-center gap-2 p-2">
       <SearchBar setSearch={setSearch} />
       <Settings />
       <div className="grid grid-cols-2 gap-2">

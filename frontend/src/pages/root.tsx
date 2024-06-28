@@ -1,11 +1,14 @@
 import RootLayout from "@/components/root-layout";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const Root = () => {
-  return (
+  const auth = true;
+  return auth ? (
     <RootLayout>
       <Outlet />
     </RootLayout>
+  ) : (
+    <Navigate to="/sign-in" />
   );
 };
 

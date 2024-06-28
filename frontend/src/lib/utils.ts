@@ -1,4 +1,4 @@
-import { Recipe, RecipeResponse, User } from "@/typings/types"
+import { Recipe, RecipeResponse, User } from "@/types/types"
 import { SignInFields } from "@/schemas/sign-in.schema"
 import { SignUpFields } from "@/schemas/sign-up.schema"
 import axios from "axios"
@@ -213,28 +213,46 @@ export async function getRecipe(id: number) {
         email: "jdavid@gmail.com",
         experience: 3,
       },
-      cookingTime: 20,
+      cookingTime: 25,
       preparationTime: 5,
       portions: 5,
       rating: 4.5,
       title: "Boiled shrimps ",
       favourite: true,
       starred: false,
+      reviews: 15,
       category: "warm_dishes",
+      ingredients: [
+        {
+          ingredientNumber: 1,
+          img: "image2.png",
+          title: "text"
+        },
+        {
+          ingredientNumber: 2,
+          img: "image2.png",
+          title: "text"
+        },
+        {
+          ingredientNumber: 3,
+          img: "image2.png",
+          title: "text"
+        }
+      ],
       steps: [
         {
-          step_number: 1,
-          step_img: "image.png",
+          stepNumber: 1,
+          img: "image2.png",
+          description: "TextTextTextTextTextTextText"
+        },
+        {
+          stepNumber: 2,
+          img: "image2.png",
           description: "TextTextTextTextTextTextTextTextText"
         },
         {
-          step_number: 2,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText"
-        },
-        {
-          step_number: 3,
-          step_img: "image.png",
+          stepNumber: 3,
+          img: "image2.png",
           description: "TextTextTextTextTextTextTextTextText"
         }
       ]

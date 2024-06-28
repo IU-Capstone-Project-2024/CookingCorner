@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default: "bg-mainBlack text-white hover:bg-mainBlack/90 font-inter",
         recipeCard:
           "border-[3px] border-mainBlack font-inter font-semibold drop-shadow-xl bg-primary",
-        icon: "rounded-full border-2 border-mainBlack p-1 drop-shadow-xl",
+        icon: "rounded-full border-2 border-mainBlack p-1",
       },
       size: {
         default: "h-10 px-4 py-2",

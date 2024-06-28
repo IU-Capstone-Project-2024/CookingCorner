@@ -1,7 +1,16 @@
-import React from "react";
+import { Button } from "../ui/button";
 
-const RecipeSwitchButton = () => {
-  return <div>RecipeSwitchButton</div>;
+interface RecipeSwitchButtonProps {
+  setIsSteps: (value: boolean) => void;
+}
+
+const RecipeSwitchButton = ({ setIsSteps }: RecipeSwitchButtonProps) => {
+  return (
+    <div className="space-x-2">
+      <Button onClick={() => setIsSteps(true)}>Cooking steps</Button>
+      <Button onClick={() => setIsSteps(false)}>Ingredients</Button>
+    </div>
+  );
 };
 
 export default RecipeSwitchButton;

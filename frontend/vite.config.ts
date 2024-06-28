@@ -14,6 +14,9 @@ export default defineConfig(({ command, mode }) => {
     },
     define: {
       __APP_ENV__: JSON.stringify(env.APP_ENV)
+    },
+    server: {
+      open: "http://127.0.0.1:5173/sign-in"
     }
   }
 })

@@ -1,7 +1,7 @@
 import RecipeCard from "@/components/search/recipe-card";
 import Title from "@/components/title";
 import { addRecipe, getRecipes } from "@/lib/utils";
-import { Recipe, RecipeResponse } from "@/typings/types";
+import { Recipe, RecipeResponse } from "@/types/types";
 import { useLoaderData } from "react-router-dom";
 
 export async function action(recipe: Recipe) {
@@ -18,7 +18,7 @@ const Search = () => {
   const { lastRecipes, recommendedRecipes } = useLoaderData() as RecipeResponse;
 
   return (
-    <section className="flex flex-col gap-8">
+    <section className="container flex flex-col gap-8">
       <div className="flex flex-col items-center gap-4">
         <Title className="mx-auto">Last recipes</Title>
         <div className="grid grid-cols-2 gap-2">

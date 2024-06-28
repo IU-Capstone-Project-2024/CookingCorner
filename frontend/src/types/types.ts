@@ -12,8 +12,8 @@ export type Page = {
 }
 
 export type Step = {
-  step_number: number;
-  step_img: string;
+  stepNumber: number;
+  img: string;
   description: string;
 }
 
@@ -29,9 +29,17 @@ export type Recipe = {
   author: User;
   favourite: boolean;
   starred: boolean;
+  reviews: number;
   category: Category;
-  steps: Step[],
+  steps: Step[];
+  ingredients: Ingredient[];
   id: number;
+}
+
+export type Ingredient = {
+  ingredientNumber: number;
+  img: string | null;
+  title: string;
 }
 
 export type User = {
