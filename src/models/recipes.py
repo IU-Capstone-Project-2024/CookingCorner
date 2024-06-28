@@ -8,7 +8,7 @@ class Recipe(Base):
     __tablename__ = 'recipe'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(length=200), unique=True, nullable=False)
+    name = Column(String(length=200), nullable=False)
     description = Column(Text, nullable=False)
     icon_path = Column(String)
     rating = Column(Float)
