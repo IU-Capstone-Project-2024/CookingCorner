@@ -1,11 +1,10 @@
 import { Recipe, RecipeResponse, User } from "@/types/types";
-import { SignInFields } from "@/schemas/sign-in.schema";
 import { SignUpFields } from "@/schemas/sign-up.schema";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const BASE_URL = "http://localhost:8000/";
+const BASE_URL = "http://158.160.136.151:8000/";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -268,6 +267,9 @@ function getAccessTokenFromCookies() {
 
 export const API = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
 });
 
 API.interceptors.request.use((config) => {

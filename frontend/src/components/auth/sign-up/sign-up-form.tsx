@@ -15,7 +15,7 @@ const SignUpForm = () => {
     mode: "onChange",
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
-      login: "",
+      username: "",
       password: "",
       cpassword: "",
     },
@@ -24,8 +24,8 @@ const SignUpForm = () => {
   const registerMutation = useRegister();
 
   const processSignUp: SubmitHandler<SignUpFields> = (data) => {
-    const { login, password } = data;
-    registerMutation.mutate({ login, password });
+    const { username, password } = data;
+    registerMutation.mutate({ username, password });
     reset();
   };
 
@@ -35,12 +35,12 @@ const SignUpForm = () => {
       className="flex w-full max-w-[360px] flex-col gap-4 px-4"
     >
       <FormInput
-        id="login"
-        name="login"
+        id="username"
+        name="username"
         type="text"
         register={register}
-        label="Username"
-        error={errors.login}
+        label="Login"
+        error={errors.username}
       />
       <FormInput
         id="password"

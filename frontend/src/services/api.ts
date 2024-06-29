@@ -7,6 +7,9 @@ export const getMyRecipes = async () => {
   );
 };
 
-export const register = async (data: { login: string; password: string }) => {
+export const register = async (data: {
+  username: string;
+  password: string;
+}) => {
   return await API.post("/register", data);
 };
