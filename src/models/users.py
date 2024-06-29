@@ -14,5 +14,6 @@ class User(Base):
     name = Column(String)
     surname = Column(String)
     cooking_experience = Column(Integer)
+    image_path = Column(String)
     tag = relationship('Tag', backref="users")
     recipe = relationship('Recipe', backref="users")
