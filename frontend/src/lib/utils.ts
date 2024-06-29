@@ -267,7 +267,6 @@ function getAccessTokenFromCookies() {
 }
 
 export const API = axios.create({
-  withCredentials: true,
   baseURL: BASE_URL,
 });
 
