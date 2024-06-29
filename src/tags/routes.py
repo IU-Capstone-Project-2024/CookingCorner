@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.utils import get_current_user
 from src.database import get_async_session
-from src.models import User, Tag
+from src.models import User, Tag, Recipe
 from src.tags.schemas import TagSchema, TagUpdateSchema
 
 tag_router = APIRouter(prefix="/tags", tags=["Tag"])
@@ -52,6 +52,15 @@ async def delete_tag(body: TagSchema, db: AsyncSession = Depends(get_async_sessi
     tag = await db.execute(query)
     if tag.first() is None:
         return HTTPException(status_code=404, detail="Tag not found")
+    query = select(Recipe).where(Tag.name == body.name)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    if recipes is not None:
+        recipes_id = [recipe[0].id for recipe in recipes]
+        for recipe_id in recipes_id:
+            query = update(Recipe).where(Recipe.id == recipe_id).values(tag_id=None)
+            await db.execute(query)
+        await db.commit()
     query = delete(Tag).where(Tag.user_id == current_user.id).where(Tag.name == body.name)
     await db.execute(query)
     await db.commit()
