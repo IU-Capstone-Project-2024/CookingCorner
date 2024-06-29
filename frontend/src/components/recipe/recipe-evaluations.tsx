@@ -14,12 +14,12 @@ const RecipeEvaluations = ({
 }: RecipeEvaluationsProps) => {
   return (
     <div className="flex items-center justify-between gap-2">
-      <div className="flex items-center gap-1 font-bold">
+      <div className="flex items-center gap-1 font-semibold">
         <FaStar size={20} className="text-hover" />
         {rating}
       </div>
       <p className="text-sm font-light">{reviews}k reviews</p>
-      <div className="font-bold">Author: {author.name}</div>
+      <div className="font-semibold">Author: {author.name}</div>
     </div>
   );
 };

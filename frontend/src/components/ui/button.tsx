@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -13,6 +12,7 @@ const buttonVariants = cva(
         recipeCard:
           "border-[3px] border-mainBlack font-inter font-semibold drop-shadow-xl bg-primary",
         icon: "rounded-full border-2 border-mainBlack p-1",
+        registration: "bg-mainBlack text-white rounded-md drop-shadow-xl",
       },
       size: {
         default: "h-10 px-4 py-2",

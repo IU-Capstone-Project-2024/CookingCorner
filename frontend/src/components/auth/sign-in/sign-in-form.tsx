@@ -3,6 +3,7 @@ import { Button } from "../../ui/button";
 import FormInput from "../../input";
 import { SignInFields, SignInSchema } from "@/schemas/sign-in.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLogin } from "@/services/mutations";
 
 const SignInForm = () => {
   const {
@@ -14,12 +15,15 @@ const SignInForm = () => {
     mode: "onChange",
     resolver: zodResolver(SignInSchema),
     defaultValues: {
-      login: "",
+      username: "",
       password: "",
     },
   });
 
+  const loginMutation = useLogin();
+
   const processSignIn: SubmitHandler<SignInFields> = (data) => {
+    loginMutation.mutate(data);
     reset();
   };
 
@@ -30,11 +34,11 @@ const SignInForm = () => {
     >
       <FormInput
         id="login"
-        name="login"
+        name="username"
         type="text"
         register={register}
         label="Login"
-        error={errors.login}
+        error={errors.username}
       />
       <FormInput
         id="password"
@@ -44,8 +48,13 @@ const SignInForm = () => {
         label="Password"
         error={errors.password}
       />
-      <Button type="submit" className="mt-4">
-        Sign in
+      <Button
+        type="submit"
+        className="mt-4"
+        disabled={loginMutation.isPending}
+        variant={"registration"}
+      >
+        {loginMutation.isPending ? "Logging in" : "Sign in"}
       </Button>
     </form>
   );

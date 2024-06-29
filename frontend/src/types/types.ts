@@ -43,12 +43,12 @@ export type Ingredient = {
 };
 
 export type User = {
-  img: string | null;
+  image_path: string | null;
   username: string;
   name: string | null;
   surname: string | null;
   email: string | null;
-  experience: number | null;
+  cooking_experience: number | null;
 };
 
 export type RecipeResponse = {

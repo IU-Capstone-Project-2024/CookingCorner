@@ -1,9 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMyRecipes } from "./api";
+import { getMe, getMyRecipes } from "./api";
 
 export function useMyRecipes() {
   return useQuery({
     queryKey: ["my-recipes"],
     queryFn: getMyRecipes,
   });
+}
+
+export function useAuth() {
+  return useQuery({
+    queryKey: ['userMe'],
+    queryFn: getMe,
+  })
 }

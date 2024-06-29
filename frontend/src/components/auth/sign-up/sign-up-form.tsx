@@ -62,8 +62,9 @@ const SignUpForm = () => {
         type="submit"
         className="mt-4"
         disabled={registerMutation.isPending}
+        variant={"registration"}
       >
-        Sign up
+        {registerMutation.isPending ? "Registering" : "Sign up"}
       </Button>
     </form>
   );

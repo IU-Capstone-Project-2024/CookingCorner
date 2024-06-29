@@ -1,18 +1,7 @@
 import RecipeCard from "@/components/search/recipe-card";
 import Title from "@/components/title";
-import { addRecipe, getRecipes } from "@/lib/utils";
 import { Recipe, RecipeResponse } from "@/types/types";
 import { useLoaderData } from "react-router-dom";
-
-export async function action(recipe: Recipe) {
-  const recipes = await addRecipe(recipe);
-  return recipes;
-}
-
-export async function loader() {
-  const recipes = await getRecipes();
-  return recipes;
-}
 
 const Search = () => {
   const { lastRecipes, recommendedRecipes } = useLoaderData() as RecipeResponse;
@@ -28,11 +17,7 @@ const Search = () => {
             </p>
           ) : (
             lastRecipes.map((recipe, idx) => (
-              <RecipeCard
-                key={`last-recipe-${idx}`}
-                recipe={recipe}
-                action={action}
-              />
+              <RecipeCard key={`last-recipe-${idx}`} recipe={recipe} />
             ))
           )}
         </div>
@@ -41,11 +26,7 @@ const Search = () => {
         <Title className="mx-auto">Recommended</Title>
         <div className="grid grid-cols-2 gap-2">
           {recommendedRecipes.map((recipe, idx) => (
-            <RecipeCard
-              key={`recommended-recipe-${idx}`}
-              recipe={recipe}
-              action={action}
-            />
+            <RecipeCard key={`recommended-recipe-${idx}`} recipe={recipe} />
           ))}
         </div>
       </div>

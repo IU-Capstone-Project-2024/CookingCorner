@@ -17,9 +17,9 @@ const ProfileDescription = ({ data }: ProfileDescriptionProps) => {
       {data.email !== null && (
         <p className="truncate text-wrap">Email: {data.email}</p>
       )}
-      {data.experience !== null && (
+      {data.cooking_experience !== null && (
         <p className="truncate text-wrap">
-          Cooking experience: {data.experience} years
+          Cooking experience: {data.cooking_experience} years
         </p>
       )}
     </section>

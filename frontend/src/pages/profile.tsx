@@ -1,22 +1,23 @@
 import ProfileDescription from "@/components/profile/profile-description";
 import ProfileImage from "@/components/profile/profile-image";
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/lib/utils";
-import { User } from "@/types/types";
-import { useLoaderData } from "react-router-dom";
-
-export async function loader() {
-  const user = await getUser();
-  return user;
-}
+import { useAuth } from "@/services/queries";
 
 const Profile = () => {
-  const { img, ...data } = useLoaderData() as User;
+  const data = useAuth();
+
+  if (data.isPending) {
+    return <div>Loading data</div>;
+  }
+
+  if (data.isError) {
+    return <div>Error occured</div>;
+  }
 
   return (
     <section className="container flex flex-col items-center justify-between gap-4">
-      <ProfileImage img={img} />
-      <ProfileDescription data={data} />
+      <ProfileImage img={data.data.image_path} />
+      <ProfileDescription data={data.data} />
       <Button variant="recipeCard">Edit</Button>
     </section>
   );

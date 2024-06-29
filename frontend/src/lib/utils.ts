@@ -4,7 +4,7 @@ import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const BASE_URL = "http://158.160.136.151:8000/";
+const BASE_URL = "http://158.160.136.151:8000";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -253,28 +253,13 @@ export async function getUser() {
   return userData;
 }
 
-function getAccessTokenFromCookies() {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === "token") {
-      return value;
-    }
-  }
-
-  return "";
-}
-
 export const API = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
 });
 
 API.interceptors.request.use((config) => {
-  const accessToken = getAccessTokenFromCookies();
+  const accessToken = localStorage.getItem("accessToken");
 
-  config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : "";
+  config.headers.Authorization = accessToken ? `Bearer ${JSON.parse(accessToken)}` : "";
   return config;
 });
