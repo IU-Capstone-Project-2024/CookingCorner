@@ -86,9 +86,8 @@ async def get_current_user(db: AsyncSession = Depends(get_async_session), author
         if username is None:
             raise HTTPException(status_code=403, detail="Token is invalid or expired")
         query = select(User).where(User.username == username)
-        # db: AsyncSession = get_async_session()
         user = await db.execute(query)
         user = user.first()[0]
         return user
-    except HTTPException:
+    except Exception:
         raise HTTPException(status_code=403, detail="Token is invalid or expired")
