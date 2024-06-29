@@ -1,31 +1,27 @@
 import Settings from "@/components/home/settings";
 import RecipeCard from "@/components/search/recipe-card";
 import SearchBar from "@/components/search-bar";
-import { addFavouriteRecipe, getMyRecipes } from "@/lib/utils";
-import { Recipe } from "@/types/types";
 import { memo, useState } from "react";
-import { useLoaderData } from "react-router-dom";
-
-export async function action(recipe: Recipe) {
-  const recipes = await addFavouriteRecipe(recipe);
-  return { recipes };
-}
-
-export async function loader() {
-  const recipes = await getMyRecipes();
-  return recipes;
-}
+import { useMyRecipes } from "@/services/queries";
 
 const Home = memo(() => {
-  const recipes = useLoaderData() as Recipe[];
+  const recipes = useMyRecipes();
   const [search, setSearch] = useState("");
+
+  if (recipes.isError) {
+    return <div>Something went wrong!</div>;
+  }
+
+  if (recipes.isPending) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="container flex flex-col items-center gap-2 p-2">
       <SearchBar setSearch={setSearch} />
       <Settings />
       <div className="grid grid-cols-2 gap-2">
-        {recipes
+        {/* {recipes
           .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
           .map((recipe, index) => (
             <RecipeCard
@@ -33,7 +29,7 @@ const Home = memo(() => {
               recipe={recipe}
               action={action}
             />
-          ))}
+          ))} */}
       </div>
     </section>
   );

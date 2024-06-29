@@ -5,6 +5,7 @@ import RecipeNavigation from "@/components/recipe/recipe-navigation";
 import RecipeDescription from "@/components/recipe/recipe-description";
 import RecipeSteps from "@/components/recipe/recipe-steps";
 import { useState } from "react";
+import { Tabs } from "@/components/ui/tabs";
 
 export async function action(recipe: Recipe) {
   await addFavouriteRecipe(recipe);
@@ -26,8 +27,10 @@ const RecipePage = () => {
         src={recipe.img === null ? "no_image.png" : "/".concat(recipe.img)}
         className="max-h-[200px] w-full max-w-[335px] object-cover"
       />
-      <RecipeDescription recipe={recipe} setIsSteps={setIsSteps} />
-      <RecipeSteps isSteps={isSteps} recipe={recipe} />
+      <Tabs defaultValue="steps" className="font-inter">
+        <RecipeDescription recipe={recipe} setIsSteps={setIsSteps} />
+        <RecipeSteps isSteps={isSteps} recipe={recipe} />
+      </Tabs>
     </section>
   );
 };

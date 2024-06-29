@@ -6,18 +6,18 @@ export type FormData = {
 };
 
 export type Page = {
-  icon: IconType,
+  icon: IconType;
   description: string;
   path: string;
-}
+};
 
 export type Step = {
   stepNumber: number;
   img: string;
   description: string;
-}
+};
 
-export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert"
+export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert";
 
 export type Recipe = {
   img: string | null;
@@ -34,13 +34,13 @@ export type Recipe = {
   steps: Step[];
   ingredients: Ingredient[];
   id: number;
-}
+};
 
 export type Ingredient = {
   ingredientNumber: number;
   img: string | null;
   title: string;
-}
+};
 
 export type User = {
   img: string | null;
@@ -49,9 +49,9 @@ export type User = {
   surname: string | null;
   email: string | null;
   experience: number | null;
-}
+};
 
 export type RecipeResponse = {
-  lastRecipes: Recipe[],
-  recommendedRecipes: Recipe[]
-}
+  lastRecipes: Recipe[];
+  recommendedRecipes: Recipe[];
+};

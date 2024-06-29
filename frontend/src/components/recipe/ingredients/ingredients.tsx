@@ -6,7 +6,7 @@ interface IngredientsProps {
 }
 const Ingredients = ({ ingredients }: IngredientsProps) => {
   return (
-    <>
+    <div className="space-y-2">
       {ingredients.map((ingredient) => (
         <IngredientCard
           key={`ingredient-card-${ingredient.ingredientNumber}`}
@@ -15,7 +15,7 @@ const Ingredients = ({ ingredients }: IngredientsProps) => {
           img={ingredient.img}
         />
       ))}
-    </>
+    </div>
   );
 };
 

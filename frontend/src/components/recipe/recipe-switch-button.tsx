@@ -1,15 +1,13 @@
-import { Button } from "../ui/button";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface RecipeSwitchButtonProps {
-  setIsSteps: (value: boolean) => void;
-}
-
-const RecipeSwitchButton = ({ setIsSteps }: RecipeSwitchButtonProps) => {
+const RecipeSwitchButton = () => {
   return (
-    <div className="space-x-2">
-      <Button onClick={() => setIsSteps(true)}>Cooking steps</Button>
-      <Button onClick={() => setIsSteps(false)}>Ingredients</Button>
-    </div>
+    <>
+      <TabsList className="w-full rounded-full border-[3px] border-mainBlack bg-primary">
+        <TabsTrigger value="steps">Cooking steps</TabsTrigger>
+        <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
+      </TabsList>
+    </>
   );
 };
 

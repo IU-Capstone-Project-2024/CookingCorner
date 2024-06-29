@@ -7,7 +7,6 @@ import Profile from "@/pages/profile";
 import Search from "@/pages/search";
 import Home from "@/pages/home";
 import { loader as searchLoader, action as searchAction } from "@/pages/search";
-import { loader as homeLoader, action as homeAction } from "@/pages/home";
 import { action as signUpAction } from "@/pages/sign-up";
 import { loader as profileLoader } from "@/pages/profile";
 import { loader as recipeLoader } from "@/pages/recipe";
@@ -22,8 +21,6 @@ const routes: RouteObject[] = [
       {
         path: "home",
         element: <Home />,
-        loader: homeLoader,
-        action: homeAction,
       },
       {
         path: "recipes",

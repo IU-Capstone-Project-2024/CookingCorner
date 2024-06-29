@@ -2,26 +2,26 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
     fontFamily: {
-      "inter": ["Inter"],
+      inter: ["Inter"],
     },
     container: {
       center: true,
       screens: {
-        "sm": "390px",
-        "md": "764px",
+        sm: "390px",
+        md: "764px",
       },
     },
     extend: {
       dropShadow: {
-        '3xl': '0 8px 8px 0 rgba(0, 0, 0, 1)',
+        "3xl": "0 8px 8px 0 rgba(0, 0, 0, 1)",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -38,6 +38,7 @@ module.exports = {
         hover: {
           DEFAULT: "#FE7F00",
           secondary: "#FFDFBE",
+          switch: "#FFBA76",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -82,4 +83,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

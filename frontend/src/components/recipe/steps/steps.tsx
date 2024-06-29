@@ -7,7 +7,7 @@ interface StepsProps {
 
 const Steps = ({ steps }: StepsProps) => {
   return (
-    <>
+    <div className="space-y-2">
       {steps.map((step) => (
         <StepCard
           key={`step-card-${step.stepNumber}`}
@@ -16,7 +16,7 @@ const Steps = ({ steps }: StepsProps) => {
           description={step.description}
         />
       ))}
-    </>
+    </div>
   );
 };
 

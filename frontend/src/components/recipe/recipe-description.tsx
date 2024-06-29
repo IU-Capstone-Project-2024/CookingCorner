@@ -10,27 +10,25 @@ interface RecipeDescriptionProps {
   setIsSteps: (value: boolean) => void;
 }
 
-const RecipeDescription = memo(
-  ({ recipe, setIsSteps }: RecipeDescriptionProps) => {
-    return (
-      <div className="sticky top-12 flex w-full flex-col gap-4 bg-primary p-2 text-left">
-        <RecipeTitle>{recipe.title}</RecipeTitle>
-        <RecipeEvaluations
-          rating={recipe.rating}
-          author={recipe.author}
-          reviews={recipe.reviews}
-        />
-        <RecipeTime
-          cookingTime={recipe.cookingTime}
-          preparationTime={recipe.preparationTime}
-          portions={recipe.portions}
-        />
-        <div className="text-center">
-          <RecipeSwitchButton setIsSteps={setIsSteps} />
-        </div>
+const RecipeDescription = memo(({ recipe }: RecipeDescriptionProps) => {
+  return (
+    <div className="sticky top-12 flex w-full flex-col gap-4 bg-primary p-2 text-left">
+      <RecipeTitle>{recipe.title}</RecipeTitle>
+      <RecipeEvaluations
+        rating={recipe.rating}
+        author={recipe.author}
+        reviews={recipe.reviews}
+      />
+      <RecipeTime
+        cookingTime={recipe.cookingTime}
+        preparationTime={recipe.preparationTime}
+        portions={recipe.portions}
+      />
+      <div className="text-center">
+        <RecipeSwitchButton />
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default RecipeDescription;
