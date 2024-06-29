@@ -222,7 +222,7 @@ async def publish(recipe_id: int, db: AsyncSession = Depends(get_async_session),
     return {"status": "success"}
 
 
-@recipe_router.put("/add_to_favourites")
+@recipe_router.post("/add_to_favourites")
 async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                             current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
@@ -235,7 +235,7 @@ async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.put("/remove_from_favourites")
+@recipe_router.delete("/remove_from_favourites")
 async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
