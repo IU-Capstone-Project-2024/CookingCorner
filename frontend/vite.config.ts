@@ -1,9 +1,9 @@
-import path from "path"
-import react from "@vitejs/plugin-react-swc"
-import { defineConfig, loadEnv } from "vite"
+import path from "path";
+import react from "@vitejs/plugin-react-swc";
+import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [react()],
@@ -13,10 +13,13 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     define: {
-      __APP_ENV__: JSON.stringify(env.APP_ENV)
+      __APP_ENV__: JSON.stringify(env.APP_ENV),
     },
     server: {
-      open: "http://127.0.0.1:5173/sign-in"
-    }
-  }
-})
+      open: "http://127.0.0.1:5173/sign-in",
+      proxy: {
+        "/api": "http://localhost:8000",
+      },
+    },
+  };
+});

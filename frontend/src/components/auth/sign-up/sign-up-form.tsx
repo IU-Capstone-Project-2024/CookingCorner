@@ -1,17 +1,15 @@
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import FormInput from "../../input";
 import { Button } from "../../ui/button";
 import { SignUpFields, SignUpSchema } from "@/schemas/sign-up.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegister } from "@/services/mutations";
 
-interface SignUpFormProps {
-  action: (data: SignUpFields) => void;
-}
-
-const SignUpForm = ({ action }: SignUpFormProps) => {
+const SignUpForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<SignUpFields>({
     mode: "onChange",
@@ -23,9 +21,17 @@ const SignUpForm = ({ action }: SignUpFormProps) => {
     },
   });
 
+  const registerMutation = useRegister();
+
+  const processSignUp: SubmitHandler<SignUpFields> = (data) => {
+    const { login, password } = data;
+    registerMutation.mutate({ login, password });
+    reset();
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(action)}
+      onSubmit={handleSubmit(processSignUp)}
       className="flex w-full max-w-[360px] flex-col gap-4 px-4"
     >
       <FormInput
@@ -52,7 +58,11 @@ const SignUpForm = ({ action }: SignUpFormProps) => {
         label="Confirm password"
         error={errors.cpassword}
       />
-      <Button type="submit" className="mt-4">
+      <Button
+        type="submit"
+        className="mt-4"
+        disabled={registerMutation.isPending}
+      >
         Sign up
       </Button>
     </form>

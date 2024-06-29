@@ -20,7 +20,6 @@ const SignInForm = () => {
   });
 
   const processSignIn: SubmitHandler<SignInFields> = (data) => {
-    console.log(data);
     reset();
   };
 
