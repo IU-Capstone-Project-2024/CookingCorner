@@ -67,16 +67,15 @@ async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_
             user = await db.execute(query)
             if user.first() is not None:
                 raise HTTPException(status_code=400, detail="Username already exists")
-    username = body.username if body.username else current_user.username
     query = update(User).where(User.id == current_user.id).values(
-        email=body.email,
-        username=username,
-        name=body.name,
-        surname=body.surname,
-        cooking_experience=body.cooking_experience,
-        image_path=body.image_path
+        email=body.email if body.email is not None else current_user.email,
+        username=body.username if body.username is not None else current_user.username,
+        name=body.name if body.name is not None else current_user.name,
+        surname=body.surname if body.name is not None else current_user.surname,
+        cooking_experience=body.cooking_experience if body.cooking_experience is not None
+        else current_user.cooking_experience,
+        image_path=body.image_path if body.image_path is not None else current_user.image_path,
     )
     await db.execute(query)
     await db.commit()
     return {"status": "success"}
-
