@@ -34,6 +34,7 @@ module.exports = {
         },
         mainBlack: {
           DEFAULT: "#2B2B2B",
+          secondary: "#50555C",
         },
         hover: {
           DEFAULT: "#FE7F00",

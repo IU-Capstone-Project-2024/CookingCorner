@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 interface RecipeCardProps {
   recipe: Recipe;
-  action: (recipe: Recipe) => void;
+  action?: (recipe: Recipe) => void;
 }
 
 const RecipeCard = ({ recipe, action }: RecipeCardProps) => {

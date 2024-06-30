@@ -16,10 +16,10 @@ const SearchBar = ({ setSearch }: SearchBarProps) => {
 
   return (
     <section
-      className="mt-2 flex h-8 w-80 items-center gap-2 rounded-lg border-2 border-mainBlack px-2"
+      className="inline-flex h-8 w-80 items-center gap-2 rounded-lg border-2 border-mainBlack px-2"
       onClick={handleClick}
     >
-      <FaMagnifyingGlass />
+      <FaMagnifyingGlass size={13} />
       <input
         ref={ref}
         type="text"

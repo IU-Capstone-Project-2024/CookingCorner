@@ -4,7 +4,7 @@ import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const BASE_URL = "http://158.160.136.151:8000";
+const BASE_URL = "http://158.160.134.200:8000";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,12 +24,12 @@ export async function getRecipe(id: number) {
     id: 1,
     img: "image2.png",
     author: {
-      img: "no_image.png",
+      image_path: "no_image.png",
       username: "dsae",
       name: "Jack",
       surname: "Davidson",
       email: "jdavid@gmail.com",
-      experience: 3,
+      cooking_experience: 3,
     },
     cookingTime: 25,
     preparationTime: 5,
@@ -191,45 +191,7 @@ export async function getRecipes(): Promise<RecipeResponse> {
     },
   ];
 
-  const recommendedRecipes: Recipe[] = [
-    {
-      id: 4,
-      img: "image.png",
-      author: {
-        img: "no_image.png",
-        username: "dsae",
-        name: "Jack",
-        surname: "Davidson",
-        email: "jdavid@gmail.com",
-        experience: 3,
-      },
-      cookingTime: 20,
-      rating: 4.5,
-      title: "Boiled shrimps",
-      favourite: false,
-      starred: false,
-      category: "warm_dishes",
-      steps: [
-        {
-          step_number: 1,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 2,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 3,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-      ],
-    },
-  ];
-
-  return { lastRecipes, recommendedRecipes };
+  return { lastRecipes };
 }
 
 export async function register(data: SignUpFields): Promise<void> {

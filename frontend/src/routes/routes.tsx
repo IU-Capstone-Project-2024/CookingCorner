@@ -7,6 +7,7 @@ import Profile from "@/pages/profile";
 import Search from "@/pages/search";
 import Home from "@/pages/home";
 import Recipe from "@/pages/recipe";
+import CreateRecipe from "@/pages/create-recipe";
 
 const routes: RouteObject[] = [
   {
@@ -25,6 +26,10 @@ const routes: RouteObject[] = [
       {
         path: "recipes/:recipeId",
         element: <Recipe />,
+      },
+      {
+        path: "recipes/create",
+        element: <CreateRecipe />,
       },
       {
         path: "profile",

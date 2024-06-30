@@ -1,37 +1,37 @@
-import Settings from "@/components/home/settings";
 import RecipeCard from "@/components/search/recipe-card";
-import SearchBar from "@/components/search-bar";
 import { memo, useState } from "react";
 import { useMyRecipes } from "@/services/queries";
+import HomeLayout from "@/components/home/home-layout";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Home = memo(() => {
   const recipes = useMyRecipes();
   const [search, setSearch] = useState("");
 
   if (recipes.isError) {
-    return <div>Something went wrong!</div>;
+    return (
+      <HomeLayout recipes={recipes} setSearch={setSearch}>
+        <p className="flex font-semibold">Something went wrong</p>
+      </HomeLayout>
+    );
   }
 
   if (recipes.isPending) {
-    return <div>Loading...</div>;
+    return (
+      <HomeLayout recipes={recipes} setSearch={setSearch}>
+        <Skeleton className="h-64 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
+      </HomeLayout>
+    );
   }
 
   return (
-    <section className="container flex flex-col items-center gap-2 p-2">
-      <SearchBar setSearch={setSearch} />
-      <Settings />
-      <div className="grid grid-cols-2 gap-2">
-        {/* {recipes
-          .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
-          .map((recipe, index) => (
-            <RecipeCard
-              key={`favourite-recipe-${index}`}
-              recipe={recipe}
-              action={action}
-            />
-          ))} */}
-      </div>
-    </section>
+    <HomeLayout recipes={recipes} setSearch={setSearch}>
+      {recipes.data
+        .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
+        .map((recipe, index) => (
+          <RecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
+        ))}
+    </HomeLayout>
   );
 });
 

@@ -3,9 +3,7 @@ import { SignInFields } from "@/schemas/sign-in.schema";
 import { Recipe } from "@/types/types";
 
 export const getMyRecipes = async () => {
-  return (await API.get<Recipe[]>("/recipes/get_all")).data.map(
-    (recipe) => recipe,
-  );
+  return (await API.get<Recipe[]>("/recipes/get_my_recipes")).data
 };
 
 export const register = async (data: {
@@ -26,4 +24,8 @@ export const login = async (data: SignInFields) => {
 
 export const getMe = async () => {
   return ((await API.post("/get_User/me")).data)
+}
+
+export const addToFavourites = async (data: Recipe) => {
+  return (await API.post("/recipes/add_to_favourites", data))
 }
