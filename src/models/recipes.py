@@ -47,6 +47,6 @@ class Tag(Base):
     __tablename__ = 'tag'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
     user_id = Column(ForeignKey('users.id'))
     recipe = relationship('Recipe', backref='tag')

@@ -23,6 +23,10 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_async_s
     db_user = await get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    if len(user.username) < 6:
+        raise HTTPException(status_code=400, detail="Username should be at least 6 characters long")
+    if len(user.password) < 6:
+        raise HTTPException(status_code=400, detail="Password should be at least 6 characters long")
     return await create_user(db=db, user=user)
 
 
