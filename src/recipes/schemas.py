@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class RecipeSchema(BaseModel):
+class RecipePaginationSchema(BaseModel):
     id: int
     name: str
     description: str

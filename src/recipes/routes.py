@@ -8,6 +8,7 @@ from src.auth.utils import get_current_user
 from src.database import get_async_session
 from src.models import User, Recipe
 from src.models.recipes import MyRecipe
+from src.recipes.schemas import RecipePaginationSchema
 from src.recipes.utils import get_category, get_tag, check_recipe_exists, get_recipe, check_my_recipe_exists
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 
@@ -27,7 +28,7 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     return recipe[0]
 
 
-@recipe_router.get("/get_all", response_model=Page[RecipeSchema])
+@recipe_router.get("/get_all", response_model=Page[RecipePaginationSchema])
 async def get_all(db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
     query = select(Recipe).where(Recipe.is_private == False)
