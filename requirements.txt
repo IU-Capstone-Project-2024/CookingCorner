@@ -13,3 +13,4 @@ passlib~=1.7.4
 pydantic~=2.7.4
 starlette~=0.37.2
 jose~=1.0.0
+requests==2.31.0
