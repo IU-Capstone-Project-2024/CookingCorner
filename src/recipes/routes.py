@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,12 +26,12 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     return recipe.first()[0]
 
 
-@recipe_router.get("/get_all")
+@recipe_router.get("/get_all", response_model=Page[RecipeSchema])
 async def get_all(db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
     query = select(Recipe).where(Recipe.is_private == False)
-    recipes = await db.execute(query)
-    recipes = [recipe[0] for recipe in recipes]
+    recipes = await paginate(db, query)
+
     return recipes
 
 

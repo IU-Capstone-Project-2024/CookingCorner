@@ -8,8 +8,10 @@ fastapi-cache2
 fastapi-users-db-sqlalchemy
 fastapi_amis_admin
 fastapi_user_auth
+fastapi-pagination==0.12.26
 asyncpg
 passlib~=1.7.4
 pydantic~=2.7.4
+pydantic-settings==2.3.4
 starlette~=0.37.2
 jose~=1.0.0

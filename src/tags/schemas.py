@@ -15,8 +15,8 @@ class RecipeSchema(BaseModel):
     description: str
     icon_path: str | None = None
     rating: float | None = None
-    category_name: str | None = None
-    tag_name: str | None = None
+    category_id: int | None = None
+    tag_id: int | None = None
     preparing_time: int | None = None
     cooking_time: int | None = None
     waiting_time: int | None = None
