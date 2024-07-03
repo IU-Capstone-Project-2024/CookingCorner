@@ -20,20 +20,21 @@ export type Step = {
 export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert";
 
 export type Recipe = {
-  img: string | null;
+  id: number;
   title: string;
+  img: string | null;
+  private: boolean;
   rating: number;
   cookingTime: number;
   preparationTime: number;
   portions: number;
-  author: User;
   favourite: boolean;
   starred: boolean;
   reviews: number;
+  author: User;
   category: Category;
   steps: Step[];
   ingredients: Ingredient[];
-  id: number;
 };
 
 export type Ingredient = {

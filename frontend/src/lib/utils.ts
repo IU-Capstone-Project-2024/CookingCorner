@@ -1,5 +1,4 @@
-import { Recipe, RecipeResponse, User } from "@/types/types";
-import { SignUpFields } from "@/schemas/sign-up.schema";
+import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -10,209 +9,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function addRecipe(recipe: Recipe): Promise<void> {
-  console.log("favourite", recipe);
-}
+export function prepareRecipeData(
+  data: RecipeSchemaFields,
+  file?: File,
+): FormData {
+  const formData = new FormData();
 
-export async function addFavouriteRecipe(recipe: Recipe): Promise<void> {
-  console.log("starred", recipe);
-}
+  if (file) {
+    formData.append("file", file);
+  }
 
-export async function getRecipe(id: number) {
-  console.log(id);
-  const recipe: Recipe = {
-    id: 1,
-    img: "image2.png",
-    author: {
-      image_path: "no_image.png",
-      username: "dsae",
-      name: "Jack",
-      surname: "Davidson",
-      email: "jdavid@gmail.com",
-      cooking_experience: 3,
-    },
-    cookingTime: 25,
-    preparationTime: 5,
-    portions: 5,
-    rating: 4.5,
-    title: "Boiled shrimps ",
-    favourite: true,
-    starred: false,
-    reviews: 15,
-    category: "warm_dishes",
-    ingredients: [
-      {
-        ingredientNumber: 1,
-        img: "image2.png",
-        title: "text",
-      },
-      {
-        ingredientNumber: 2,
-        img: "image2.png",
-        title: "text",
-      },
-      {
-        ingredientNumber: 3,
-        img: "image2.png",
-        title: "text",
-      },
-    ],
-    steps: [
-      {
-        stepNumber: 1,
-        img: "image2.png",
-        description: "TextTextTextTextTextTextText",
-      },
-      {
-        stepNumber: 2,
-        img: "image2.png",
-        description: "TextTextTextTextTextTextTextTextText",
-      },
-      {
-        stepNumber: 3,
-        img: "image2.png",
-        description: "TextTextTextTextTextTextTextTextText",
-      },
-    ],
-  };
+  formData.append("data", JSON.stringify({ ...data, private: true }));
 
-  return recipe;
-}
-
-export async function getRecipes(): Promise<RecipeResponse> {
-  // const lastRecipes = await API.get('/recipes/last') as Recipe[];
-  // const recommendedRecipes = await API.get('/recipes/recommended') as Recipe[];
-
-  const lastRecipes: Recipe[] = [
-    {
-      id: 1,
-      img: "image.png",
-      author: {
-        img: "no_image.png",
-        username: "dsae",
-        name: "Jack",
-        surname: "Davidson",
-        email: "jdavid@gmail.com",
-        experience: 3,
-      },
-      cookingTime: 20,
-      rating: 4.5,
-      title: "Boiled shrimps",
-      favourite: false,
-      starred: false,
-      category: "warm_dishes",
-      steps: [
-        {
-          step_number: 1,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 2,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 3,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-      ],
-    },
-    {
-      id: 2,
-      img: null,
-      author: {
-        img: "no_image.png",
-        username: "ronin",
-        name: "Daniel",
-        surname: "Jordan",
-        email: "djordan@gmail.com",
-        experience: 3,
-      },
-      cookingTime: 35,
-      rating: 4.8,
-      title: "Chicken in soy sauce",
-      favourite: false,
-      starred: false,
-      category: "warm_dishes",
-      steps: [
-        {
-          step_number: 1,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 2,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 3,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-      ],
-    },
-    {
-      id: 3,
-      img: "image.png",
-      author: {
-        img: "no_image.png",
-        username: "ronin",
-        name: "Daniel",
-        surname: "Jordan",
-        email: "djordan@gmail.com",
-        experience: 3,
-      },
-      cookingTime: 35,
-      rating: 4.8,
-      title: "Chicken in soy sauce",
-      favourite: false,
-      starred: false,
-      category: "warm_dishes",
-      steps: [
-        {
-          step_number: 1,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 2,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-        {
-          step_number: 3,
-          step_img: "image.png",
-          description: "TextTextTextTextTextTextTextTextText",
-        },
-      ],
-    },
-  ];
-
-  return { lastRecipes };
-}
-
-export async function register(data: SignUpFields): Promise<void> {
-  await API.post("/register", data)
-    .then((res) => console.log(res))
-    .catch((err) => console.error(err));
-}
-
-export async function getUser() {
-  // const response = await API.post('/get_User/me') as User;
-
-  const userData: User = {
-    img: null,
-    username: "dsae",
-    name: null,
-    surname: "Davidson",
-    email: "jdavid@gmail.com",
-    experience: 3,
-  };
-
-  return userData;
+  return formData;
 }
 
 export const API = axios.create({
@@ -222,6 +31,8 @@ export const API = axios.create({
 API.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("accessToken");
 
-  config.headers.Authorization = accessToken ? `Bearer ${JSON.parse(accessToken)}` : "";
+  config.headers.Authorization = accessToken
+    ? `Bearer ${JSON.parse(accessToken)}`
+    : "";
   return config;
 });

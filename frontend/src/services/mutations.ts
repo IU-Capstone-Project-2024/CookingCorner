@@ -1,8 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { addToFavourites, login, register } from "./api";
+import { addToFavourites, createRecipe, login, register } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { Recipe } from "@/types/types";
+import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -10,13 +11,13 @@ export function useRegister() {
     mutationFn: (data: { username: string; password: string }) =>
       register(data),
 
-    onError: () => {
-      console.log("Error occured");
+    onError: (err) => {
+      console.log(`Error occured while registering. ${err}`);
     },
 
     onSuccess: () => {
-      console.log("Success")
-      navigate("/sign-in")
+      console.log("Successfully signed up");
+      navigate("/sign-in");
     },
   });
 }
@@ -24,33 +25,42 @@ export function useRegister() {
 export function useLogin() {
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: (data: SignInFields) =>
-      login(data),
+    mutationFn: (data: SignInFields) => login(data),
 
-    onError: () => {
-      console.log("Error occured");
+    onError: (err) => {
+      console.log(`Error occured while trying to log in. ${err}`);
     },
 
     onSuccess: (data) => {
-      const {access_token, refresh_token} = data.data
-      localStorage.setItem("accessToken", access_token)
-      localStorage.setItem("refreshToken", refresh_token)
-      navigate('/home')
+      console.log("Successfully logged in");
+      const { access_token, refresh_token } = data.data;
+      localStorage.setItem("accessToken", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+      navigate("/home");
     },
   });
 }
 
 export function useAddFavourite() {
   return useMutation({
-    mutationFn: (data: Recipe) =>
-      addToFavourites(data),
+    mutationFn: (data: Recipe) => addToFavourites(data),
 
-    onError: () => {
-      console.log("Error occured");
+    onError: (err) => {
+      console.log(`Error occured while adding to favourite. ${err}`);
     },
 
     onSuccess: () => {
-      console.log("Success")
+      console.log("successfully added to favourite");
     },
+  });
+}
+
+export function useCreateRecipe() {
+  return useMutation({
+    mutationFn: (data: FormData) => createRecipe(data),
+
+    onError: (err) =>
+      console.log(`Error occured while creating new recipe. ${err}`),
+    onSuccess: () => console.log("New recipe successfully created!"),
   });
 }
