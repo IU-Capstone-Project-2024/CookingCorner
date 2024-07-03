@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -41,14 +41,22 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = timedelta(days=REFRESH_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token = await create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     refresh_token = await create_access_token(
         data={"sub": user.username}, expires_delta=refresh_token_expires
     )
-    return TokenSchema(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
+    access_token_expires += datetime.now()
+    refresh_token_expires += datetime.now()
+    return TokenSchema(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
+        access_token_expires=access_token_expires.strftime('%d.%m.%Y %H:%M'),
+        refresh_token_expires=refresh_token_expires.strftime('%d.%m.%Y %H:%M')
+    )
 
 
 @router.get("/verify-token/{token}")
