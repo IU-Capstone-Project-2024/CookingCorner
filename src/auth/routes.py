@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 
+import pytz
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
@@ -54,8 +55,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         access_token=access_token,
         refresh_token=refresh_token,
         token_type="bearer",
-        access_token_expires=access_token_expires.strftime('%d.%m.%Y %H:%M'),
-        refresh_token_expires=refresh_token_expires.strftime('%d.%m.%Y %H:%M')
+        access_token_expires=access_token_expires.astimezone(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M'),
+        refresh_token_expires=refresh_token_expires.astimezone(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M')
     )
 
 
