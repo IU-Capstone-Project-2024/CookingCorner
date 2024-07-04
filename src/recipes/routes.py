@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,7 +8,8 @@ from src.auth.utils import get_current_user
 from src.database import get_async_session
 from src.models import User, Recipe
 from src.models.recipes import MyRecipe
-from src.recipes.utils import get_category, get_tag, check_recipe_exists, get_recipe
+from src.recipes.schemas import RecipePaginationSchema
+from src.recipes.utils import get_category, get_tag, check_recipe_exists, get_recipe, check_my_recipe_exists
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
@@ -17,19 +20,32 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
                            current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=recipe_id):
         raise HTTPException(status_code=404, detail="Recipe not found")
-    query = (select(Recipe).
-             where(Recipe.id == recipe_id).
-             where((not Recipe.is_private) or Recipe.user_id == current_user.id))
+    query = select(Recipe).where(Recipe.id == recipe_id)
     recipe = await db.execute(query)
-    return recipe.first()[0]
+    recipe = recipe.first()
+    if recipe[0].is_private and recipe[0].user_id != current_user.id:
+        raise HTTPException(status_code=400, detail="Recipe is private")
+    recipe = recipe[0]
+    query = select(MyRecipe).where(MyRecipe.recipe_id == recipe_id).where(MyRecipe.user_id == current_user.id)
+    my_recipe = await db.execute(query)
+    my_recipe = my_recipe.first()
+    additional_info = {}
+    if my_recipe is not None:
+        my_recipe = my_recipe[0]
+        additional_info["is_my_recipe"] = True
+        additional_info["is_favourite"] = my_recipe.is_favourite
+    else:
+        additional_info["is_my_recipe"] = False
+        additional_info["is_favourite"] = False
+    return recipe, additional_info
 
 
-@recipe_router.get("/get_all")
+@recipe_router.get("/get_all", response_model=Page[RecipePaginationSchema])
 async def get_all(db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
     query = select(Recipe).where(Recipe.is_private == False)
-    recipes = await db.execute(query)
-    recipes = [recipe[0] for recipe in recipes]
+    recipes = await paginate(db, query)
+
     return recipes
 
 
@@ -66,7 +82,7 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
                           current_user: User = Depends(get_current_user)):
     category = await get_category(db=db, category_name=category_name)
     if category is None:
-        raise HTTPException(status_code=404, detail="Tag not found")
+        raise HTTPException(status_code=404, detail="Category not found")
     query = select(Recipe).where(Recipe.category_id == category.id)
     recipes = await db.execute(query)
     recipes = recipes.all()
@@ -200,22 +216,22 @@ async def update_recipe(body: RecipeUpdateSchema,
     return {"status": "success"}
 
 
-@recipe_router.delete("/delete")
-async def delete_recipe(recipe_id: int, db: AsyncSession = Depends(get_async_session),
-                        current_user: User = Depends(get_current_user)):
-    if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
-        raise HTTPException(status_code=404, detail="Recipe not found or it belongs to another user")
-    query = select(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
-    recipe = await db.execute(query)
-    recipe = recipe.first()
-    if not recipe[0].is_private:
-        raise HTTPException(status_code=400, detail="Recipe is published, so it cannot be deleted")
-    query = delete(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
-    await db.execute(query)
-    query = delete(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.id == recipe_id)
-    await db.execute(query)
-    await db.commit()
-    return {"status": "success"}
+# @recipe_router.delete("/delete")
+# async def delete_recipe(recipe_id: int, db: AsyncSession = Depends(get_async_session),
+#                         current_user: User = Depends(get_current_user)):
+#     if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
+#         raise HTTPException(status_code=404, detail="Recipe not found or it belongs to another user")
+#     query = select(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
+#     recipe = await db.execute(query)
+#     recipe = recipe.first()
+#     if not recipe[0].is_private:
+#         raise HTTPException(status_code=400, detail="Recipe is published, so it cannot be deleted")
+#     query = delete(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
+#     await db.execute(query)
+#     query = delete(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.id == recipe_id)
+#     await db.execute(query)
+#     await db.commit()
+#     return {"status": "success"}
 
 
 @recipe_router.put("/publish")
@@ -231,11 +247,61 @@ async def publish(recipe_id: int, db: AsyncSession = Depends(get_async_session),
     return {"status": "success"}
 
 
+@recipe_router.post("/add_to_my_recipes")
+async def add_to_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async_session),
+                            current_user: User = Depends(get_current_user)):
+    if not await check_recipe_exists(recipe_id=recipe_id, db=db):
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    query = select(Recipe).where(Recipe.id == recipe_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()[0]
+    if recipe.is_private:
+        raise HTTPException(status_code=400, detail="Recipe is private and cannot be added to my recipes")
+    query = select(MyRecipe).where(MyRecipe.recipe_id == recipe_id).where(MyRecipe.user_id == current_user.id)
+    my_recipe = await db.execute(query)
+    if my_recipe.first() is not None:
+        raise HTTPException(status_code=400, detail="Recipe already in my recipes")
+    query = insert(MyRecipe).values(
+        recipe_id=recipe.id,
+        user_id=current_user.id
+    )
+    await db.execute(query)
+    await db.commit()
+    return {"status": "success"}
+
+
+@recipe_router.delete("/delete_from_my_recipes")
+async def delete_from_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async_session),
+                                 current_user: User = Depends(get_current_user)):
+    if not await check_recipe_exists(recipe_id=recipe_id, db=db):
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    query = select(Recipe).where(Recipe.id == recipe_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()[0]
+
+    query = select(MyRecipe).where(MyRecipe.recipe_id == recipe_id).where(MyRecipe.user_id == current_user.id)
+    my_recipe = await db.execute(query)
+    my_recipe = my_recipe.first()
+    if my_recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found in my recipes")
+    if recipe.user_id == current_user.id:
+        if not recipe.is_private:
+            raise HTTPException(status_code=400, detail="Recipe is public and cannot be deleted")
+        query = delete(Recipe).where(Recipe.id == recipe_id)
+        await db.execute(query)
+    query = delete(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.recipe_id == recipe_id)
+    await db.execute(query)
+    await db.commit()
+    return {"status": "success"}
+
+
 @recipe_router.post("/add_to_favourites")
 async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                             current_user: User = Depends(get_current_user)):
-    if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
-        raise HTTPException(status_code=404, detail="Recipe not found or it belongs to another user")
+    if not await check_recipe_exists(recipe_id=recipe_id, db=db):
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    if not await check_my_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
+        raise HTTPException(status_code=404, detail="Recipe not found in my recipes")
     query = update(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.recipe_id == recipe_id).values(
         is_favourite=True
     )
@@ -247,8 +313,10 @@ async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async
 @recipe_router.delete("/remove_from_favourites")
 async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
-    if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
-        raise HTTPException(status_code=404, detail="Recipe not found or it belongs to another user")
+    if not await check_recipe_exists(recipe_id=recipe_id, db=db):
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    if not await check_my_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
+        raise HTTPException(status_code=404, detail="Recipe not found in my recipes")
     query = update(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.recipe_id == recipe_id).values(
         is_favourite=False
     )

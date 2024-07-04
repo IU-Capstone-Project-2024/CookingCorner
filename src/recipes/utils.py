@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import Category, Tag, Recipe
+from src.models.recipes import MyRecipe
 
 
 async def get_category(db: AsyncSession, category_name: str) -> Category | None:
@@ -31,6 +32,14 @@ async def check_recipe_exists(db: AsyncSession, recipe_id: int, user_id: int | N
         query = select(Recipe).where(Recipe.id == recipe_id)
     recipe = await db.execute(query)
     if recipe.first() is None:
+        return False
+    return True
+
+
+async def check_my_recipe_exists(db: AsyncSession, recipe_id: int, user_id: int) -> bool:
+    query = select(MyRecipe).where(MyRecipe.recipe_id == recipe_id).where(MyRecipe.user_id == user_id)
+    my_recipe = await db.execute(query)
+    if my_recipe.first() is None:
         return False
     return True
 
