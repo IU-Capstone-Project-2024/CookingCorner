@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -23,6 +23,10 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_async_s
     db_user = await get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    if len(user.username) < 6:
+        raise HTTPException(status_code=400, detail="Username should be at least 6 characters long")
+    if len(user.password) < 6:
+        raise HTTPException(status_code=400, detail="Password should be at least 6 characters long")
     return await create_user(db=db, user=user)
 
 
@@ -37,14 +41,22 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = timedelta(days=REFRESH_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token = await create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     refresh_token = await create_access_token(
         data={"sub": user.username}, expires_delta=refresh_token_expires
     )
-    return TokenSchema(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
+    access_token_expires += datetime.now()
+    refresh_token_expires += datetime.now()
+    return TokenSchema(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
+        access_token_expires=access_token_expires.strftime('%d.%m.%Y %H:%M'),
+        refresh_token_expires=refresh_token_expires.strftime('%d.%m.%Y %H:%M')
+    )
 
 
 @router.get("/verify-token/{token}")
@@ -67,16 +79,15 @@ async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_
             user = await db.execute(query)
             if user.first() is not None:
                 raise HTTPException(status_code=400, detail="Username already exists")
-    username = body.username if body.username else current_user.username
     query = update(User).where(User.id == current_user.id).values(
-        email=body.email,
-        username=username,
-        name=body.name,
-        surname=body.surname,
-        cooking_experience=body.cooking_experience,
-        image_path=body.image_path
+        email=body.email if body.email is not None else current_user.email,
+        username=body.username if body.username is not None else current_user.username,
+        name=body.name if body.name is not None else current_user.name,
+        surname=body.surname if body.name is not None else current_user.surname,
+        cooking_experience=body.cooking_experience if body.cooking_experience is not None
+        else current_user.cooking_experience,
+        image_path=body.image_path if body.image_path is not None else current_user.image_path,
     )
     await db.execute(query)
     await db.commit()
     return {"status": "success"}
-

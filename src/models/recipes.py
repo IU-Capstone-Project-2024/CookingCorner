@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY
+from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY, Boolean
 from sqlalchemy.orm import relationship
 
 from src.database import Base
@@ -31,12 +31,22 @@ class Recipe(Base):
     dishes = Column(Text)
     video_link = Column(String)
     source = Column(String)
+    is_private = Column(Boolean, nullable=False, default=True)
+
+
+class MyRecipe(Base):
+    __tablename__ = 'my_recipe'
+
+    id = Column(Integer, primary_key=True)
+    recipe_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)
+    is_favourite = Column(Boolean, nullable=False, default=False)
 
 
 class Tag(Base):
     __tablename__ = 'tag'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
     user_id = Column(ForeignKey('users.id'))
     recipe = relationship('Recipe', backref='tag')
