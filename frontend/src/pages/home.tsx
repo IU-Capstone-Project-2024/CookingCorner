@@ -3,6 +3,8 @@ import { memo, useState } from "react";
 import { useMyRecipes } from "@/services/queries";
 import HomeLayout from "@/components/home/home-layout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 const Home = memo(() => {
   const recipes = useMyRecipes();
@@ -26,11 +28,11 @@ const Home = memo(() => {
 
   return (
     <HomeLayout recipes={recipes} setSearch={setSearch}>
-      {recipes.data
+      {/* {recipes.data
         .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
         .map((recipe, index) => (
           <RecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
-        ))}
+        ))} */}
     </HomeLayout>
   );
 });

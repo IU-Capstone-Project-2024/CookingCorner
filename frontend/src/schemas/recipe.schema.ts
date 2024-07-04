@@ -6,7 +6,7 @@ export const RecipeSchema = z.object({
     .min(1, { message: "You need to name your recipe!" })
     .max(30),
   description: z.string().min(0),
-  category: z.string().min(0),
+  category: z.any(),
   tag: z.string().min(0),
   preparationTime: z.string().min(0),
   cookingTime: z.string().min(0),

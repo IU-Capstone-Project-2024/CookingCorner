@@ -50,9 +50,10 @@ const SignInForm = () => {
       />
       <Button
         type="submit"
-        className="mt-4"
+        className="mt-4 text-lg"
         disabled={loginMutation.isPending}
         variant={"registration"}
+        size={"lg"}
       >
         {loginMutation.isPending ? "Logging in" : "Sign in"}
       </Button>

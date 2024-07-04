@@ -23,6 +23,9 @@ module.exports = {
       dropShadow: {
         "3xl": "0 8px 8px 0 rgba(0, 0, 0, 1)",
       },
+      boxShadow: {
+        inside: "-1px 81px 25px -100px #000000 inset",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

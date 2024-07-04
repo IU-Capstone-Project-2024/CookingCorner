@@ -1,6 +1,6 @@
 import { API } from "@/lib/utils";
 import { SignInFields } from "@/schemas/sign-in.schema";
-import { Recipe } from "@/types/types";
+import { Recipe, User } from "@/types/types";
 
 export const getMyRecipes = async () => {
   return (await API.get<Recipe[]>("/recipes/get_my_recipes")).data;
@@ -30,9 +30,13 @@ export const addToFavourites = async (data: Recipe) => {
 };
 
 export const createRecipe = async (data: FormData) => {
-  return await API.post("/recipe/create_recipe", data);
+  return await API.post("/recipes/create", data);
 };
 
 export const changePrivacy = async (id: number) => {
   return await API.put(`/recipes/publish`, id);
 };
+
+export const getRecipeById = async (id: number) => {
+  return (await API.get<Recipe>(`/recipes/get_by_id/${id}`)).data;
+}

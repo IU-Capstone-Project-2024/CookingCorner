@@ -1,38 +1,45 @@
 import { RecipeSchema, RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefObject } from "react";
 import { useCreateRecipe } from "@/services/mutations";
 import { prepareRecipeData } from "@/lib/utils";
+import RecipeCategory from "./recipe-category";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
 }
 
 const RecipeForm = ({ submitRef }: RecipeFormProps) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<RecipeSchemaFields>({
-    mode: "onChange",
+  const form = useForm<RecipeSchemaFields>({
     resolver: zodResolver(RecipeSchema),
+    defaultValues: {
+      title: "",
+    },
   });
 
   const createRecipeMutation = useCreateRecipe();
 
-  const processRecipeCreation: SubmitHandler<RecipeSchemaFields> = (data) => {
-    createRecipeMutation.mutate(prepareRecipeData(data));
-    reset();
-  };
+  function processRecipeCreation(data: RecipeSchemaFields) {
+    console.log(data);
+    // createRecipeMutation.mutate(prepareRecipeData(data));
+    // reset();
+  }
 
   return (
     <form
       className="mt-2 flex flex-col gap-2 font-inter"
-      onSubmit={handleSubmit(processRecipeCreation)}
+      onSubmit={form.handleSubmit(processRecipeCreation)}
     >
       <div className="inline-flex items-center justify-center">
         <Label
@@ -52,93 +59,102 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
       <Input
         placeholder="Name"
         isize={"default"}
-        {...register("title")}
+        {...form.register("title")}
         className="placeholder:text-mainBlack-secondary"
-        error={errors.title}
+        error={form.formState.errors.title}
       />
       <Input
         placeholder="Description"
         isize={"default"}
-        {...register("description")}
+        {...form.register("description")}
       />
-      <Input
+      <RecipeCategory register={form.register} />
+      {/* <Input
         placeholder="Category"
         isize={"default"}
-        {...register("category")}
-      />
-      <Input placeholder="Tag" isize={"default"} {...register("tag")} />
+        {...form.register("category")}
+      /> */}
+      <Input placeholder="Tag" isize={"default"} {...form.register("tag")} />
       <Input
         placeholder="Preparation time"
         isize={"default"}
         type="number"
-        {...register("preparationTime")}
+        {...form.register("preparationTime")}
       />
       <Input
         placeholder="Cooking time"
         isize={"default"}
         type="number"
-        {...register("cookingTime")}
+        {...form.register("cookingTime")}
       />
       <Input
         placeholder="Rest time"
         isize={"default"}
         type="number"
-        {...register("restTime")}
+        {...form.register("restTime")}
       />
       <Input
         placeholder="Total time"
         isize={"default"}
         type="number"
-        {...register("totalTime")}
+        {...form.register("totalTime")}
       />
       <Input
         placeholder="Portions"
         isize={"default"}
         type="number"
-        {...register("portions")}
+        {...form.register("portions")}
       />
       <textarea
         placeholder="Ingredients"
-        {...register("ingredients")}
+        {...form.register("ingredients")}
         className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
       />
       <textarea
         placeholder="Cooking steps"
-        {...register("cookingSteps")}
+        {...form.register("cookingSteps")}
         className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
       />
       <Input
         placeholder="Comments"
         isize={"default"}
-        {...register("comments")}
+        {...form.register("comments")}
       />
       <Input
         placeholder="Nutritional value"
         isize={"default"}
-        {...register("nutritionalValue")}
+        {...form.register("nutritionalValue")}
       />
       <Input
         placeholder="Proteins value"
         isize={"default"}
-        {...register("proteinsValue")}
+        {...form.register("proteinsValue")}
       />
       <Input
         placeholder="Fats value"
         isize={"default"}
-        {...register("fatsValue")}
+        {...form.register("fatsValue")}
       />
       <Input
         placeholder="Carbohydrates value"
         isize={"default"}
-        {...register("carbohydratesValue")}
+        {...form.register("carbohydratesValue")}
       />
-      <Input placeholder="Dishes" isize={"default"} {...register("dishes")} />
+      <Input
+        placeholder="Dishes"
+        isize={"default"}
+        {...form.register("dishes")}
+      />
       <Input
         placeholder="Video link"
         isize={"default"}
-        {...register("videoLink")}
+        {...form.register("videoLink")}
       />
-      <Input placeholder="Source" isize={"default"} {...register("source")} />
+      <Input
+        placeholder="Source"
+        isize={"default"}
+        {...form.register("source")}
+      />
       <button ref={submitRef} className="hidden" />
     </form>
   );

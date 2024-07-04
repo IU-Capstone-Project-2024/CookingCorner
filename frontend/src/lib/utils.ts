@@ -3,7 +3,7 @@ import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const BASE_URL = "http://158.160.134.200:8000";
+const BASE_URL = "http://51.250.112.178:8000";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,7 +18,6 @@ export function prepareRecipeData(
   if (file) {
     formData.append("file", file);
   }
-
   formData.append("data", JSON.stringify({ ...data, private: true }));
 
   return formData;

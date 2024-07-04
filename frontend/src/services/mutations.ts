@@ -34,8 +34,8 @@ export function useLogin() {
     onSuccess: (data) => {
       console.log("Successfully logged in");
       const { access_token, refresh_token } = data.data;
-      localStorage.setItem("accessToken", access_token);
-      localStorage.setItem("refreshToken", refresh_token);
+      localStorage.setItem("accessToken", JSON.stringify(access_token));
+      localStorage.setItem("refreshToken", JSON.stringify(refresh_token));
       navigate("/home");
     },
   });

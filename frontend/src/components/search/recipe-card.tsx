@@ -3,6 +3,7 @@ import RecipeTitle from "./recipe-card-title";
 import RecipeDescription from "./recipe-card-description";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -30,10 +31,20 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
       />
       <Button
         size="recipeCard"
-        variant="recipeCard"
-        onClick={() => action(recipe)}
+        variant={recipe.starred ? "favourite" : "recipeCard"}
       >
-        {recipe.favourite ? "Add to favourites" : "Add to my recipes"}
+        {recipe.favourite ? (
+          <p className="flex items-center gap-2">
+            Add to favourites{" "}
+            {recipe.starred ? (
+              <FaHeart size={20} className="text-hover" />
+            ) : (
+              <FaRegHeart size={20} className="text-hover" />
+            )}
+          </p>
+        ) : (
+          <p className="flex items-center gap-2">Add to your recipes</p>
+        )}
       </Button>
     </div>
   );
