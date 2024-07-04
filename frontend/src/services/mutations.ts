@@ -3,7 +3,6 @@ import { addToFavourites, createRecipe, login, register } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { Recipe } from "@/types/types";
-import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -33,9 +32,20 @@ export function useLogin() {
 
     onSuccess: (data) => {
       console.log("Successfully logged in");
-      const { access_token, refresh_token } = data.data;
-      localStorage.setItem("accessToken", JSON.stringify(access_token));
-      localStorage.setItem("refreshToken", JSON.stringify(refresh_token));
+      const {
+        access_token,
+        access_token_expires,
+        refresh_token,
+        refresh_token_expires,
+      } = data.data;
+      localStorage.setItem(
+        "accessToken",
+        JSON.stringify(`${access_token};${access_token_expires}`),
+      );
+      localStorage.setItem(
+        "refreshToken",
+        JSON.stringify(`${refresh_token};${refresh_token_expires}`),
+      );
       navigate("/home");
     },
   });

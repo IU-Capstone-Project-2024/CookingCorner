@@ -23,6 +23,14 @@ export function prepareRecipeData(
   return formData;
 }
 
+export function convertDataToGMT(time: string[]) {
+  const reversedTime = time[0].split(".");
+
+  return new Date(
+    `${reversedTime[1]}.${reversedTime[0]}.${reversedTime[2]} ${time[1]}`,
+  );
+}
+
 export const API = axios.create({
   baseURL: BASE_URL,
 });

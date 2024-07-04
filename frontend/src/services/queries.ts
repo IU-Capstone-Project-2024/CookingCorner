@@ -10,14 +10,14 @@ export function useMyRecipes() {
 
 export function useAuth() {
   return useQuery({
-    queryKey: ['userMe'],
+    queryKey: ["userMe"],
     queryFn: getMe,
-  })
+  });
 }
 
 export function useRecipe(id: number) {
   return useQuery({
-    queryKey: ['recipe', id],
+    queryKey: ["recipe", id],
     queryFn: () => getRecipeById(id),
-  })
+  });
 }

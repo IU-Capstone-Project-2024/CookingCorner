@@ -39,4 +39,4 @@ export const changePrivacy = async (id: number) => {
 
 export const getRecipeById = async (id: number) => {
   return (await API.get<Recipe>(`/recipes/get_by_id/${id}`)).data;
-}
+};
