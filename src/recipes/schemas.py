@@ -4,26 +4,32 @@ from pydantic import BaseModel
 class RecipePaginationSchema(BaseModel):
     id: int
     name: str
-    description: str
-    icon_path: str
-    rating: float
+    description: str | None = None
+    icon_path: str | None = None
+    rating: float | None = None
+    user_id: int | None = None
+    category_id: int | None = None
+    tag_id: int | None = None
+    preparing_time: int | None = None
+    cooking_time: int | None = None
+    waiting_time: int | None = None
+    total_time: int | None = None
+    portions: int | None = None
+    ingredients: str | None = None
+    how_to_cook: str | None = None
+    images_paths: list[str] | None = None
+    comments: str | None = None
+    nutritional_value: float | None = None
+    proteins_value: float | None = None
+    fats_value: float | None = None
+    carbohydrates_value: float | None = None
+    dishes: str | None = None
+    video_link: str | None = None
+    source: str | None = None
+    is_private: bool | None = None
+
+
+class MyRecipePaginationSchema(BaseModel):
+    recipe_id: int
     user_id: int
-    category_id: int
-    tag_id: int
-    preparing_time: int
-    cooking_time: int
-    waiting_time: int
-    total_time: int
-    portions: int
-    ingredients: str
-    how_to_cook: str
-    images_paths: list[str]
-    comments: str
-    nutritional_value: float
-    proteins_value: float
-    fats_value: float
-    carbohydrates_value: float
-    dishes: str
-    video_link: str
-    source: str
-    is_private: bool
+    is_favorite: bool
