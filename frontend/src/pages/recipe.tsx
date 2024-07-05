@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { useRecipe } from "@/services/queries";
 import { useParams } from "react-router-dom";
+import RecipeLayout from "@/components/recipe/recipe-layout";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const RecipePage = () => {
   const params = useParams();
@@ -12,25 +14,50 @@ const RecipePage = () => {
   const [isSteps, setIsSteps] = useState(true);
 
   if (recipe.isError) {
-    return <div>Something went wrong, please reload a page</div>;
+    return (
+      <RecipeLayout>
+        <p className="col-span-2 flex text-center font-semibold">
+          Something went wrong
+        </p>
+      </RecipeLayout>
+    );
   }
 
   if (recipe.isPending) {
-    return <div>Loading...</div>;
+    return (
+      <RecipeLayout>
+        <Skeleton className="h-[200px] w-full border-2 border-mainBlack bg-hover-secondary" />
+        <Skeleton className="h-8 w-full items-start bg-hover-secondary" />
+        <div className="grid w-full grid-cols-3 gap-2">
+          <Skeleton className="h-8 w-full bg-hover-secondary" />
+          <Skeleton className="h-8 w-full bg-hover-secondary" />
+          <Skeleton className="h-8 w-full bg-hover-secondary" />
+        </div>
+        <div className="grid w-full grid-cols-3 gap-1">
+          <Skeleton className="h-12 w-full bg-hover-secondary" />
+          <Skeleton className="h-12 w-full bg-hover-secondary" />
+          <Skeleton className="h-12 w-full bg-hover-secondary" />
+        </div>
+        <div className="flex h-8 w-full items-center gap-1 rounded-full border-2 border-mainBlack bg-primary p-1">
+          <Skeleton className="h-6 w-full rounded-full bg-hover-secondary" />
+          <Skeleton className="h-6 w-full rounded-full bg-hover-secondary" />
+        </div>
+        <Skeleton className="h-[200px] w-full bg-hover-secondary" />
+      </RecipeLayout>
+    );
   }
 
   return (
-    <section className="container flex flex-col items-center gap-4 px-7 font-inter">
-      <RecipeNavigation privateRecipe={recipe.data.private} />
+    <RecipeLayout isPrivate={recipe.data.private}>
       <img
         src={recipe.data.img === null ? "no_image.png" : "/" + recipe.data.img}
-        className="max-h-[200px] w-full max-w-[335px] object-cover"
+        className="max-h-[200px] w-full max-w-[320px] object-cover"
       />
       <Tabs defaultValue="steps" className="font-inter">
         <RecipeDescription recipe={recipe.data} setIsSteps={setIsSteps} />
         <RecipeSteps isSteps={isSteps} recipe={recipe.data} />
       </Tabs>
-    </section>
+    </RecipeLayout>
   );
 };
 

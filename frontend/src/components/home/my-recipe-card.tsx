@@ -1,21 +1,22 @@
 import { Recipe } from "@/types/types";
-import RecipeTitle from "./recipe-card-title";
-import RecipeDescription from "./recipe-card-description";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { useAddRecipe } from "@/services/mutations";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import RecipeDescription from "../search/recipe-card-description";
+import RecipeTitle from "../search/recipe-card-title";
+import { useAddFavourite } from "@/services/mutations";
 
-interface RecipeCardProps {
+interface MyRecipeCardProps {
   recipe: Recipe;
   action?: (recipe: Recipe) => void;
 }
 
-const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
+const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
   const navigate = useNavigate();
-  const addToRecipesMutation = useAddRecipe();
+  const addFavouriteMutation = useAddFavourite();
 
-  function handleAddToRecipes(id: number) {
-    addToRecipesMutation.mutate(id);
+  function handleAddToFavourites(id: number) {
+    addFavouriteMutation.mutate(id);
   }
 
   return (
@@ -34,11 +35,18 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
         author={recipe.author}
         cookingTime={recipe.cookingTime}
       />
-      <Button onClick={() => handleAddToRecipes(recipe.id)}>
-        <p className="flex items-center gap-2">Add to your recipes</p>
+      <Button onClick={() => handleAddToFavourites(recipe.id)}>
+        <p className="flex items-center gap-2">
+          Add to favourites{" "}
+          {recipe.starred ? (
+            <FaHeart size={20} className="text-hover" />
+          ) : (
+            <FaRegHeart size={20} className="text-hover" />
+          )}
+        </p>
       </Button>
     </div>
   );
 };
 
-export default RecipeCard;
+export default MyRecipeCard;

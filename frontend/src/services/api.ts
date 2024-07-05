@@ -25,9 +25,13 @@ export const getMe = async () => {
   return (await API.post("/get_User/me")).data;
 };
 
-export const addToFavourites = async (data: Recipe) => {
-  return await API.post("/recipes/add_to_favourites", data);
+export const addToFavourites = async (id: number) => {
+  return await API.post("/recipes/add_to_favourites", id);
 };
+
+export const addToMyRecipes = async (id: number) => {
+  return await API.post('/recipes/add_to_my_recipes', id)
+}
 
 export const createRecipe = async (data: FormData) => {
   return await API.post("/recipes/create", data);

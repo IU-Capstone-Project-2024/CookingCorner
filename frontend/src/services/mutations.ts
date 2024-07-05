@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { addToFavourites, createRecipe, login, register } from "./api";
+import { addToFavourites, addToMyRecipes, createRecipe, login, register } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { Recipe } from "@/types/types";
@@ -55,7 +55,7 @@ export function useLogin() {
 
 export function useAddFavourite() {
   return useMutation({
-    mutationFn: (data: Recipe) => addToFavourites(data),
+    mutationFn: (id: number) => addToFavourites(id),
 
     onError: (err) => {
       console.log(`Error occured while adding to favourite. ${err}`);
@@ -75,4 +75,14 @@ export function useCreateRecipe() {
       console.log(`Error occured while creating new recipe. ${err}`),
     onSuccess: () => console.log("New recipe successfully created!"),
   });
+}
+
+export function useAddRecipe() {
+  return useMutation({
+    mutationFn: (id: number) => addToMyRecipes(id),
+
+    onError: (err) =>
+      console.log(`Error occured while adding recipe to my recipes. ${err}`),
+    onSuccess: () => console.log("New recipe successfully added!"),
+  })
 }

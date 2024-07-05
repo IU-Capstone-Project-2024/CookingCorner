@@ -1,8 +1,8 @@
-import RecipeCard from "@/components/search/recipe-card";
 import { memo, useState } from "react";
 import { useMyRecipes } from "@/services/queries";
 import HomeLayout from "@/components/home/home-layout";
 import { Skeleton } from "@/components/ui/skeleton";
+import MyRecipeCard from "@/components/home/my-recipe-card";
 
 const Home = memo(() => {
   const recipes = useMyRecipes();
@@ -38,7 +38,7 @@ const Home = memo(() => {
       {recipes.data
         .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
         .map((recipe, index) => (
-          <RecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
+          <MyRecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
         ))}
     </HomeLayout>
   );
