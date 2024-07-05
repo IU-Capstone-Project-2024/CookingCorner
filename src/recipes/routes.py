@@ -37,7 +37,50 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     else:
         additional_info["is_my_recipe"] = False
         additional_info["is_favourite"] = False
+
+    if current_user.recent_recipes is None:
+        recent_recipes = [0] * 10
+    else:
+        recent_recipes = current_user.recent_recipes.copy()
+    for i in range(len(recent_recipes) - 1, -1, -1):
+        recent_recipes[i] = recent_recipes[i - 1]
+    is_recipe_inside = False
+    for i in range(len(recent_recipes)):
+        if recent_recipes[i] == recipe_id:
+            is_recipe_inside = True
+        if is_recipe_inside:
+            if i == len(recent_recipes) - 1:
+                recent_recipes[i] = 0
+            else:
+                recent_recipes[i] = recent_recipes[i + 1]
+    recent_recipes[0] = recipe_id
+    current_user.recent_recipes = recent_recipes.copy()
+    await db.commit()
     return recipe, additional_info
+
+
+@recipe_router.get("/get_recent_recipes")
+async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
+                             current_user: User = Depends(get_current_user)):
+    recent_recipes_ids = current_user.recent_recipes
+    if recent_recipes_ids is None:
+        return []
+    recipes = []
+    for recent_recipe_id in recent_recipes_ids:
+        query = select(Recipe).where(Recipe.id == recent_recipe_id)
+        recipe = await db.execute(query)
+        recipe = recipe.first()
+        if recipe is not None:
+            recipes.append(recipe[0])
+    return recipes
+
+
+@recipe_router.delete("/delete_recent_recipes")
+async def delete_recent_recipes(db: AsyncSession = Depends(get_async_session),
+                                current_user: User = Depends(get_current_user)):
+    current_user.recent_recipes = None
+    await db.commit()
+    return {"status": "success"}
 
 
 @recipe_router.get("/get_all", response_model=Page[RecipePaginationSchema])

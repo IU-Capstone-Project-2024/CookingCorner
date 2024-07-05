@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ARRAY
 from sqlalchemy.orm import relationship
 
 from src.database import Base
@@ -15,5 +15,6 @@ class User(Base):
     surname = Column(String)
     cooking_experience = Column(Integer)
     image_path = Column(String)
+    recent_recipes = Column(ARRAY(Integer))
     tag = relationship('Tag', backref="users")
     recipe = relationship('Recipe', backref="users")
