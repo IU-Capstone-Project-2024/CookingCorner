@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY, Boolean
+from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY, Boolean, DateTime
 from sqlalchemy.orm import relationship
 
 from src.database import Base
@@ -32,6 +32,7 @@ class Recipe(Base):
     video_link = Column(String)
     source = Column(String)
     is_private = Column(Boolean, nullable=False, default=True)
+    creation_time = Column(DateTime)
 
 
 class MyRecipe(Base):

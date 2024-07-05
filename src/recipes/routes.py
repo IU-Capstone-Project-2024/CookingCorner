@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -143,6 +145,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
     if tag is None:
         raise HTTPException(status_code=404, detail="Tag not found")
 
+    creation_time = datetime.now()
     query = insert(Recipe).values(
         name=body.name,
         description=body.description,
@@ -166,7 +169,8 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         carbohydrates_value=body.carbohydrates_value,
         dishes=body.dishes,
         video_link=body.video_link,
-        source=body.source
+        source=body.source,
+        creation_time=creation_time
     )
 
     await db.execute(query)
@@ -194,7 +198,8 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.carbohydrates_value == body.carbohydrates_value,
         Recipe.dishes == body.dishes,
         Recipe.video_link == body.video_link,
-        Recipe.source == body.source
+        Recipe.source == body.source,
+        Recipe.creation_time == creation_time
     )
     recipe = await db.execute(query)
     recipe = recipe.first()[0]
