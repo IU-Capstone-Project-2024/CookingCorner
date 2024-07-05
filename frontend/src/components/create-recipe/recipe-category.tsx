@@ -17,7 +17,7 @@ const RecipeCategory = ({ register }: RecipeCategoryProps) => {
   return (
     <Select>
       <SelectTrigger className="h-12 w-full bg-primary px-4 py-2 font-inter font-medium text-mainBlack-secondary">
-        <SelectValue placeholder="Category" />
+        <SelectValue placeholder="Category" id="text" />
       </SelectTrigger>
       <SelectContent className="bg-primary font-inter font-medium">
         <SelectGroup>

@@ -11,7 +11,7 @@ const Category = () => {
   return (
     <Select>
       <SelectTrigger className="h-8 w-[180px] bg-primary font-inter font-medium">
-        <SelectValue placeholder="Category" />
+        <SelectValue placeholder="Category" defaultValue={"all"} />
       </SelectTrigger>
       <SelectContent className="bg-primary font-inter font-medium">
         <SelectGroup>

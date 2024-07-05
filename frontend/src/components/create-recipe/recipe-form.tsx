@@ -8,14 +8,6 @@ import { useCreateRecipe } from "@/services/mutations";
 import { prepareRecipeData } from "@/lib/utils";
 import RecipeCategory from "./recipe-category";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
 }
@@ -31,7 +23,8 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   const createRecipeMutation = useCreateRecipe();
 
   function processRecipeCreation(data: RecipeSchemaFields) {
-    console.log(data);
+    const category = document.getElementById("text")?.textContent;
+    console.log({ ...data, category: category });
     // createRecipeMutation.mutate(prepareRecipeData(data));
     // reset();
   }

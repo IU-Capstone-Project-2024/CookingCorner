@@ -14,7 +14,7 @@ const Settings = ({
   handleChangeAscending,
 }: SettingsProps) => {
   return (
-    <section className="container inline-flex h-12 w-full items-center justify-center gap-4 border-2 border-x-transparent border-y-mainBlack bg-hover-secondary">
+    <section className="inline-flex h-12 w-full items-center justify-center gap-4 border-2 border-x-transparent border-y-mainBlack bg-hover-secondary">
       <NewRecipe />
       <Category />
       <FaArrowDownWideShort size={24} onClick={handleChangeAscending} />

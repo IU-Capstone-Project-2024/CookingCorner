@@ -4,9 +4,9 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const Root = () => {
   function checkAuth() {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessTokenExpires");
     if (token) {
-      const time = JSON.parse(token).split(";")[1].split(" ");
+      const time = JSON.parse(token).split(" ");
       const updatedTime = convertDataToGMT(time);
       return !(updatedTime.getTime() < new Date().getTime());
     }

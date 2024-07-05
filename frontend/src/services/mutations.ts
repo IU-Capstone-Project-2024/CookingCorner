@@ -38,13 +38,15 @@ export function useLogin() {
         refresh_token,
         refresh_token_expires,
       } = data.data;
+      localStorage.setItem("accessToken", JSON.stringify(`${access_token}`));
       localStorage.setItem(
-        "accessToken",
-        JSON.stringify(`${access_token};${access_token_expires}`),
+        "accessTokenExpires",
+        JSON.stringify(`${access_token_expires}`),
       );
+      localStorage.setItem("refreshToken", JSON.stringify(`${refresh_token}`));
       localStorage.setItem(
-        "refreshToken",
-        JSON.stringify(`${refresh_token};${refresh_token_expires}`),
+        "refreshTokenExpires",
+        JSON.stringify(`${refresh_token_expires}`),
       );
       navigate("/home");
     },

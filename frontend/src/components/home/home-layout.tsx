@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import SearchBar from "../search-bar";
 import Settings from "./settings";
 import useFilters from "@/hooks/useFilters";
@@ -16,7 +16,7 @@ const HomeLayout = ({ children, recipes, setSearch }: HomeLayoutProps) => {
     useFilters({ recipes: recipes });
 
   return (
-    <section className="container flex flex-col items-center gap-2">
+    <section className="flex flex-col items-center gap-2">
       <SearchBar setSearch={setSearch} />
       <Settings
         isFavourite={isFavourite}

@@ -5,7 +5,8 @@ module.exports = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -25,6 +26,15 @@ module.exports = {
       },
       boxShadow: {
         inside: "-1px 81px 25px -100px #000000 inset",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-200%)" },
+          "100%": { transform: "translateX(200%)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1s linear infinite",
       },
       colors: {
         border: "hsl(var(--border))",
