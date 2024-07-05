@@ -39,6 +39,7 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     else:
         additional_info["is_my_recipe"] = False
         additional_info["is_favourite"] = False
+    additional_info["username"] = current_user.username
 
     if current_user.recent_recipes is None:
         recent_recipes = [0] * 10
