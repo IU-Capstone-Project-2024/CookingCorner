@@ -51,3 +51,19 @@ class Tag(Base):
     name = Column(String, nullable=False)
     user_id = Column(ForeignKey('users.id'))
     recipe = relationship('Recipe', backref='tag')
+#
+#
+# class Ingredient(Base):
+#     __tablename__ = 'ingredient'
+#
+#     id = Column(Integer, primary_key=True)
+#     title = Column(String, nullable=False)
+#     portion = Column(String)
+#
+#
+# class Step(Base):
+#     __tablename__ = 'step'
+#
+#     id = Column(Integer, primary_key=True)
+#     title = Column(String, nullable=False)
+#     image_path = Column(String)

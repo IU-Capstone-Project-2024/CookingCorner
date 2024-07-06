@@ -89,13 +89,13 @@ async def delete_recent_recipes(db: AsyncSession = Depends(get_async_session),
     return {"status": "success"}
 
 
-@recipe_router.get("/get_all", response_model=Page[RecipePaginationSchema])
-async def get_all(db: AsyncSession = Depends(get_async_session),
-                  current_user: User = Depends(get_current_user)):
-    query = select(Recipe).where(Recipe.is_private == False)
-    recipes = await paginate(db, query)
-
-    return recipes
+# @recipe_router.get("/get_all", response_model=Page[RecipePaginationSchema])
+# async def get_all(db: AsyncSession = Depends(get_async_session),
+#                   current_user: User = Depends(get_current_user)):
+#     query = select(Recipe).where(Recipe.is_private == False)
+#     recipes = await paginate(db, query)
+#
+#     return recipes
 
 
 @recipe_router.get("/get_my_recipes")

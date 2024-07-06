@@ -56,8 +56,8 @@ async def create_access_token(data: dict, expires_delta: timedelta | None = None
 async def verify_token(token: str = Depends(security)):
     try:
         payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise HTTPException(status_code=403, detail="Token is invalid or expired")
         return payload
     except Exception:
@@ -71,7 +71,8 @@ async def get_user_data(current_user: User):
         username=current_user.username,
         name=current_user.name,
         surname=current_user.surname,
-        cooking_experience=current_user.cooking_experience
+        cooking_experience=current_user.cooking_experience,
+        image_path=current_user.image_path
     )
 
 
@@ -79,10 +80,10 @@ async def get_current_user(db: AsyncSession = Depends(get_async_session), author
     try:
         token = authorization.credentials
         payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise HTTPException(status_code=403, detail="Token is invalid or expired")
-        query = select(User).where(User.username == username)
+        query = select(User).where(User.id == user_id)
         user = await db.execute(query)
         user = user.first()[0]
         return user
