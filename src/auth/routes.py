@@ -44,10 +44,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token = await create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.id}, expires_delta=access_token_expires
     )
     refresh_token = await create_access_token(
-        data={"sub": user.username}, expires_delta=refresh_token_expires
+        data={"sub": user.id}, expires_delta=refresh_token_expires
     )
     access_token_expires += datetime.now()
     refresh_token_expires += datetime.now()
