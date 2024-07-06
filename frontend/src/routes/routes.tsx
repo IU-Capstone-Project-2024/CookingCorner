@@ -8,6 +8,8 @@ import Search from "@/pages/search";
 import Home from "@/pages/home";
 import Recipe from "@/pages/recipe";
 import CreateRecipe from "@/pages/create-recipe";
+import Upload from "@/pages/upload";
+import ProfileEdit from "@/pages/profile-edit";
 
 const routes: RouteObject[] = [
   {
@@ -32,8 +34,16 @@ const routes: RouteObject[] = [
         element: <CreateRecipe />,
       },
       {
+        path: "recipes/upload",
+        element: <Upload />,
+      },
+      {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "profile/edit",
+        element: <ProfileEdit />,
       },
     ],
   },

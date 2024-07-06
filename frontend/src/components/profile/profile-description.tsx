@@ -5,16 +5,17 @@ interface ProfileDescriptionProps {
 }
 
 const ProfileDescription = ({ data }: ProfileDescriptionProps) => {
+  console.log(data);
   return (
     <section className="flex max-w-[330px] flex-col gap-2 truncate font-inter text-2xl font-medium text-mainBlack md:max-w-full">
       <p className="truncate text-wrap">Username: {data.username}</p>
-      {data.name !== null && (
+      {data.name !== "" && (
         <p className="truncate text-wrap">Name: {data.name}</p>
       )}
-      {data.surname !== null && (
+      {data.surname !== "" && (
         <p className="truncate text-wrap">Surname: {data.surname}</p>
       )}
-      {data.email !== null && (
+      {data.email !== "" && (
         <p className="truncate text-wrap">Email: {data.email}</p>
       )}
       {data.cooking_experience !== null && (

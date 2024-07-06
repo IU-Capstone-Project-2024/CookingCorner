@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const RecipePage = () => {
   const params = useParams();
   const recipe = useRecipe(+params.recipeId!);
+  console.log(recipe.data);
   const [isSteps, setIsSteps] = useState(true);
 
   if (recipe.isError) {

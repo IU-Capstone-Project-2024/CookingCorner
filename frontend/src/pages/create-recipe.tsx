@@ -6,7 +6,7 @@ const CreateRecipe = () => {
   const submitRef = useRef<HTMLButtonElement>(null);
 
   const submitClick = () => {
-    if (submitRef) {
+    if (submitRef.current) {
       submitRef.current?.click();
     }
   };

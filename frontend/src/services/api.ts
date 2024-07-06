@@ -48,3 +48,11 @@ export const getRecipeById = async (id: number) => {
 export const getBestRatedRecipes = async () => {
   return (await API.get<Recipe[]>("/recipes/get_best_rated")).data;
 };
+
+export const getRecentRecipes = async () => {
+  return (await API.get<Recipe[]>("/recipes/get_recent_recipes")).data;
+}
+
+export const changeProfileData = async (data: User) => {
+  return (await API.post("/edit_user_data", data))
+}

@@ -21,6 +21,7 @@ const NewRecipe = () => {
           className="flex items-center gap-1 group-hover:border-hover"
           variant={"icon"}
           size={"icon"}
+          onClick={() => navigate("/recipes/upload")}
         >
           <FaArrowDownLong className="group-hover:text-hover" />
         </Button>

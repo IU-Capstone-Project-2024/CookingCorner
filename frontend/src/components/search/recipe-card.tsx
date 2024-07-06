@@ -32,7 +32,7 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
       <RecipeDescription
         rating={recipe.rating}
         author={recipe.author}
-        cookingTime={recipe.cookingTime}
+        cookingTime={recipe.cooking_time}
       />
       <Button onClick={() => handleAddToRecipes(recipe.id)}>
         <p className="flex items-center gap-2">Add to your recipes</p>

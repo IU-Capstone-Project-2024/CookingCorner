@@ -1,4 +1,6 @@
+import { ProfileEditSchema } from "@/schemas/profile-edit.schema";
 import { IconType } from "react-icons";
+import { z } from "zod";
 
 export type FormData = {
   login: string;
@@ -25,7 +27,7 @@ export type Recipe = {
   img: string | null;
   private: boolean;
   rating: number;
-  cookingTime: number;
+  cooking_time: number;
   preparationTime: number;
   portions: number;
   favourite: boolean;
@@ -43,14 +45,7 @@ export type Ingredient = {
   title: string;
 };
 
-export type User = {
-  image_path: string | null;
-  username: string;
-  name: string | null;
-  surname: string | null;
-  email: string | null;
-  cooking_experience: number | null;
-};
+export type User = z.infer<typeof ProfileEditSchema>
 
 export type RecipeResponse = {
   lastRecipes: Recipe[];

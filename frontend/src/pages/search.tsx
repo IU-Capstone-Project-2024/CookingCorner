@@ -1,15 +1,19 @@
+import RecipeCard from "@/components/search/recipe-card";
 import SearchLayout from "@/components/search/search-layout";
 import Title from "@/components/title";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSearch } from "@/services/queries";
+import { useBestRated, useRecent } from "@/services/queries";
+import { Recipe } from "@/types/types";
 import { useState } from "react";
 
 const Search = () => {
   // const { lastRecipes, recommendedRecipes } = useLoaderData() as RecipeResponse;
-  const data = useSearch();
+  // const bestRated = useBestRated();
+  const recentRecipes = useRecent();
+  console.log(recentRecipes.data);
   const [search, setSearch] = useState("");
 
-  if (data.isError) {
+  if (recentRecipes.isError) {
     return (
       <SearchLayout setSearch={setSearch}>
         <p className="col-span-2 flex text-center font-semibold">
@@ -19,7 +23,7 @@ const Search = () => {
     );
   }
 
-  if (data.isPending) {
+  if (recentRecipes.isPending) {
     return (
       <SearchLayout setSearch={setSearch}>
         <Title className="mx-auto">Last recipes</Title>
@@ -43,22 +47,22 @@ const Search = () => {
     <SearchLayout setSearch={setSearch}>
       <Title className="mx-auto">Last recipes</Title>
       <div className="grid grid-cols-2 gap-2">
-        {/* {lastRecipes.length === 0 ? (
-            <p className="font-inter font-semibold text-mainBlack">
-              You don't have any reviewed recipes yet!
-            </p>
-          ) : (
-            lastRecipes.map((recipe, idx) => (
-              <RecipeCard key={`last-recipe-${idx}`} recipe={recipe} />
-            ))
-          )} */}
+        {recentRecipes.data.length === 0 ? (
+          <p className="col-span-2 text-center font-inter font-semibold text-mainBlack">
+            You don't have any reviewed recipes yet!
+          </p>
+        ) : (
+          recentRecipes.data.map((recipe, idx) => (
+            <RecipeCard key={`last-recipe-${idx}`} recipe={recipe} />
+          ))
+        )}
       </div>
 
       <Title className="mx-auto">Best rated</Title>
       <div className="grid grid-cols-2 gap-2">
-        {/* {recommendedRecipes.map((recipe, idx) => (
-            <RecipeCard key={`recommended-recipe-${idx}`} recipe={recipe} />
-          ))} */}
+        {/* {bestRated.data.map((recipe, idx) => (
+          <RecipeCard key={`recommended-recipe-${idx}`} recipe={recipe} />
+        ))} */}
       </div>
     </SearchLayout>
   );

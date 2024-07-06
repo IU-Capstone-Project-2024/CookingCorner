@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaEllipsisVertical } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -16,9 +16,14 @@ interface RecipeNavigationProps {
 }
 
 const RecipeNavigation = memo(({ privateRecipe }: RecipeNavigationProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
   return (
-    <div className="sticky top-0 flex w-full items-center justify-between gap-2 bg-primary p-2">
+    <div
+      className="sticky top-0 flex w-full items-center justify-between gap-2 bg-primary p-2"
+      data-open={isOpen}
+    >
       <Button
         variant={"icon"}
         size={"icon"}

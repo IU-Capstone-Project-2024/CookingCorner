@@ -23,7 +23,7 @@ const RecipeCardDescription = memo(
           </div>
           <div className="flex items-center gap-1 truncate text-wrap">
             <FaUser className="text-hover" />
-            {author.username}
+            {/* {author.username} */}
           </div>
         </div>
       </div>

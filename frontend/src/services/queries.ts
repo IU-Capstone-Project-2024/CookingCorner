@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getBestRatedRecipes, getMe, getMyRecipes, getRecipeById } from "./api";
+import { getBestRatedRecipes, getMe, getMyRecipes, getRecentRecipes, getRecipeById } from "./api";
 
 export function useMyRecipes() {
   return useQuery({
@@ -22,9 +22,16 @@ export function useRecipe(id: number) {
   });
 }
 
-export function useSearch() {
+export function useBestRated() {
   return useQuery({
     queryKey: ["best-rated"],
     queryFn: getBestRatedRecipes,
   });
+}
+
+export function useRecent() {
+  return useQuery({
+    queryKey: ['recent'],
+    queryFn: getRecentRecipes
+  })
 }

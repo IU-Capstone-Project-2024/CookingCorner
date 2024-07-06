@@ -10,11 +10,7 @@ const Navigation = ({ submitForm }: NavigationProps) => {
   const navigate = useNavigate();
   return (
     <div className="sticky top-0 z-[100] flex w-full items-center justify-between bg-primary p-2 font-inter">
-      <Button
-        variant={"icon"}
-        size={"icon"}
-        onClick={() => navigate("/recipes")}
-      >
+      <Button variant={"icon"} size={"icon"} onClick={() => navigate("/home")}>
         <FaArrowLeft size={20} />
       </Button>
       <Button

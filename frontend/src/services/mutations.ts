@@ -1,8 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, createRecipe, login, register } from "./api";
+import { addToFavourites, addToMyRecipes, changeProfileData, createRecipe, login, register } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
-import { Recipe } from "@/types/types";
+import { Recipe, User } from "@/types/types";
+import { DatabaseZap } from "lucide-react";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -84,5 +85,15 @@ export function useAddRecipe() {
     onError: (err) =>
       console.log(`Error occured while adding recipe to my recipes. ${err}`),
     onSuccess: () => console.log("New recipe successfully added!"),
+  })
+}
+
+export function useProfileEdit() {
+  return useMutation({
+    mutationFn: (data: User) => changeProfileData(data),
+
+    onError: (err) =>
+      console.log(`Error occured while changing profile data. ${err}`),
+    onSuccess: () => console.log("Profile data changed!"),
   })
 }
