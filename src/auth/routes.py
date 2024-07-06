@@ -56,13 +56,14 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         refresh_token=refresh_token,
         token_type="bearer",
         access_token_expires=access_token_expires.astimezone(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M'),
-        refresh_token_expires=refresh_token_expires.astimezone(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M')
+        refresh_token_expires=refresh_token_expires.astimezone(pytz.timezone('Europe/Moscow')).strftime(
+            '%d.%m.%Y %H:%M')
     )
 
 
 @router.get("/verify-token/{token}")
-async def verify_user_token(token: str):
-    await verify_token(token=token)
+async def verify_user_token(db: AsyncSession = Depends(get_async_session),
+                            current_user: User = Depends(get_current_user)):
     return {"message": "Token is valid"}
 
 
