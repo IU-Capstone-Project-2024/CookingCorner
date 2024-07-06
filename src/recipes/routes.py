@@ -156,6 +156,39 @@ async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
     return result_recipes
 
 
+@recipe_router.get("/get_best_rated")
+async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.is_private == False).order_by(Recipe.rating.desc()).limit(10)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    recipes = [recipe[0] for recipe in recipes]
+    return recipes
+
+
+@recipe_router.post("/rate_recipe")
+async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(get_async_session),
+                      current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.is_private == False).where(Recipe.id == recipe_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    recipe = recipe[0]
+    users_ratings = {}
+    if recipe.users_ratings is not None:
+        users_ratings = recipe.users_ratings.copy()
+    current_rating = recipe.rating
+    rating_sum = current_rating * len(users_ratings)
+    if str(current_user.id) in users_ratings:
+        rating_sum -= users_ratings[str(current_user.id)]
+    users_ratings[str(current_user.id)] = rating
+    rating_sum += rating
+    recipe.rating = rating_sum / len(users_ratings)
+    recipe.users_ratings = users_ratings.copy()
+    await db.commit()
+    return {"status": "success"}
+
+
 @recipe_router.post("/create")
 async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):

@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY, Boolean, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy_utils import JSONType
 
 from src.database import Base
 
@@ -33,6 +34,8 @@ class Recipe(Base):
     source = Column(String)
     is_private = Column(Boolean, nullable=False, default=True)
     creation_time = Column(DateTime)
+    users_rated = Column(ARRAY(Integer))
+    users_ratings = Column(JSONType)
 
 
 class MyRecipe(Base):
