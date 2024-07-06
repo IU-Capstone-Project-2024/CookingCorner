@@ -8,7 +8,7 @@ from sqlalchemy import update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import UserCreate, TokenSchema, UserSchema
-from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, verify_token, \
+from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, \
     get_user_data, get_current_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
