@@ -7,6 +7,7 @@ class RecipePaginationSchema(BaseModel):
     description: str | None = None
     icon_path: str | None = None
     rating: float | None = None
+    reviews: int | None = None
     user_id: int | None = None
     category_id: int | None = None
     tag_id: int | None = None
@@ -14,10 +15,8 @@ class RecipePaginationSchema(BaseModel):
     cooking_time: int | None = None
     waiting_time: int | None = None
     total_time: int | None = None
-    portions: int | None = None
-    ingredients: str | None = None
-    how_to_cook: str | None = None
-    images_paths: list[str] | None = None
+    ingredients: list[dict] | None = None
+    steps: list[dict] | None = None
     comments: str | None = None
     nutritional_value: float | None = None
     proteins_value: float | None = None
@@ -33,3 +32,11 @@ class MyRecipePaginationSchema(BaseModel):
     recipe_id: int
     user_id: int
     is_favorite: bool
+
+
+class RecipeWithAdditionalDataSchema(RecipePaginationSchema):
+    is_my_recipe: bool | None = None
+    is_favorite: bool | None = None
+    creator_username: bool | None = None
+    category_name: str | None = None
+    tag_name: str | None = None
