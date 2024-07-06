@@ -8,16 +8,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.utils import get_current_user
 from src.database import get_async_session
-from src.models import User, Recipe
-from src.models.recipes import MyRecipe
-from src.recipes.schemas import RecipePaginationSchema
-from src.recipes.utils import get_category, get_tag, check_recipe_exists, get_recipe, check_my_recipe_exists
+from src.models import User, Recipe, Category
+from src.models.recipes import MyRecipe, Tag
+from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema
+from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recipe_exists, get_recipe, \
+    check_my_recipe_exists, \
+    recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
 
 
-@recipe_router.get("/get_by_id/{recipe_id}")
+@recipe_router.get("/get_by_id/{recipe_id}", response_model=RecipeWithAdditionalDataSchema)
 async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                            current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=recipe_id):
@@ -28,21 +30,8 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     if recipe[0].is_private and recipe[0].user_id != current_user.id:
         raise HTTPException(status_code=400, detail="Recipe is private")
     recipe = recipe[0]
-    query = select(MyRecipe).where(MyRecipe.recipe_id == recipe_id).where(MyRecipe.user_id == current_user.id)
-    my_recipe = await db.execute(query)
-    my_recipe = my_recipe.first()
-    additional_info = {}
-    if my_recipe is not None:
-        my_recipe = my_recipe[0]
-        additional_info["is_my_recipe"] = True
-        additional_info["is_favourite"] = my_recipe.is_favourite
-    else:
-        additional_info["is_my_recipe"] = False
-        additional_info["is_favourite"] = False
-    query = select(User).where(User.id == recipe.user_id)
-    user = await db.execute(query)
-    user = user.first()[0]
-    additional_info["creator_username"] = user.username
+
+    result_schema = await get_result_schema(db=db, recipe=recipe, current_user=current_user)
 
     if current_user.recent_recipes is None:
         recent_recipes = [0] * 10
@@ -62,10 +51,10 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     recent_recipes[0] = recipe_id
     current_user.recent_recipes = recent_recipes.copy()
     await db.commit()
-    return recipe, additional_info
+    return result_schema
 
 
-@recipe_router.get("/get_recent_recipes")
+@recipe_router.get("/get_recent_recipes", response_model=list[RecipeWithAdditionalDataSchema])
 async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
                              current_user: User = Depends(get_current_user)):
     recent_recipes_ids = current_user.recent_recipes
@@ -77,7 +66,8 @@ async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
         recipe = await db.execute(query)
         recipe = recipe.first()
         if recipe is not None:
-            recipes.append(recipe[0])
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
+            recipes.append(result_schema)
     return recipes
 
 
@@ -106,46 +96,110 @@ async def get_my_recipes(db: AsyncSession = Depends(get_async_session),
     recipes = []
     for my_recipe in my_recipes:
         query = select(Recipe).where(my_recipe[0].recipe_id == Recipe.id)
-        result = await db.execute(query)
-        result = result.first()
-        if result is not None:
-            recipes.append(result[0])
+        recipe = await db.execute(query)
+        recipe = recipe.first()
+        if recipe is not None:
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user, my_recipe=my_recipe[0])
+            recipes.append(result_schema)
     return recipes
 
 
 @recipe_router.get("/get_by_tag/{tag_name}")
 async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session),
                      current_user: User = Depends(get_current_user)):
-    tag = await get_tag(db=db, user_id=current_user.id, tag_name=tag_name)
+    tag = await get_tag_by_name(db=db, user_id=current_user.id, tag_name=tag_name)
     if tag is None:
         raise HTTPException(status_code=404, detail="Tag not found")
     query = select(Recipe).where(Recipe.tag_id == tag.id)
     recipes = await db.execute(query)
     recipes = recipes.all()
-    recipes = [recipe[0] for recipe in recipes]
-    return recipes
+    result = []
+    for recipe in recipes:
+        if recipe is not None:
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
+            result.append(result_schema)
+    return result
 
 
 @recipe_router.get("/get_by_category/{category_name}")
 async def get_by_category(category_name: str, db: AsyncSession = Depends(get_async_session),
                           current_user: User = Depends(get_current_user)):
-    category = await get_category(db=db, category_name=category_name)
+    category = await get_category_by_name(db=db, category_name=category_name)
     if category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     query = select(Recipe).where(Recipe.category_id == category.id)
     recipes = await db.execute(query)
     recipes = recipes.all()
-    recipes = [recipe[0] for recipe in recipes]
-    return recipes
+    result = []
+    for recipe in recipes:
+        if recipe is not None:
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
+            result.append(result_schema)
+    return result
+
+
+@recipe_router.get("/get_by_name")
+async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
+                      current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.name == name)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    if recipes is None:
+        raise HTTPException(status_code=404, detail="Recipes with such name not found")
+    result = []
+    for recipe in recipes:
+        if not recipe[0].is_private:
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
+            result.append(result_schema)
+    if len(result) == 0:
+        return None
+    return result
+
+
+@recipe_router.get("/get_best_rated")
+async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.is_private == False).order_by(Recipe.rating.desc()).limit(10)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    result = []
+    for recipe in recipes:
+        if recipe is not None:
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
+            result.append(result_schema)
+    return result
+
+
+@recipe_router.post("/rate_recipe")
+async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(get_async_session),
+                      current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.is_private == False).where(Recipe.id == recipe_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    recipe = recipe[0]
+    users_ratings = {}
+    if recipe.users_ratings is not None:
+        users_ratings = recipe.users_ratings.copy()
+    current_rating = recipe.rating
+    rating_sum = current_rating * len(users_ratings)
+    if str(current_user.id) in users_ratings:
+        rating_sum -= users_ratings[str(current_user.id)]
+    users_ratings[str(current_user.id)] = rating
+    rating_sum += rating
+    recipe.rating = rating_sum / len(users_ratings)
+    recipe.users_ratings = users_ratings.copy()
+    await db.commit()
+    return {"status": "success"}
 
 
 @recipe_router.post("/create")
 async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):
-    category = await get_category(db=db, category_name=body.category_name)
+    category = await get_category_by_name(db=db, category_name=body.category_name)
     if category is None:
         raise HTTPException(status_code=404, detail="Category not found")
-    tag = await get_tag(db=db, tag_name=body.tag_name, user_id=current_user.id)
+    tag = await get_tag_by_name(db=db, tag_name=body.tag_name, user_id=current_user.id)
     if tag is None:
         raise HTTPException(status_code=404, detail="Tag not found")
 
@@ -162,10 +216,8 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         cooking_time=body.cooking_time,
         waiting_time=body.waiting_time,
         total_time=body.total_time,
-        portions=body.portions,
-        ingredients=body.ingredients,
-        how_to_cook=body.how_to_cook,
-        images_paths=body.images_paths,
+        ingredients=body.ingredients.copy() if body.ingredients is not None else None,
+        steps=body.steps.copy() if body.steps is not None else None,
         comments=body.comments,
         nutritional_value=body.nutritional_value,
         proteins_value=body.proteins_value,
@@ -191,10 +243,6 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.cooking_time == body.cooking_time,
         Recipe.waiting_time == body.waiting_time,
         Recipe.total_time == body.total_time,
-        Recipe.portions == body.portions,
-        Recipe.ingredients == body.ingredients,
-        Recipe.how_to_cook == body.how_to_cook,
-        Recipe.images_paths == body.images_paths,
         Recipe.comments == body.comments,
         Recipe.nutritional_value == body.nutritional_value,
         Recipe.proteins_value == body.proteins_value,
@@ -225,14 +273,14 @@ async def update_recipe(body: RecipeUpdateSchema,
     if recipe is None:
         raise HTTPException(status_code=404, detail="Recipe not found or it belongs to other user")
     if body.category_name is not None:
-        category = await get_category(db=db, category_name=body.category_name)
+        category = await get_category_by_name(db=db, category_name=body.category_name)
         if category is None:
             raise HTTPException(status_code=404, detail="Category not found")
         category_id = category.id
     else:
         category_id = recipe.category_id
     if body.tag_name is not None:
-        tag = await get_tag(db=db, tag_name=body.tag_name, user_id=current_user.id)
+        tag = await get_tag_by_name(db=db, tag_name=body.tag_name, user_id=current_user.id)
         if tag is None:
             raise HTTPException(status_code=404, detail="Tag not found")
         tag_id = tag.id
@@ -249,10 +297,8 @@ async def update_recipe(body: RecipeUpdateSchema,
         cooking_time=body.cooking_time if body.cooking_time is not None else recipe.cooking_time,
         waiting_time=body.waiting_time if body.waiting_time is not None else recipe.waiting_time,
         total_time=body.total_time if body.total_time is not None else recipe.total_time,
-        portions=body.portions if body.portions is not None else recipe.portions,
         ingredients=body.ingredients if body.ingredients is not None else recipe.ingredients,
-        how_to_cook=body.how_to_cook if body.how_to_cook is not None else recipe.how_to_cook,
-        images_paths=body.images_paths if body.images_paths is not None else recipe.images_paths,
+        steps=body.steps if body.steps is not None else recipe.steps,
         comments=body.comments if body.comments is not None else recipe.comments,
         nutritional_value=body.nutritional_value if body.nutritional_value is not None else recipe.nutritional_value,
         proteins_value=body.proteins_value if body.proteins_value is not None else recipe.proteins_value,

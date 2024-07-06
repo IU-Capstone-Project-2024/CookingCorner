@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, Column, String, Text, ForeignKey, Float, ARRAY, Boolean, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy_utils import JSONType
 
 from src.database import Base
 
@@ -19,10 +20,8 @@ class Recipe(Base):
     cooking_time = Column(Integer)
     waiting_time = Column(Integer)
     total_time = Column(Integer)
-    portions = Column(Integer)
-    ingredients = Column(Text)
-    how_to_cook = Column(Text)
-    images_paths = Column(ARRAY(String))
+    ingredients = Column(ARRAY(JSONType))
+    steps = Column(ARRAY(JSONType))
     comments = Column(Text)
     nutritional_value = Column(Float)
     proteins_value = Column(Float)
@@ -33,6 +32,7 @@ class Recipe(Base):
     source = Column(String)
     is_private = Column(Boolean, nullable=False, default=True)
     creation_time = Column(DateTime)
+    users_ratings = Column(JSONType)
 
 
 class MyRecipe(Base):
@@ -51,19 +51,3 @@ class Tag(Base):
     name = Column(String, nullable=False)
     user_id = Column(ForeignKey('users.id'))
     recipe = relationship('Recipe', backref='tag')
-#
-#
-# class Ingredient(Base):
-#     __tablename__ = 'ingredient'
-#
-#     id = Column(Integer, primary_key=True)
-#     title = Column(String, nullable=False)
-#     portion = Column(String)
-#
-#
-# class Step(Base):
-#     __tablename__ = 'step'
-#
-#     id = Column(Integer, primary_key=True)
-#     title = Column(String, nullable=False)
-#     image_path = Column(String)

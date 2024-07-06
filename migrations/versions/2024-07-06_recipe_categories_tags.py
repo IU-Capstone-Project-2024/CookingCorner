@@ -1,18 +1,19 @@
-"""User Recipe Category Tag
+"""recipe categories tags
 
-Revision ID: 9c61868fc4e7
+Revision ID: 9722156b4645
 Revises: 
-Create Date: 2024-06-27 17:45:21.982533
+Create Date: 2024-07-06 17:35:21.284352
 
 """
 from typing import Sequence, Union
 
+import sqlalchemy_utils
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9c61868fc4e7'
+revision: str = '9722156b4645'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,6 +27,13 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('my_recipe',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('is_favourite', sa.Boolean(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
@@ -35,6 +43,7 @@ def upgrade() -> None:
     sa.Column('surname', sa.String(), nullable=True),
     sa.Column('cooking_experience', sa.Integer(), nullable=True),
     sa.Column('image_path', sa.String(), nullable=True),
+    sa.Column('recent_recipes', sa.ARRAY(sa.Integer()), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('tag',
@@ -42,8 +51,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('recipe',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -58,10 +66,8 @@ def upgrade() -> None:
     sa.Column('cooking_time', sa.Integer(), nullable=True),
     sa.Column('waiting_time', sa.Integer(), nullable=True),
     sa.Column('total_time', sa.Integer(), nullable=True),
-    sa.Column('portions', sa.Integer(), nullable=True),
-    sa.Column('ingredients', sa.Text(), nullable=True),
-    sa.Column('how_to_cook', sa.Text(), nullable=True),
-    sa.Column('images_paths', sa.ARRAY(sa.String()), nullable=True),
+    sa.Column('ingredients', sa.ARRAY(sqlalchemy_utils.types.json.JSONType()), nullable=True),
+    sa.Column('steps', sa.ARRAY(sqlalchemy_utils.types.json.JSONType()), nullable=True),
     sa.Column('comments', sa.Text(), nullable=True),
     sa.Column('nutritional_value', sa.Float(), nullable=True),
     sa.Column('proteins_value', sa.Float(), nullable=True),
@@ -70,11 +76,13 @@ def upgrade() -> None:
     sa.Column('dishes', sa.Text(), nullable=True),
     sa.Column('video_link', sa.String(), nullable=True),
     sa.Column('source', sa.String(), nullable=True),
+    sa.Column('is_private', sa.Boolean(), nullable=False),
+    sa.Column('creation_time', sa.DateTime(), nullable=True),
+    sa.Column('users_ratings', sqlalchemy_utils.types.json.JSONType(), nullable=True),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),
     sa.ForeignKeyConstraint(['tag_id'], ['tag.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
@@ -84,5 +92,6 @@ def downgrade() -> None:
     op.drop_table('recipe')
     op.drop_table('tag')
     op.drop_table('users')
+    op.drop_table('my_recipe')
     op.drop_table('category')
     # ### end Alembic commands ###
