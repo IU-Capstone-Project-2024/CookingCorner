@@ -61,8 +61,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.get("/verify-token/{token}")
-async def verify_user_token(token: str):
-    await verify_token(token=token)
+async def verify_user_token(current_user: User = Depends(get_current_user)):
     return {"message": "Token is valid"}
 
 
