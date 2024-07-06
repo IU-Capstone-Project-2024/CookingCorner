@@ -139,6 +139,23 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
     return recipes
 
 
+@recipe_router.get("/get_by_name")
+async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
+                      current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.name == name)
+    recipes = await db.execute(query)
+    recipes = recipes.all()
+    if recipes is None:
+        raise HTTPException(status_code=404, detail="Recipes with such name not found")
+    result_recipes = []
+    for recipe in recipes:
+        if not recipe[0].is_private:
+            result_recipes.append(recipe[0])
+    if len(result_recipes) == 0:
+        return None
+    return result_recipes
+
+
 @recipe_router.post("/create")
 async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async_session),
                         current_user: User = Depends(get_current_user)):
