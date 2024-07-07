@@ -9,13 +9,13 @@ const ProfileDescription = ({ data }: ProfileDescriptionProps) => {
   return (
     <section className="flex max-w-[330px] flex-col gap-2 truncate font-inter text-2xl font-medium text-mainBlack md:max-w-full">
       <p className="truncate text-wrap">Username: {data.username}</p>
-      {data.name !== "" && (
+      {data.name !== null && (
         <p className="truncate text-wrap">Name: {data.name}</p>
       )}
-      {data.surname !== "" && (
+      {data.surname !== null && (
         <p className="truncate text-wrap">Surname: {data.surname}</p>
       )}
-      {data.email !== "" && (
+      {data.email !== null && (
         <p className="truncate text-wrap">Email: {data.email}</p>
       )}
       {data.cooking_experience !== null && (

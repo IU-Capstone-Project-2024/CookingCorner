@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { UploadFields, UploadSchema } from "@/schemas/upload.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,7 +18,7 @@ const Upload = () => {
   });
 
   const submit: SubmitHandler<UploadFields> = (data) => {
-    console.log(data);
+    console.log(data, "Working with llama");
   };
 
   return (
@@ -30,7 +31,11 @@ const Upload = () => {
           Provide a link to a site that has a cooking recipe and we will create
           a recipe from it and add it to your list.
         </p>
-        <Input placeholder="Link" {...register("link")} />
+        <Input
+          placeholder={errors.link ? "Provide link first" : "Link"}
+          className={`${errors.link ? "font-medium placeholder:text-red-500" : "placeholder:text-mainBlack-secondary"}`}
+          {...register("link")}
+        />
         <Button
           variant={"icon"}
           className="mx-auto w-32 font-inter text-lg"

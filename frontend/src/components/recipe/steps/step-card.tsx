@@ -1,6 +1,6 @@
 interface StepCardProps {
   step: number;
-  img: string | null;
+  img?: string | null;
   description: string;
 }
 

@@ -6,12 +6,14 @@ interface RecipeLayoutProps {
   isPrivate?: boolean;
   children: React.ReactNode;
   className?: string;
+  isPending?: boolean;
 }
 
 const RecipeLayout = ({
-  isPrivate,
   children,
   className,
+  isPending,
+  isPrivate,
 }: RecipeLayoutProps) => {
   return (
     <section
@@ -20,7 +22,7 @@ const RecipeLayout = ({
         className,
       )}
     >
-      <RecipeNavigation privateRecipe={isPrivate} />
+      <RecipeNavigation isPending={isPending} isPrivate={isPrivate} />
       {children}
     </section>
   );

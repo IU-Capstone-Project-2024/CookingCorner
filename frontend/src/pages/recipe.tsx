@@ -4,29 +4,24 @@ import RecipeSteps from "@/components/recipe/recipe-steps";
 import { useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { useRecipe } from "@/services/queries";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RecipeLayout from "@/components/recipe/recipe-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const RecipePage = () => {
   const params = useParams();
   const recipe = useRecipe(+params.recipeId!);
+  const navigate = useNavigate();
   console.log(recipe.data);
   const [isSteps, setIsSteps] = useState(true);
 
   if (recipe.isError) {
-    return (
-      <RecipeLayout>
-        <p className="col-span-2 flex text-center font-semibold">
-          Something went wrong
-        </p>
-      </RecipeLayout>
-    );
+    return navigate("/home");
   }
 
   if (recipe.isPending) {
     return (
-      <RecipeLayout>
+      <RecipeLayout isPending={recipe.isPending}>
         <Skeleton className="h-[200px] w-full border-2 border-mainBlack bg-hover-secondary" />
         <Skeleton className="h-8 w-full items-start bg-hover-secondary" />
         <div className="grid w-full grid-cols-3 gap-2">
@@ -49,9 +44,14 @@ const RecipePage = () => {
   }
 
   return (
-    <RecipeLayout isPrivate={recipe.data.private}>
+    <RecipeLayout isPrivate={recipe.data.is_private}>
       <img
-        src={recipe.data.img === null ? "no_image.png" : "/" + recipe.data.img}
+        src={
+          recipe.data.icon_path === null
+            ? "/no_image.png"
+            : "/" + recipe.data.icon_path
+        }
+        alt="recipe picture"
         className="max-h-[200px] w-full max-w-[320px] object-cover"
       />
       <Tabs defaultValue="steps" className="font-inter">

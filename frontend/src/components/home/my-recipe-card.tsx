@@ -25,20 +25,20 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
-        src={recipe.img === null ? "no_image.png" : recipe.img}
-        alt={recipe.title}
+        src={recipe.icon_path === null ? "no_image.png" : recipe.icon_path}
+        alt={recipe.name}
         className="w-fit"
       />
-      <RecipeTitle>{recipe.title}</RecipeTitle>
+      <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription
         rating={recipe.rating}
-        author={recipe.author}
-        cookingTime={recipe.cookingTime}
+        author={recipe.creator_username}
+        cookingTime={recipe.cooking_time}
       />
       <Button onClick={() => handleAddToFavourites(recipe.id)}>
         <p className="flex items-center gap-2">
           Add to favourites{" "}
-          {recipe.starred ? (
+          {recipe.is_favorite ? (
             <FaHeart size={20} className="text-hover" />
           ) : (
             <FaRegHeart size={20} className="text-hover" />

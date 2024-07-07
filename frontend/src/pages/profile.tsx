@@ -7,21 +7,21 @@ import { FaPen } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const data = useAuth();
+  const profileData = useAuth();
   const navigate = useNavigate();
 
-  if (data.isError) {
+  if (profileData.isError) {
     return <div>Error occured</div>;
   }
 
-  if (data.isPending) {
+  if (profileData.isPending) {
     return <LoadingPage />;
   }
 
   return (
     <section className="flex flex-col items-center justify-between gap-4 px-4">
-      <ProfileImage img={data.data.image_path} />
-      <ProfileDescription data={data.data} />
+      <ProfileImage img={profileData.data.image_path} />
+      <ProfileDescription data={profileData.data} />
       <Button
         variant="recipeCard"
         size={"lg"}

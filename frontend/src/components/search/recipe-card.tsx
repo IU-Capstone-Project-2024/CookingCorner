@@ -10,7 +10,7 @@ interface RecipeCardProps {
   action?: (recipe: Recipe) => void;
 }
 
-const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
+const RecipeCard = ({ recipe }: RecipeCardProps) => {
   const navigate = useNavigate();
   const addToRecipesMutation = useAddRecipe();
 
@@ -24,14 +24,14 @@ const RecipeCard = ({ recipe, action }: RecipeCardProps) => {
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
-        src={recipe.img === null ? "no_image.png" : recipe.img}
-        alt={recipe.title}
+        src={recipe.icon_path === null ? "/no_image.png" : recipe.icon_path}
+        alt={"recipe picture"}
         className="w-fit"
       />
-      <RecipeTitle>{recipe.title}</RecipeTitle>
+      <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription
         rating={recipe.rating}
-        author={recipe.author}
+        author={recipe.creator_username}
         cookingTime={recipe.cooking_time}
       />
       <Button onClick={() => handleAddToRecipes(recipe.id)}>

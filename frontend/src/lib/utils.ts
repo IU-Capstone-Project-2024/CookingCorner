@@ -1,4 +1,5 @@
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
+import { User } from "@/types/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -31,12 +32,39 @@ export function convertDataToGMT(time: string[]) {
   );
 }
 
+export function checkAuth() {
+  const token = localStorage.getItem("accessTokenExpires");
+  if (token) {
+    const time = JSON.parse(token).split(" ");
+    const updatedTime = convertDataToGMT(time);
+    return !(updatedTime.getTime() < new Date().getTime());
+  }
+}
+
+export function prepareDataForEdit(data: User) {
+  let res: any = {}
+  for (let [key, value] of Object.entries(data)) {
+    if (value === '') {
+      res[key] = null;
+    } else {
+      res[key] = value;
+    }
+  }
+
+  return {...res, image_path: null};
+} 
+
 export const API = axios.create({
   baseURL: BASE_URL,
 });
 
 API.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  // if (checkAuth()) {
+    
+  // }
 
   config.headers.Authorization = accessToken
     ? `Bearer ${JSON.parse(accessToken)}`

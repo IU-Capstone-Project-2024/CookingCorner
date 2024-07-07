@@ -3,9 +3,11 @@ import { useMyRecipes } from "@/services/queries";
 import HomeLayout from "@/components/home/home-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import MyRecipeCard from "@/components/home/my-recipe-card";
+import RecipeCard from "@/components/search/recipe-card";
 
 const Home = memo(() => {
   const recipes = useMyRecipes();
+  console.log(recipes.data);
   const [search, setSearch] = useState("");
 
   if (recipes.isError) {
@@ -37,9 +39,9 @@ const Home = memo(() => {
     <HomeLayout recipes={recipes} setSearch={setSearch}>
       {recipes.data.length ? (
         recipes.data
-          .filter((recipe) => recipe.title.toLowerCase().startsWith(search))
+          .filter((recipe) => recipe.name.toLowerCase().startsWith(search))
           .map((recipe, index) => (
-            <MyRecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
+            <RecipeCard key={`favourite-recipe-${index}`} recipe={recipe} />
           ))
       ) : (
         <p className="col-span-2 text-center font-inter font-semibold text-mainBlack">

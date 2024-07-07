@@ -1,11 +1,10 @@
-import { User } from "@/types/types";
 import { memo } from "react";
 import { FaStar, FaClock, FaUser } from "react-icons/fa6";
 
 interface RecipeCardDescriptionProps {
   rating: number;
   cookingTime: number;
-  author: User;
+  author: string;
 }
 
 const RecipeCardDescription = memo(
@@ -19,11 +18,11 @@ const RecipeCardDescription = memo(
           </div>
           <div className="flex items-center gap-1 truncate text-wrap">
             <FaClock className="text-hover" />
-            {cookingTime + " min"}
+            {cookingTime === null ? 0 : cookingTime} min
           </div>
-          <div className="flex items-center gap-1 truncate text-wrap">
+          <div className="col-span-2 flex items-center gap-1 truncate text-wrap">
             <FaUser className="text-hover" />
-            {/* {author.username} */}
+            {author}
           </div>
         </div>
       </div>

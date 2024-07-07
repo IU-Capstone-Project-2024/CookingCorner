@@ -1,28 +1,28 @@
 import z from "zod";
 
 export const RecipeSchema = z.object({
-  title: z
+  name: z
     .string()
     .min(1, { message: "You need to name your recipe!" })
     .max(30),
-  description: z.string().min(0),
-  category: z.any(),
-  tag: z.string().min(0),
-  preparationTime: z.string().min(0),
-  cookingTime: z.string().min(0),
-  restTime: z.string().min(0),
-  totalTime: z.string().min(0),
-  portions: z.string().min(0),
-  ingredients: z.string().min(0),
-  cookingSteps: z.string().min(0),
-  comments: z.string().min(0),
-  nutritionalValue: z.string().min(0),
-  proteinsValue: z.string().min(0),
-  fatsValue: z.string().min(0),
-  carbohydratesValue: z.string().min(0),
-  dishes: z.string().min(0),
-  videoLink: z.string().min(0),
-  source: z.string().min(0),
+  description: z.string().min(1),
+  category_name: z.string().min(0),
+  tag_name: z.string().min(0).optional().or(z.literal(undefined)),
+  preparing_time: z.string().min(0).optional().or(z.literal(undefined)),
+  cooking_time: z.string().min(0).optional().or(z.literal(undefined)),
+  waiting_time: z.string().min(0).optional().or(z.literal(undefined)),
+  total_time: z.string().min(0).optional().or(z.literal(undefined)),
+  portions: z.string().min(0).optional().or(z.literal(undefined)),
+  ingredients: z.string().min(0).optional().or(z.literal(undefined)),
+  steps: z.string().min(0).optional().or(z.literal(undefined)),
+  comments: z.string().min(0).optional().or(z.literal(undefined)),
+  nutritional_value: z.string().min(0).optional().or(z.literal(undefined)),
+  proteins_value: z.string().min(0).optional().or(z.literal(undefined)),
+  fats_value: z.string().min(0).optional().or(z.literal(undefined)),
+  carbohydrates_value: z.string().min(0).optional().or(z.literal(undefined)),
+  dishes: z.string().min(0).optional().or(z.literal(undefined)),
+  video_link: z.string().min(0).optional().or(z.literal(undefined)),
+  source: z.string().min(0).optional().or(z.literal(undefined)),
 });
 
 export type RecipeSchemaFields = z.infer<typeof RecipeSchema>;

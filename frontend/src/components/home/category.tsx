@@ -6,8 +6,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCategories } from "@/services/queries";
 
 const Category = () => {
+  const categories = useCategories();
+
+  if (categories.isError) {
+    return <p>Error</p>;
+  }
+
+  if (categories.isPending) {
+    return <p>Loading</p>;
+  }
+
   return (
     <Select>
       <SelectTrigger className="h-8 w-[180px] bg-primary font-inter font-medium">
@@ -15,11 +26,11 @@ const Category = () => {
       </SelectTrigger>
       <SelectContent className="bg-primary font-inter font-medium">
         <SelectGroup>
-          <SelectItem value="all">All</SelectItem>
-          <SelectItem value="warm dishes">Warm dishes</SelectItem>
-          <SelectItem value="smoked">Smoked</SelectItem>
-          <SelectItem value="boiled">Boiled</SelectItem>
-          <SelectItem value="dessert">Dessert</SelectItem>
+          {categories.data.map((item: string) => (
+            <SelectItem key={item} value={item}>
+              {item}
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

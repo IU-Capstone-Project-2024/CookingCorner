@@ -10,7 +10,7 @@ const RecipeTime = ({
   portions,
 }: RecipeTimeProps) => {
   return (
-    <div className="flex items-center justify-between text-center">
+    <div className="flex items-center justify-between gap-4 text-center">
       <div className="flex flex-col font-inter font-normal">
         Prep. time{" "}
         <span className="font-bold">

@@ -3,17 +3,17 @@ import SearchLayout from "@/components/search/search-layout";
 import Title from "@/components/title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBestRated, useRecent } from "@/services/queries";
-import { Recipe } from "@/types/types";
 import { useState } from "react";
 
 const Search = () => {
   // const { lastRecipes, recommendedRecipes } = useLoaderData() as RecipeResponse;
-  // const bestRated = useBestRated();
+  const bestRated = useBestRated();
+  console.log(bestRated.data);
   const recentRecipes = useRecent();
   console.log(recentRecipes.data);
   const [search, setSearch] = useState("");
 
-  if (recentRecipes.isError) {
+  if (recentRecipes.isError || bestRated.isError) {
     return (
       <SearchLayout setSearch={setSearch}>
         <p className="col-span-2 flex text-center font-semibold">
@@ -23,7 +23,7 @@ const Search = () => {
     );
   }
 
-  if (recentRecipes.isPending) {
+  if (recentRecipes.isPending || bestRated.isPending) {
     return (
       <SearchLayout setSearch={setSearch}>
         <Title className="mx-auto">Last recipes</Title>
@@ -60,9 +60,9 @@ const Search = () => {
 
       <Title className="mx-auto">Best rated</Title>
       <div className="grid grid-cols-2 gap-2">
-        {/* {bestRated.data.map((recipe, idx) => (
+        {bestRated.data.map((recipe, idx) => (
           <RecipeCard key={`recommended-recipe-${idx}`} recipe={recipe} />
-        ))} */}
+        ))}
       </div>
     </SearchLayout>
   );

@@ -14,34 +14,47 @@ export type Page = {
 };
 
 export type Step = {
-  stepNumber: number;
-  img: string;
+  image_path: string;
   description: string;
+  title: string;
 };
 
 export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert";
 
 export type Recipe = {
   id: number;
-  title: string;
-  img: string | null;
-  private: boolean;
-  rating: number;
+  carbohydrates_value: number;
+  category_id: number;
+  category_name: string;
+  comments: string;
   cooking_time: number;
-  preparationTime: number;
-  portions: number;
-  favourite: boolean;
-  starred: boolean;
-  reviews: number;
-  author: User;
-  category: Category;
-  steps: Step[];
+  creator_username: string;
+  description: string;
+  dishes: string;
+  fats_value: number;
+  icon_path: string;
   ingredients: Ingredient[];
+  is_favorite: boolean;
+  is_my_recipe: boolean;
+  is_private: boolean;
+  name: string;
+  nutritional_value: number;
+  preparing_time: number;
+  proteins_value: number;
+  rating: number;
+  reviews: number;
+  source: string;
+  steps: Step[];
+  tag_id: number;
+  tag_name: number;
+  total_time: number;
+  user_id: number;
+  video_link: string;
+  waiting_time: number;
 };
 
 export type Ingredient = {
-  ingredientNumber: number;
-  img: string | null;
+  portion: string;
   title: string;
 };
 

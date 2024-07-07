@@ -1,4 +1,5 @@
 import { API } from "@/lib/utils";
+import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { Recipe, User } from "@/types/types";
 
@@ -33,12 +34,12 @@ export const addToMyRecipes = async (id: number) => {
   return await API.post('/recipes/add_to_my_recipes', id)
 }
 
-export const createRecipe = async (data: FormData) => {
+export const createRecipe = async (data: RecipeSchemaFields) => {
   return await API.post("/recipes/create", data);
 };
 
 export const changePrivacy = async (id: number) => {
-  return await API.put(`/recipes/publish`, id);
+  return await API.put(`/recipes/publish/${id}`);
 };
 
 export const getRecipeById = async (id: number) => {
@@ -55,4 +56,8 @@ export const getRecentRecipes = async () => {
 
 export const changeProfileData = async (data: User) => {
   return (await API.post("/edit_user_data", data))
+}
+
+export const getCategories = async () => {
+  return (await API.get('/categories/get_all')).data
 }

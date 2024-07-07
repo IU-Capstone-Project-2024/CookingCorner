@@ -13,16 +13,16 @@ interface RecipeDescriptionProps {
 const RecipeDescription = memo(({ recipe }: RecipeDescriptionProps) => {
   return (
     <div className="sticky top-12 flex w-full flex-col gap-4 bg-primary p-2 text-left">
-      <RecipeTitle>{recipe.title}</RecipeTitle>
+      <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeEvaluations
         rating={recipe.rating}
-        author={recipe.author}
+        author={recipe.creator_username}
         reviews={recipe.reviews}
       />
       <RecipeTime
-        cookingTime={recipe.cookingTime}
-        preparationTime={recipe.preparationTime}
-        portions={recipe.portions}
+        cookingTime={recipe.cooking_time}
+        preparationTime={recipe.preparing_time}
+        portions={0}
       />
       <div className="text-center">
         <RecipeSwitchButton />

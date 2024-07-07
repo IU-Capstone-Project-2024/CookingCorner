@@ -1,9 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changeProfileData, createRecipe, login, register } from "./api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, login, register } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
-import { Recipe, User } from "@/types/types";
-import { DatabaseZap } from "lucide-react";
+import { User } from "@/types/types";
+import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export function useAddFavourite() {
 
 export function useCreateRecipe() {
   return useMutation({
-    mutationFn: (data: FormData) => createRecipe(data),
+    mutationFn: (data: RecipeSchemaFields) => createRecipe(data),
 
     onError: (err) =>
       console.log(`Error occured while creating new recipe. ${err}`),
@@ -79,21 +79,52 @@ export function useCreateRecipe() {
 }
 
 export function useAddRecipe() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (id: number) => addToMyRecipes(id),
-
-    onError: (err) =>
-      console.log(`Error occured while adding recipe to my recipes. ${err}`),
     onSuccess: () => console.log("New recipe successfully added!"),
+
+    onSettled: async (_, err, variables) => {
+      if (err) {
+        console.log(`Error occured while adding recipe to my recipes. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['my-recipes']})
+      }
+    }
   })
 }
 
 export function useProfileEdit() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: User) => changeProfileData(data),
 
+    onSettled: async (_, err, variables) => {
+      if (err) {
+        console.log(`Error occured while changing profile data. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['userMe']})
+      }
+    }
+  })
+}
+
+export function usePublish() {
+  return useMutation({
+    mutationFn: (id: number) => changePrivacy(id),
+    
     onError: (err) =>
-      console.log(`Error occured while changing profile data. ${err}`),
-    onSuccess: () => console.log("Profile data changed!"),
+      console.log(`Error occured while publishing recipe. ${err}`),
+    onSuccess: () => console.log("Recipe successfully published!"),
+
+    // onSettled: async (_, err, variables) => {
+    //   if (err) {
+    //     console.log(`Error occured while changing profile data. ${err}`)
+    //   } else {
+    //     await queryClient.invalidateQueries({queryKey: ['recipe', {id: variables.id}]})
+    //   }
+    // }
   })
 }
