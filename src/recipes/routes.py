@@ -274,7 +274,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.put("/update")
+@recipe_router.put("/update/{id}")
 async def update_recipe(body: RecipeUpdateSchema,
                         db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     recipe = await get_recipe(db=db, recipe_id=body.id, user_id=current_user.id)
@@ -376,7 +376,7 @@ async def add_to_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.delete("/delete_from_my_recipes")
+@recipe_router.delete("/delete_from_my_recipes/{recipe_id}")
 async def delete_from_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db):
@@ -416,7 +416,7 @@ async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.delete("/remove_from_favourites")
+@recipe_router.delete("/remove_from_favourites/{recipe_id}")
 async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db):
