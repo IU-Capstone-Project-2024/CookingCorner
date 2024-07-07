@@ -1,12 +1,17 @@
+import base64
+import io
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi.responses import FileResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import StreamingResponse
 
 from src.auth.utils import get_current_user
+from src.config import IMAGE_PATH_DIR
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
@@ -19,7 +24,7 @@ from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
 
 
-@recipe_router.get("/get_by_id/{recipe_id}", response_model=RecipeWithAdditionalDataSchema)
+@recipe_router.get("/get_by_id/{recipe_id}", response_model=RecipeWithAdditionalDataSchema | None)
 async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                            current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(db=db, recipe_id=recipe_id):
@@ -54,7 +59,7 @@ async def get_recipe_by_id(recipe_id: int, db: AsyncSession = Depends(get_async_
     return result_schema
 
 
-@recipe_router.get("/get_recent_recipes", response_model=list[RecipeWithAdditionalDataSchema])
+@recipe_router.get("/get_recent_recipes", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
                              current_user: User = Depends(get_current_user)):
     recent_recipes_ids = current_user.recent_recipes
@@ -88,7 +93,7 @@ async def delete_recent_recipes(db: AsyncSession = Depends(get_async_session),
 #     return recipes
 
 
-@recipe_router.get("/get_my_recipes")
+@recipe_router.get("/get_my_recipes", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_my_recipes(db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
     query = select(MyRecipe).where(MyRecipe.user_id == current_user.id)
@@ -99,12 +104,13 @@ async def get_my_recipes(db: AsyncSession = Depends(get_async_session),
         recipe = await db.execute(query)
         recipe = recipe.first()
         if recipe is not None:
-            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user, my_recipe=my_recipe[0])
+            result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user,
+                                                    my_recipe=my_recipe[0])
             recipes.append(result_schema)
     return recipes
 
 
-@recipe_router.get("/get_by_tag/{tag_name}")
+@recipe_router.get("/get_by_tag/{tag_name}", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session),
                      current_user: User = Depends(get_current_user)):
     tag = await get_tag_by_name(db=db, user_id=current_user.id, tag_name=tag_name)
@@ -121,7 +127,7 @@ async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session
     return result
 
 
-@recipe_router.get("/get_by_category/{category_name}")
+@recipe_router.get("/get_by_category/{category_name}", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_by_category(category_name: str, db: AsyncSession = Depends(get_async_session),
                           current_user: User = Depends(get_current_user)):
     category = await get_category_by_name(db=db, category_name=category_name)
@@ -138,7 +144,7 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
     return result
 
 
-@recipe_router.get("/get_by_name")
+@recipe_router.get("/get_by_name", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
                       current_user: User = Depends(get_current_user)):
     query = select(Recipe).where(Recipe.name == name)
@@ -156,7 +162,7 @@ async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
     return result
 
 
-@recipe_router.get("/get_best_rated")
+@recipe_router.get("/get_best_rated", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     query = select(Recipe).where(Recipe.is_private == False).order_by(Recipe.rating.desc()).limit(10)
     recipes = await db.execute(query)
@@ -334,7 +340,7 @@ async def update_recipe(body: RecipeUpdateSchema,
 #     return {"status": "success"}
 
 
-@recipe_router.put("/publish")
+@recipe_router.put("/publish/{recipe_id}")
 async def publish(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
@@ -423,3 +429,16 @@ async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_
     await db.execute(query)
     await db.commit()
     return {"status": "success"}
+
+
+@recipe_router.post("/upload_file")
+async def upload_file(file: UploadFile, db: AsyncSession = Depends(get_async_session),
+                current_user: User = Depends(get_current_user)):
+    with open(f"{IMAGE_PATH_DIR}/1.jpg", mode="wb") as f:
+        f.write(await file.read())
+    return file
+
+
+@recipe_router.get("/get_file")
+async def get_file(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
+    return FileResponse(f"{IMAGE_PATH_DIR}/1.jpg")
