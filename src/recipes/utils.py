@@ -29,8 +29,10 @@ async def get_tag_by_name(db: AsyncSession, user_id: int, tag_name: str) -> Tag 
 async def get_tag_by_recipe(db: AsyncSession, recipe: Recipe) -> Tag | None:
     query = select(Tag).where(Tag.id == recipe.tag_id)
     tag = await db.execute(query)
-    tag = tag.first()[0]
-    return tag
+    tag = tag.first()
+    if tag is not None:
+        return tag[0]
+    return None
 
 
 async def get_category_by_recipe(db: AsyncSession, recipe: Recipe) -> Category | None:
@@ -135,6 +137,6 @@ async def get_result_schema(
         else:
             result_schema.is_favorite = my_recipe[0].is_favourite
     result_schema.creator_username = creator_username
-    result_schema.tag_name = tag.name
+    result_schema.tag_name = tag.name if tag is not None else None
     result_schema.category_name = category.name
     return result_schema
