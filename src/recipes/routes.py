@@ -181,7 +181,7 @@ async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(ge
     users_ratings = {}
     if recipe.users_ratings is not None:
         users_ratings = recipe.users_ratings.copy()
-    current_rating = recipe.rating
+    current_rating = recipe.rating if recipe.rating is not None else 0
     rating_sum = current_rating * len(users_ratings)
     if str(current_user.id) in users_ratings:
         rating_sum -= users_ratings[str(current_user.id)]
@@ -199,9 +199,12 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
     category = await get_category_by_name(db=db, category_name=body.category_name)
     if category is None:
         raise HTTPException(status_code=404, detail="Category not found")
-    tag = await get_tag_by_name(db=db, tag_name=body.tag_name, user_id=current_user.id)
-    if tag is None:
-        raise HTTPException(status_code=404, detail="Tag not found")
+    if body.tag_name is not None:
+        tag = await get_tag_by_name(db=db, tag_name=body.tag_name, user_id=current_user.id)
+        if tag is None:
+            raise HTTPException(status_code=404, detail="Tag not found")
+    else:
+        tag = None
 
     creation_time = datetime.now()
     query = insert(Recipe).values(
@@ -210,7 +213,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         icon_path=body.icon_path,
         rating=body.rating,
         category_id=category.id,
-        tag_id=tag.id,
+        tag_id=tag.id if tag is not None else None,
         user_id=current_user.id,
         preparing_time=body.preparing_time,
         cooking_time=body.cooking_time,
@@ -237,7 +240,6 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.icon_path == body.icon_path,
         Recipe.rating == body.rating,
         Recipe.category_id == category.id,
-        Recipe.tag_id == tag.id,
         Recipe.user_id == current_user.id,
         Recipe.preparing_time == body.preparing_time,
         Recipe.cooking_time == body.cooking_time,
