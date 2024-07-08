@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import UserCreate, TokenSchema, UserSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, \
-    get_user_data, get_current_user
+    get_user_data, get_current_user, verify_token
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
 from src.models import User
@@ -62,8 +62,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @auth_router.get("/verify-token/{token}")
-async def verify_user_token(db: AsyncSession = Depends(get_async_session),
-                            current_user: User = Depends(get_current_user)):
+async def verify_user_token(token: str, db: AsyncSession = Depends(get_async_session)):
+    await verify_token(token=token, db=db)
     return {"message": "Token is valid"}
 
 

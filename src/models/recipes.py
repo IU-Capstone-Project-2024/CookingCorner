@@ -22,6 +22,7 @@ class Recipe(Base):
     total_time = Column(Integer)
     ingredients = Column(ARRAY(JSONType))
     steps = Column(ARRAY(JSONType))
+    portions = Column(Integer, default=1)
     comments = Column(Text)
     nutritional_value = Column(Float)
     proteins_value = Column(Float)

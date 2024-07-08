@@ -15,10 +15,10 @@ from src.config import IMAGE_PATH_DIR
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
-from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema
+from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema, RecipeFiltersSchema
 from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recipe_exists, get_recipe, \
     check_my_recipe_exists, \
-    recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema
+    recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
@@ -68,11 +68,11 @@ async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
     recipes = []
     for recent_recipe_id in recent_recipes_ids:
         query = select(Recipe).where(Recipe.id == recent_recipe_id)
-        recipe = await db.execute(query)
         recipe = recipe.first()
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             recipes.append(result_schema)
+    recipes.reverse()
     return recipes
 
 
@@ -93,20 +93,28 @@ async def delete_recent_recipes(db: AsyncSession = Depends(get_async_session),
 #     return recipes
 
 
-@recipe_router.get("/get_my_recipes", response_model=list[RecipeWithAdditionalDataSchema] | None)
-async def get_my_recipes(db: AsyncSession = Depends(get_async_session),
+@recipe_router.post("/get_my_recipes", response_model=list[RecipeWithAdditionalDataSchema] | None)
+async def get_my_recipes(body: RecipeFiltersSchema, db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
     query = select(MyRecipe).where(MyRecipe.user_id == current_user.id)
     my_recipes = await db.execute(query)
     recipes = []
     for my_recipe in my_recipes:
         query = select(Recipe).where(my_recipe[0].recipe_id == Recipe.id)
+
+        query = await filter_query(db=db, recipe_id=my_recipe[0].recipe_id, body=body, query=query,
+                                   current_user=current_user)
+        if query is None:
+            continue
+
         recipe = await db.execute(query)
         recipe = recipe.first()
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user,
                                                     my_recipe=my_recipe[0])
             recipes.append(result_schema)
+    if not body.ascending_order:
+        recipes.reverse()
     return recipes
 
 
@@ -124,6 +132,7 @@ async def get_by_tag(tag_name: str, db: AsyncSession = Depends(get_async_session
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
+    result.reverse()
     return result
 
 
@@ -141,24 +150,35 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
+    result.reverse()
     return result
 
 
-@recipe_router.get("/get_by_name", response_model=list[RecipeWithAdditionalDataSchema] | None)
-async def get_by_name(name: str, db: AsyncSession = Depends(get_async_session),
+@recipe_router.post("/get_by_name", response_model=list[RecipeWithAdditionalDataSchema] | None)
+async def get_by_name(name: str, body: RecipeFiltersSchema, db: AsyncSession = Depends(get_async_session),
                       current_user: User = Depends(get_current_user)):
-    query = select(Recipe).where(Recipe.name == name)
+    query = select(Recipe).where(Recipe.name.ilike('%' + name + '%'))
     recipes = await db.execute(query)
     recipes = recipes.all()
     if recipes is None:
         raise HTTPException(status_code=404, detail="Recipes with such name not found")
     result = []
     for recipe in recipes:
+        query = select(Recipe)
+        query = await filter_query(db=db, recipe_id=recipe[0].id, body=body, query=query,
+                                   current_user=current_user)
+        if query is None:
+            continue
+        query_result = await db.execute(query)
+        if query_result.first() is None:
+            continue
         if not recipe[0].is_private:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
     if len(result) == 0:
         return None
+    if not body.ascending_order:
+        result.reverse()
     return result
 
 
@@ -172,6 +192,7 @@ async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
+    result.reverse()
     return result
 
 
@@ -227,6 +248,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         total_time=body.total_time,
         ingredients=body.ingredients.copy() if body.ingredients is not None else None,
         steps=body.steps.copy() if body.steps is not None else None,
+        portions=body.portions if body.portions is not None else None,
         comments=body.comments,
         nutritional_value=body.nutritional_value,
         proteins_value=body.proteins_value,
@@ -251,6 +273,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.cooking_time == body.cooking_time,
         Recipe.waiting_time == body.waiting_time,
         Recipe.total_time == body.total_time,
+        Recipe.portions == body.portions,
         Recipe.comments == body.comments,
         Recipe.nutritional_value == body.nutritional_value,
         Recipe.proteins_value == body.proteins_value,
@@ -274,7 +297,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.put("/update/{id}")
+@recipe_router.put("/update")
 async def update_recipe(body: RecipeUpdateSchema,
                         db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     recipe = await get_recipe(db=db, recipe_id=body.id, user_id=current_user.id)
@@ -307,6 +330,7 @@ async def update_recipe(body: RecipeUpdateSchema,
         total_time=body.total_time if body.total_time is not None else recipe.total_time,
         ingredients=body.ingredients if body.ingredients is not None else recipe.ingredients,
         steps=body.steps if body.steps is not None else recipe.steps,
+        portions=body.portions if body.portions is not None else recipe.portions,
         comments=body.comments if body.comments is not None else recipe.comments,
         nutritional_value=body.nutritional_value if body.nutritional_value is not None else recipe.nutritional_value,
         proteins_value=body.proteins_value if body.proteins_value is not None else recipe.proteins_value,
@@ -376,7 +400,7 @@ async def add_to_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.delete("/delete_from_my_recipes/{recipe_id}")
+@recipe_router.delete("/delete_from_my_recipes")
 async def delete_from_my_recipes(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db):
@@ -416,7 +440,7 @@ async def add_to_favourites(recipe_id: int, db: AsyncSession = Depends(get_async
     return {"status": "success"}
 
 
-@recipe_router.delete("/remove_from_favourites/{recipe_id}")
+@recipe_router.delete("/remove_from_favourites")
 async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                                  current_user: User = Depends(get_current_user)):
     if not await check_recipe_exists(recipe_id=recipe_id, db=db):
@@ -433,7 +457,7 @@ async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_
 
 @recipe_router.post("/upload_file")
 async def upload_file(file: UploadFile, db: AsyncSession = Depends(get_async_session),
-                current_user: User = Depends(get_current_user)):
+                      current_user: User = Depends(get_current_user)):
     with open(f"{IMAGE_PATH_DIR}/1.jpg", mode="wb") as f:
         f.write(await file.read())
     return file
