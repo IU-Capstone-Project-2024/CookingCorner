@@ -12,7 +12,7 @@ class Recipe(Base):
     name = Column(String(length=200), nullable=False)
     description = Column(Text, nullable=False)
     icon_path = Column(String)
-    rating = Column(Float)
+    rating = Column(Float, default=0.0)
     user_id = Column(ForeignKey('users.id'), nullable=False)
     category_id = Column(ForeignKey('category.id'), nullable=False)
     tag_id = Column(ForeignKey('tag.id'))
@@ -34,6 +34,7 @@ class Recipe(Base):
     is_private = Column(Boolean, nullable=False, default=True)
     creation_time = Column(DateTime)
     users_ratings = Column(JSONType)
+    users_ratings_count = Column(Integer, default=0)
 
 
 class MyRecipe(Base):
