@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-from sqlalchemy import select, insert, delete, update
+from sqlalchemy import select, insert, delete, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import StreamingResponse
 
@@ -68,6 +68,7 @@ async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
     recipes = []
     for recent_recipe_id in recent_recipes_ids:
         query = select(Recipe).where(Recipe.id == recent_recipe_id)
+        recipe = await db.execute(query)
         recipe = recipe.first()
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
@@ -184,7 +185,11 @@ async def get_by_name(name: str, body: RecipeFiltersSchema, db: AsyncSession = D
 
 @recipe_router.get("/get_best_rated", response_model=list[RecipeWithAdditionalDataSchema] | None)
 async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
-    query = select(Recipe).where(Recipe.is_private == False).order_by(Recipe.rating.desc()).limit(10)
+    query = (select(Recipe)
+             .where(Recipe.is_private == False)
+             .order_by(Recipe.rating.desc())
+             .order_by(Recipe.users_ratings_count.desc())
+             .limit(10))
     recipes = await db.execute(query)
     recipes = recipes.all()
     result = []
@@ -192,7 +197,6 @@ async def get_best_rated(db: AsyncSession = Depends(get_async_session), current_
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
-    result.reverse()
     return result
 
 
@@ -216,6 +220,9 @@ async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(ge
     rating_sum += rating
     recipe.rating = rating_sum / len(users_ratings)
     recipe.users_ratings = users_ratings.copy()
+    if recipe.users_ratings_count is None:
+        recipe.users_ratings_count = 0
+    recipe.users_ratings_count += 1
     await db.commit()
     return {"status": "success"}
 
@@ -238,7 +245,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         name=body.name,
         description=body.description,
         icon_path=body.icon_path,
-        rating=body.rating,
+        rating=0.0,
         category_id=category.id,
         tag_id=tag.id if tag is not None else None,
         user_id=current_user.id,
@@ -266,7 +273,6 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.name == body.name,
         Recipe.description == body.description,
         Recipe.icon_path == body.icon_path,
-        Recipe.rating == body.rating,
         Recipe.category_id == category.id,
         Recipe.user_id == current_user.id,
         Recipe.preparing_time == body.preparing_time,
