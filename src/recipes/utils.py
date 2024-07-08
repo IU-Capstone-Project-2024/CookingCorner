@@ -1,9 +1,9 @@
-from sqlalchemy import select
+from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import Category, Tag, Recipe, User
 from src.models.recipes import MyRecipe
-from src.recipes.schemas import RecipeWithAdditionalDataSchema
+from src.recipes.schemas import RecipeWithAdditionalDataSchema, RecipeFiltersSchema
 
 
 async def get_category_by_name(db: AsyncSession, category_name: str) -> Category | None:
@@ -95,6 +95,7 @@ async def recipe_to_schema(recipe: Recipe) -> RecipeWithAdditionalDataSchema:
         total_time=recipe.total_time,
         ingredients=recipe.ingredients,
         steps=recipe.steps,
+        portions=recipe.portions,
         comments=recipe.comments,
         nutritional_value=recipe.nutritional_value,
         proteins_value=recipe.proteins_value,
@@ -140,3 +141,24 @@ async def get_result_schema(
     result_schema.tag_name = tag.name if tag is not None else None
     result_schema.category_name = category.name
     return result_schema
+
+
+async def filter_query(
+        db: AsyncSession,
+        recipe_id: int,
+        body: RecipeFiltersSchema,
+        query: Select[tuple[Recipe]],
+        current_user: User
+) -> Select[tuple[Recipe]] | None:
+    if body.category_name:
+        category = await get_category_by_name(db=db, category_name=body.category_name)
+        query = query.where(Recipe.category_id == category.id)
+    if body.is_favourite:
+        my_recipe_query = select(MyRecipe).where(MyRecipe.user_id == current_user.id).where(
+            MyRecipe.recipe_id == recipe_id)
+        my_recipe = await db.execute(my_recipe_query)
+        my_recipe = my_recipe.first()
+        if my_recipe is not None:
+            if not my_recipe[0].is_favourite:
+                return None
+    return query

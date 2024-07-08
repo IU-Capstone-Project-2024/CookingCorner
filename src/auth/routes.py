@@ -9,17 +9,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import UserCreate, TokenSchema, UserSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, \
-    get_user_data, get_current_user
+    get_user_data, get_current_user, verify_token
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
 from src.models import User
 
-router = APIRouter(tags=["Auth"])
+auth_router = APIRouter(tags=["Auth"])
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-@router.post("/register")
+@auth_router.post("/register")
 async def register_user(user: UserCreate, db: AsyncSession = Depends(get_async_session)):
     db_user = await get_user_by_username(db, username=user.username)
     if db_user:
@@ -31,7 +31,7 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_async_s
     return await create_user(db=db, user=user)
 
 
-@router.post("/login")
+@auth_router.post("/login")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),
                                  db: AsyncSession = Depends(get_async_session)):
     user = await authenticate_user(form_data.username, form_data.password, db)
@@ -61,18 +61,18 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
 
 
-@router.get("/verify-token/{token}")
-async def verify_user_token(db: AsyncSession = Depends(get_async_session),
-                            current_user: User = Depends(get_current_user)):
+@auth_router.get("/verify-token/{token}")
+async def verify_user_token(token: str, db: AsyncSession = Depends(get_async_session)):
+    await verify_token(token=token, db=db)
     return {"message": "Token is valid"}
 
 
-@router.post("/get_User/me")
+@auth_router.post("/get_User/me")
 async def get_user_me(db: AsyncSession = Depends(get_async_session), current_user: User = Depends(get_current_user)):
     return await get_user_data(current_user=current_user)
 
 
-@router.post("/edit_user_data")
+@auth_router.post("/edit_user_data")
 async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
     if body.username is not None:

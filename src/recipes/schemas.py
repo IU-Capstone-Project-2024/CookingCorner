@@ -17,6 +17,7 @@ class RecipePaginationSchema(BaseModel):
     total_time: int | None = None
     ingredients: list[dict] | None = None
     steps: list[dict] | None = None
+    portions: int | None = None
     comments: str | None = None
     nutritional_value: float | None = None
     proteins_value: float | None = None
@@ -40,3 +41,9 @@ class RecipeWithAdditionalDataSchema(RecipePaginationSchema):
     creator_username: bool | None = None
     category_name: str | None = None
     tag_name: str | None = None
+
+
+class RecipeFiltersSchema(BaseModel):
+    category_name: str | None = None
+    is_favourite: bool | None = None
+    ascending_order: bool | None = None
