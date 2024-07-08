@@ -6,11 +6,8 @@ import { useBestRated, useRecent } from "@/services/queries";
 import { useState } from "react";
 
 const Search = () => {
-  // const { lastRecipes, recommendedRecipes } = useLoaderData() as RecipeResponse;
   const bestRated = useBestRated();
-  console.log(bestRated.data);
   const recentRecipes = useRecent();
-  console.log(recentRecipes.data);
   const [search, setSearch] = useState("");
 
   if (recentRecipes.isError || bestRated.isError) {

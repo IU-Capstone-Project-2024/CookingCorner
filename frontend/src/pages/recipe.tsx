@@ -1,4 +1,3 @@
-import RecipeNavigation from "@/components/recipe/recipe-navigation";
 import RecipeDescription from "@/components/recipe/recipe-description";
 import RecipeSteps from "@/components/recipe/recipe-steps";
 import { useState } from "react";
@@ -12,11 +11,10 @@ const RecipePage = () => {
   const params = useParams();
   const recipe = useRecipe(+params.recipeId!);
   const navigate = useNavigate();
-  console.log(recipe.data);
   const [isSteps, setIsSteps] = useState(true);
 
   if (recipe.isError) {
-    return navigate("/home");
+    return navigate("/recipes");
   }
 
   if (recipe.isPending) {
@@ -34,7 +32,7 @@ const RecipePage = () => {
           <Skeleton className="h-12 w-full bg-hover-secondary" />
           <Skeleton className="h-12 w-full bg-hover-secondary" />
         </div>
-        <div className="flex h-8 w-full items-center gap-1 rounded-full border-2 border-mainBlack bg-primary p-1">
+        <div className="flex h-8 w-full items-center gap-1 rounded-full bg-primary p-1">
           <Skeleton className="h-6 w-full rounded-full bg-hover-secondary" />
           <Skeleton className="h-6 w-full rounded-full bg-hover-secondary" />
         </div>

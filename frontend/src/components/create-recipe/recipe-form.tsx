@@ -2,9 +2,9 @@ import { RecipeSchema, RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RefObject } from "react";
-import { useCreateRecipe } from "@/services/mutations";
-import { Form, FormField } from "@/components/ui/form";
+import { RefObject, useState } from "react";
+import { useCreateRecipe, useUploadFile } from "@/services/mutations";
+import { Form, FormControl, FormField } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -13,7 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCategories } from "@/services/queries";
+import { useCategories, useFile } from "@/services/queries";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
@@ -21,11 +23,11 @@ interface RecipeFormProps {
 
 const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   const categories = useCategories();
+  const createRecipeMutation = useCreateRecipe();
+  // const uploadFileMutation = useUploadFile();
+  // const data = useFile();
   const form = useForm<RecipeSchemaFields>({
     resolver: zodResolver(RecipeSchema),
-    defaultValues: {
-      name: "",
-    },
   });
 
   if (categories.isError) {
@@ -36,11 +38,19 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
     return <p>Loading</p>;
   }
 
-  const createRecipeMutation = useCreateRecipe();
+  // const fileRef = form.register("icon_path");
+
+  // function getFile() {
+  //   console.log(data.data.data);
+  //   setBinary(data?.data?.data);
+  // }
 
   function processRecipeCreation(data: RecipeSchemaFields) {
     createRecipeMutation.mutate(data);
     form.reset();
+    // let formData = new FormData();
+    // formData.append("file", data.icon_path[0]);
+    // uploadFileMutation.mutate(formData);
   }
 
   return (
@@ -49,6 +59,31 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         onSubmit={form.handleSubmit(processRecipeCreation)}
         className="mt-2 flex flex-col gap-2 font-inter"
       >
+        {/* <FormField
+          control={form.control}
+          name="icon_path"
+          render={({ field }) => (
+            <div className="inline-flex items-center justify-center">
+              <Label
+                className="text-md flex h-12 items-center justify-center rounded-md border border-mainBlack bg-hover-switch px-4 py-2 font-bold"
+                htmlFor="image-file"
+              >
+                Add top image
+              </Label>
+              {form.formState.errors.icon_path && <p>Error</p>}
+              <FormControl>
+                <Input
+                  {...fileRef}
+                  id="image-file"
+                  variant={"image"}
+                  isize={"image"}
+                  className="mx-auto hidden text-center"
+                  type="file"
+                />
+              </FormControl>
+            </div>
+          )}
+        /> */}
         <FormField
           control={form.control}
           name="name"
@@ -223,126 +258,6 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <button ref={submitRef} className="hidden" />
       </form>
     </Form>
-    // <Form
-    //   className="mt-2 flex flex-col gap-2 font-inter"
-    //   onSubmit={form.handleSubmit(processRecipeCreation)}
-    // >
-    //   <div className="inline-flex items-center justify-center">
-    //     <Label
-    //       className="text-md flex h-12 items-center justify-center rounded-md border border-mainBlack bg-hover-switch px-4 py-2 font-bold"
-    //       htmlFor="image-file"
-    //     >
-    //       Add top image
-    //     </Label>
-    //     <Input
-    //       id="image-file"
-    //       variant={"image"}
-    //       isize={"image"}
-    //       className="mx-auto hidden text-center"
-    //       type="file"
-    //     />
-    //   </div>
-    //   <Input
-    //     placeholder="Name"
-    //     isize={"default"}
-    //     {...form.register("title")}
-    //     className="placeholder:text-mainBlack-secondary"
-    //     error={form.formState.errors.title}
-    //   />
-    //   <Input
-    //     placeholder="Description"
-    //     isize={"default"}
-    //     {...form.register("description")}
-    //   />
-    //   <RecipeCategory register={form.register} />
-    //   {/* <Input
-    //     placeholder="Category"
-    //     isize={"default"}
-    //     {...form.register("category")}
-    //   /> */}
-    //   <Input placeholder="Tag" isize={"default"} {...form.register("tag")} />
-    //   <Input
-    //     placeholder="Preparation time"
-    //     isize={"default"}
-    //     type="number"
-    //     {...form.register("preparationTime")}
-    //   />
-    //   <Input
-    //     placeholder="Cooking time"
-    //     isize={"default"}
-    //     type="number"
-    //     {...form.register("cookingTime")}
-    //   />
-    //   <Input
-    //     placeholder="Rest time"
-    //     isize={"default"}
-    //     type="number"
-    //     {...form.register("restTime")}
-    //   />
-    //   <Input
-    //     placeholder="Total time"
-    //     isize={"default"}
-    //     type="number"
-    //     {...form.register("totalTime")}
-    //   />
-    //   <Input
-    //     placeholder="Portions"
-    //     isize={"default"}
-    //     type="number"
-    //     {...form.register("portions")}
-    //   />
-    //   <textarea
-    //     placeholder="Ingredients"
-    //     {...form.register("ingredients")}
-    //     className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
-    //   />
-    //   <textarea
-    //     placeholder="Cooking steps"
-    //     {...form.register("cookingSteps")}
-    //     className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
-    //   />
-    //   <Input
-    //     placeholder="Comments"
-    //     isize={"default"}
-    //     {...form.register("comments")}
-    //   />
-    //   <Input
-    //     placeholder="Nutritional value"
-    //     isize={"default"}
-    //     {...form.register("nutritionalValue")}
-    //   />
-    //   <Input
-    //     placeholder="Proteins value"
-    //     isize={"default"}
-    //     {...form.register("proteinsValue")}
-    //   />
-    //   <Input
-    //     placeholder="Fats value"
-    //     isize={"default"}
-    //     {...form.register("fatsValue")}
-    //   />
-    //   <Input
-    //     placeholder="Carbohydrates value"
-    //     isize={"default"}
-    //     {...form.register("carbohydratesValue")}
-    //   />
-    //   <Input
-    //     placeholder="Dishes"
-    //     isize={"default"}
-    //     {...form.register("dishes")}
-    //   />
-    //   <Input
-    //     placeholder="Video link"
-    //     isize={"default"}
-    //     {...form.register("videoLink")}
-    //   />
-    //   <Input
-    //     placeholder="Source"
-    //     isize={"default"}
-    //     {...form.register("source")}
-    //   />
-    //   <button ref={submitRef} className="hidden" />
-    // </Form>
   );
 };
 

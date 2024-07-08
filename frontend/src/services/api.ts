@@ -27,11 +27,31 @@ export const getMe = async () => {
 };
 
 export const addToFavourites = async (id: number) => {
-  return await API.post("/recipes/add_to_favourites", id);
+  return await API.post(`/recipes/add_to_favourites?recipe_id=${id}`);
 };
 
+export const removeFromFavourites = async (id: number) => {
+  return await API.delete(`/recipes/remove_from_favourites?recipe_id=${id}`)
+}
+
 export const addToMyRecipes = async (id: number) => {
-  return await API.post('/recipes/add_to_my_recipes', id)
+  return await API.post(`/recipes/add_to_my_recipes?recipe_id=${id}`)
+}
+
+export const deleteRecipe = async (id: number) => {
+  return await API.delete(`/recipes/delete_from_my_recipes?recipe_id=${id}`)
+}
+
+export const uploadFile = async (file: FormData) => {
+  return await API.post('/recipes/upload_file', file, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+}
+
+export const getFile = async () => {
+  return await API.get('/recipes/get_file')
 }
 
 export const createRecipe = async (data: RecipeSchemaFields) => {
@@ -41,6 +61,10 @@ export const createRecipe = async (data: RecipeSchemaFields) => {
 export const changePrivacy = async (id: number) => {
   return await API.put(`/recipes/publish/${id}`);
 };
+
+export const findByRecipeName = async (name: string) => {
+  return (await API.get<Recipe[]>(`/recipes/get_by_name?name=${name}`)).data
+}
 
 export const getRecipeById = async (id: number) => {
   return (await API.get<Recipe>(`/recipes/get_by_id/${id}`)).data;

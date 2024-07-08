@@ -32,7 +32,7 @@ export type Recipe = {
   description: string;
   dishes: string;
   fats_value: number;
-  icon_path: string;
+  icon_path: string | File;
   ingredients: Ingredient[];
   is_favorite: boolean;
   is_my_recipe: boolean;

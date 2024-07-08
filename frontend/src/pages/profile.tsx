@@ -31,6 +31,17 @@ const Profile = () => {
         Edit
         <FaPen size={20} />
       </Button>
+      <Button
+        variant="recipeCard"
+        size={"lg"}
+        onClick={() => {
+          localStorage.clear();
+          navigate("/sign-in");
+        }}
+        className="flex w-72 items-center gap-2 bg-hover-secondary font-inter text-lg"
+      >
+        Log out
+      </Button>
     </section>
   );
 };

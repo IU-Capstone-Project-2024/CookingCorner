@@ -18,14 +18,6 @@ const useFilters = ({recipes}: FilterProps) => {
         setIsAscending(prev => !prev)
     }
 
-    const objects = [
-        { name: 'Объект 1', favourite: true },
-        { name: 'Объект 2', favourite: false },
-        { name: 'Объект 3', favourite: true },
-    ];
-
-    // const favouriteRecipes = objects.filter(recipe => recipe.favourite === true)
-
     return {
         isFavourite,
         handleChangeFavourite,

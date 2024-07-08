@@ -1,11 +1,12 @@
 import { FaArrowDownWideShort, FaRegHeart, FaHeart } from "react-icons/fa6";
 import Category from "./category";
 import NewRecipe from "./new-recipe";
+import { Dispatch, SetStateAction } from "react";
 
 interface SettingsProps {
   isFavourite?: boolean;
-  handleChangeFavourite?: () => void;
   handleChangeAscending?: () => void;
+  handleChangeFavourite?: Dispatch<SetStateAction<boolean>>;
 }
 
 const Settings = ({
@@ -22,13 +23,13 @@ const Settings = ({
         <FaRegHeart
           size={24}
           className="text-hover"
-          onClick={handleChangeFavourite}
+          onClick={() => handleChangeFavourite!(!isFavourite)}
         />
       ) : (
         <FaHeart
           size={24}
           className="text-hover"
-          onClick={handleChangeFavourite}
+          onClick={() => handleChangeFavourite!(!isFavourite)}
         />
       )}
     </section>

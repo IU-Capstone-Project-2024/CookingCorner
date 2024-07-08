@@ -8,7 +8,6 @@ interface SearchBarProps {
 
 const SearchBar = ({ setSearch }: SearchBarProps) => {
   const ref = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
 
   function handleClick() {
     if (ref.current != null) {
@@ -18,7 +17,7 @@ const SearchBar = ({ setSearch }: SearchBarProps) => {
 
   return (
     <section
-      className="inline-flex h-10 w-full max-w-80 items-center gap-2 rounded-lg border border-mainBlack bg-white px-2"
+      className="inline-flex h-8 w-80 items-center gap-2 rounded-lg border-2 border-mainBlack bg-white px-2"
       onClick={handleClick}
     >
       <FaMagnifyingGlass size={13} />
@@ -26,12 +25,8 @@ const SearchBar = ({ setSearch }: SearchBarProps) => {
         ref={ref}
         type="text"
         className="w-full bg-transparent font-inter font-normal outline-none"
-        placeholder="Search for new cooking recipes"
-        onKeyDown={(e: any) => {
-          if (e.key === "Enter" && e.target.value !== "") {
-            navigate(`/recipes/search/${e.target.value}`);
-          }
-        }}
+        placeholder="Filter your recipes"
+        onChange={(e) => setSearch(e.target.value.toLowerCase())}
       />
     </section>
   );

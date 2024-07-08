@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, login, register } from "./api";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, login, register, removeFromFavourites, uploadFile } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/types";
@@ -55,17 +55,33 @@ export function useLogin() {
 }
 
 export function useAddFavourite() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: number) => addToFavourites(id),
 
-    onError: (err) => {
-      console.log(`Error occured while adding to favourite. ${err}`);
-    },
-
-    onSuccess: () => {
-      console.log("successfully added to favourite");
-    },
+    onSettled: async (_, err, variables) => {
+      if (err) {
+        console.log(`Error occured while adding recipe to favourites. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['my-recipes']})
+      }
+    }
   });
+}
+
+export function useRemoveFavourite() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => removeFromFavourites(id),
+
+    onSettled: async (_, err) => {
+      if (err) {
+        console.log(`Error occured while removing recipe from favourites. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['my-recipes']})
+      }
+    }
+  })
 }
 
 export function useCreateRecipe() {
@@ -78,6 +94,16 @@ export function useCreateRecipe() {
   });
 }
 
+export function useUploadFile() {
+  return useMutation({
+    mutationFn: (file: FormData) => uploadFile(file),
+
+    onError: (err) =>
+      console.log(`Error occured while uploading file . ${err}`),
+    onSuccess: () => console.log("File successfully uploaded!"),
+  }) 
+}
+
 export function useAddRecipe() {
   const queryClient = useQueryClient()
 
@@ -85,9 +111,25 @@ export function useAddRecipe() {
     mutationFn: (id: number) => addToMyRecipes(id),
     onSuccess: () => console.log("New recipe successfully added!"),
 
-    onSettled: async (_, err, variables) => {
+    onSettled: async (_, err) => {
       if (err) {
         console.log(`Error occured while adding recipe to my recipes. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['my-recipes']})
+      }
+    }
+  })
+}
+
+export function useDeleteRecipe() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => deleteRecipe(id),
+    onSuccess: () => console.log("Recipe successfully deleted!"),
+
+    onSettled: async (_, err) => {
+      if (err) {
+        console.log(`Error occured while removing recipe from my recipes. ${err}`)
       } else {
         await queryClient.invalidateQueries({queryKey: ['my-recipes']})
       }

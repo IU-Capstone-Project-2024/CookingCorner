@@ -14,13 +14,14 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
   const navigate = useNavigate();
   const addToRecipesMutation = useAddRecipe();
 
-  function handleAddToRecipes(id: number) {
+  function handleAddToRecipes(id: number, e: any) {
+    e.stopPropagation();
     addToRecipesMutation.mutate(id);
   }
 
   return (
     <div
-      className="flex min-h-64 max-w-44 cursor-pointer flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
+      className="flex min-h-64 max-w-44 cursor-pointer flex-col justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
@@ -34,8 +35,8 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
         author={recipe.creator_username}
         cookingTime={recipe.cooking_time}
       />
-      <Button onClick={() => handleAddToRecipes(recipe.id)}>
-        <p className="flex items-center gap-2">Add to your recipes</p>
+      <Button onClick={(e) => handleAddToRecipes(recipe.id, e)}>
+        <p className="flex items-center gap-2 text-xs">Add to your recipes</p>
       </Button>
     </div>
   );

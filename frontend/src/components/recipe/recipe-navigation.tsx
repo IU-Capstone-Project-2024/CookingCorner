@@ -3,9 +3,9 @@ import { Button } from "../ui/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { memo } from "react";
 import { Select, SelectContent, SelectGroup } from "../ui/select";
+import { useDeleteRecipe, usePublish } from "@/services/mutations";
+import { useAuth, useRecipe } from "@/services/queries";
 import { SelectTrigger } from "@radix-ui/react-select";
-import { usePublish } from "@/services/mutations";
-
 interface RecipeNavigationProps {
   isPending?: boolean;
   isPrivate?: boolean;
@@ -15,10 +15,18 @@ const RecipeNavigation = memo(
   ({ isPrivate, isPending }: RecipeNavigationProps) => {
     const navigate = useNavigate();
     const params = useParams();
-    const publishMutate = usePublish();
+    const userData = useAuth().data;
+    const recipe = useRecipe(+params.recipeId!).data;
+    const publishMutation = usePublish();
+    const deleteMutation = useDeleteRecipe();
 
     function handlePublish() {
-      publishMutate.mutate(+params.recipeId!);
+      publishMutation.mutate(+params.recipeId!);
+    }
+
+    function handleDelete() {
+      deleteMutation.mutate(+params.recipeId!);
+      navigate("/home");
     }
 
     return (
@@ -48,9 +56,21 @@ const RecipeNavigation = memo(
                     Publish the recipe
                   </Button>
                 )}
-                <Button className="rounded-md border-none">
-                  Edit your recipe
-                </Button>
+                {userData?.username === recipe?.creator_username && (
+                  <Button className="rounded-md border-none">
+                    Edit your recipe
+                  </Button>
+                )}
+                {((recipe?.is_my_recipe &&
+                  userData?.username !== recipe?.creator_username) ||
+                  (isPrivate && recipe?.is_my_recipe)) && (
+                  <Button
+                    className="rounded-md border-none"
+                    onClick={handleDelete}
+                  >
+                    Delete from recipes
+                  </Button>
+                )}
               </SelectGroup>
             </SelectContent>
           </Select>

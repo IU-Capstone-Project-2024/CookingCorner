@@ -1,8 +1,14 @@
 import z from "zod";
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
+
 export const RecipeSchema = z.object({
-  name: z
-    .string()
+  // icon_path: z.instanceof(FileList)
+  //   .refine((file) => file[0].size <= MAX_FILE_SIZE)
+  //   .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file[0].type)),
+  name: 
+    z.string()
     .min(1, { message: "You need to name your recipe!" })
     .max(30),
   description: z.string().min(1),

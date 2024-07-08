@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileEdit = () => {
   const profileData = useAuth();
-  console.log(profileData.data);
   const navigate = useNavigate();
   const {
     register,

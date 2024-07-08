@@ -5,7 +5,6 @@ interface ProfileDescriptionProps {
 }
 
 const ProfileDescription = ({ data }: ProfileDescriptionProps) => {
-  console.log(data);
   return (
     <section className="flex max-w-[330px] flex-col gap-2 truncate font-inter text-2xl font-medium text-mainBlack md:max-w-full">
       <p className="truncate text-wrap">Username: {data.username}</p>

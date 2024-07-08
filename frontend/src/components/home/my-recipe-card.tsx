@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import RecipeDescription from "../search/recipe-card-description";
 import RecipeTitle from "../search/recipe-card-title";
-import { useAddFavourite } from "@/services/mutations";
+import { useAddFavourite, useRemoveFavourite } from "@/services/mutations";
 
 interface MyRecipeCardProps {
   recipe: Recipe;
@@ -14,14 +14,18 @@ interface MyRecipeCardProps {
 const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
   const navigate = useNavigate();
   const addFavouriteMutation = useAddFavourite();
+  const removeFavouriteMutation = useRemoveFavourite();
 
-  function handleAddToFavourites(id: number) {
-    addFavouriteMutation.mutate(id);
+  function handleAddToFavourites(id: number, e: any, is_favorite: boolean) {
+    e.stopPropagation();
+    is_favorite
+      ? removeFavouriteMutation.mutate(id)
+      : addFavouriteMutation.mutate(id);
   }
 
   return (
     <div
-      className="flex min-h-64 max-w-44 cursor-pointer flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
+      className="mx-1 flex min-h-64 max-w-full cursor-pointer flex-col items-center justify-between rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
@@ -35,15 +39,19 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
         author={recipe.creator_username}
         cookingTime={recipe.cooking_time}
       />
-      <Button onClick={() => handleAddToFavourites(recipe.id)}>
-        <p className="flex items-center gap-2">
-          Add to favourites{" "}
-          {recipe.is_favorite ? (
-            <FaHeart size={20} className="text-hover" />
-          ) : (
-            <FaRegHeart size={20} className="text-hover" />
-          )}
-        </p>
+      <Button
+        onClick={(e) => handleAddToFavourites(recipe.id, e, recipe.is_favorite)}
+        variant={recipe.is_favorite ? "favourite" : "recipeCard"}
+      >
+        {recipe.is_favorite ? (
+          <p className="flex items-center gap-1 text-xs">
+            Remove from favourites <FaHeart size={18} className="text-hover" />
+          </p>
+        ) : (
+          <p className="flex items-center gap-1 text-xs">
+            Add to favourites <FaRegHeart size={18} className="text-hover" />
+          </p>
+        )}
       </Button>
     </div>
   );
