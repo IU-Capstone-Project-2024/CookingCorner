@@ -21,10 +21,9 @@ class RecipeSchema(BaseModel):
     cooking_time: int | None = None
     waiting_time: int | None = None
     total_time: int | None = None
+    ingredients: list[dict] | None = None
+    steps: list[dict] | None = None
     portions: int | None = None
-    ingredients: str | None = None
-    how_to_cook: str | None = None
-    images_paths: list[str] | None = None
     comments: str | None = None
     nutritional_value: float | None = None
     proteins_value: float | None = None
@@ -47,10 +46,9 @@ class RecipeUpdateSchema(BaseModel):
     cooking_time: int | None = None
     waiting_time: int | None = None
     total_time: int | None = None
+    ingredients: list[dict] | None = None
+    steps: list[dict] | None = None
     portions: int | None = None
-    ingredients: str | None = None
-    how_to_cook: str | None = None
-    images_paths: list[str] | None = None
     comments: str | None = None
     nutritional_value: float | None = None
     proteins_value: float | None = None

@@ -22,3 +22,5 @@ class TokenSchema(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
+    access_token_expires: str
+    refresh_token_expires: str

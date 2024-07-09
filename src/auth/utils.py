@@ -47,24 +47,10 @@ async def authenticate_user(username: str, password: str, db: AsyncSession):
 
 async def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+    expire = datetime.now() + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_AUTH, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-async def verify_token(token: str = Depends(security)):
-    try:
-        payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=403, detail="Token is invalid or expired")
-        return payload
-    except Exception:
-        raise HTTPException(status_code=403, detail="Token is invalid or expired")
 
 
 async def get_user_data(current_user: User):
@@ -74,18 +60,34 @@ async def get_user_data(current_user: User):
         username=current_user.username,
         name=current_user.name,
         surname=current_user.surname,
-        cooking_experience=current_user.cooking_experience
+        cooking_experience=current_user.cooking_experience,
+        image_path=current_user.image_path
     )
 
 
-async def get_current_user(db: AsyncSession = Depends(get_async_session), authorization: HTTPAuthorizationCredentials = Security(security)) -> User:
+async def verify_token(db: AsyncSession, token: str = Depends(security)):
+    try:
+        payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=403, detail="Token is invalid or expired")
+        query = select(User).where(User.id == user_id)
+        user = await db.execute(query)
+        user = user.first()[0]
+        return user
+    except Exception:
+        raise HTTPException(status_code=403, detail="Token is invalid or expired")
+
+
+async def get_current_user(db: AsyncSession = Depends(get_async_session),
+                           authorization: HTTPAuthorizationCredentials = Security(security)) -> User:
     try:
         token = authorization.credentials
         payload = jwt.decode(token, SECRET_AUTH, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise HTTPException(status_code=403, detail="Token is invalid or expired")
-        query = select(User).where(User.username == username)
+        query = select(User).where(User.id == user_id)
         user = await db.execute(query)
         user = user.first()[0]
         return user
