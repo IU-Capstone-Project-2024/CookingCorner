@@ -19,6 +19,16 @@ export type Step = {
   title: string;
 };
 
+export type FilterConditions = {
+  [index: string]: string | boolean
+}
+
+export type ContextState = {
+  filters: FilterConditions,
+  setFilters: (value: FilterConditions) => void;
+  handleFiltersChange: (name: string, value?: string | boolean) => void;
+}
+
 export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert";
 
 export type Recipe = {

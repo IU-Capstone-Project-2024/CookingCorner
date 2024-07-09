@@ -1,35 +1,37 @@
 import { FaArrowDownWideShort, FaRegHeart, FaHeart } from "react-icons/fa6";
 import Category from "./category";
 import NewRecipe from "./new-recipe";
-import { Dispatch, SetStateAction } from "react";
+import { FilterConditions } from "@/types/types";
 
 interface SettingsProps {
-  isFavourite?: boolean;
-  handleChangeAscending?: () => void;
-  handleChangeFavourite?: Dispatch<SetStateAction<boolean>>;
+  filters: FilterConditions;
+  setFilters: (value: FilterConditions) => void;
 }
 
-const Settings = ({
-  isFavourite,
-  handleChangeFavourite,
-  handleChangeAscending,
-}: SettingsProps) => {
+const Settings = ({ filters, setFilters }: SettingsProps) => {
+  function handleFiltersChange(name: string, value?: string | boolean) {
+    setFilters({ ...filters, [name]: value ?? !filters[name] });
+  }
+
   return (
     <section className="inline-flex h-12 w-full items-center justify-center gap-4 border-2 border-x-transparent border-y-mainBlack bg-hover-secondary">
       <NewRecipe />
-      <Category />
-      <FaArrowDownWideShort size={24} onClick={handleChangeAscending} />
-      {!isFavourite ? (
+      <Category handleFilterChange={handleFiltersChange} />
+      <FaArrowDownWideShort
+        size={24}
+        onClick={() => handleFiltersChange("ascending_order")}
+      />
+      {!filters.is_favourite ? (
         <FaRegHeart
           size={24}
           className="text-hover"
-          onClick={() => handleChangeFavourite!(!isFavourite)}
+          onClick={() => handleFiltersChange("is_favourite")}
         />
       ) : (
         <FaHeart
           size={24}
           className="text-hover"
-          onClick={() => handleChangeFavourite!(!isFavourite)}
+          onClick={() => handleFiltersChange("is_favourite")}
         />
       )}
     </section>

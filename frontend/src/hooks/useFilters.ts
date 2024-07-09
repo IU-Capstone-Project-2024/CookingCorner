@@ -1,28 +1,14 @@
-import { Recipe } from "@/types/types";
-import { UseQueryResult } from "@tanstack/react-query";
-import { useState } from "react"
+import { FilterContext } from "@/components/filter-provider";
+import { useContext } from "react"
 
-interface FilterProps {
-    recipes: UseQueryResult<Recipe[], Error>;
-}
+const useFilters = () => {
+    const context = useContext(FilterContext)
 
-const useFilters = ({recipes}: FilterProps) => {
-    const [isFavourite, setIsFavourite] = useState(false);
-    const [isAscending, setIsAscending] = useState(true);
-
-    const handleChangeFavourite = () => {
-        setIsFavourite(prev => !prev)
+    if (!context) {
+        throw new Error("Please use filter provider in the parent element");
     }
 
-    const handleChangeAscending = () => {
-        setIsAscending(prev => !prev)
-    }
-
-    return {
-        isFavourite,
-        handleChangeFavourite,
-        handleChangeAscending
-    }
+    return context;
 }
 
 export default useFilters

@@ -8,7 +8,11 @@ import {
 } from "@/components/ui/select";
 import { useCategories } from "@/services/queries";
 
-const Category = () => {
+interface CategoryProps {
+  handleFilterChange: (name: string, value?: string | boolean) => void;
+}
+
+const Category = ({ handleFilterChange }: CategoryProps) => {
   const categories = useCategories();
 
   if (categories.isError) {

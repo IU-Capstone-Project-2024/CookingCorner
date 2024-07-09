@@ -1,12 +1,13 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {  useQuery, useQueryClient } from "@tanstack/react-query";
 import { findByRecipeName, getBestRatedRecipes, getCategories, getFile, getMe, getMyRecipes, getRecentRecipes, getRecipeById } from "./api";
+import { FilterConditions } from "@/types/types";
 
-export function useMyRecipes() {
+export function useMyRecipes(filters: FilterConditions) {
   const queryClient = useQueryClient()
   queryClient.invalidateQueries({queryKey: ["my-recipes"]})
   return useQuery({
-    queryKey: ["my-recipes"],
-    queryFn: getMyRecipes,
+    queryKey: ['my-recipes', filters],
+    queryFn: () => getMyRecipes(filters),
     initialData: () => {
       return queryClient.getQueryData(['my-recipes'])
     }

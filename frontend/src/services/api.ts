@@ -1,10 +1,10 @@
 import { API } from "@/lib/utils";
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { SignInFields } from "@/schemas/sign-in.schema";
-import { Recipe, User } from "@/types/types";
+import { FilterConditions, Recipe, User } from "@/types/types";
 
-export const getMyRecipes = async () => {
-  return (await API.get<Recipe[]>("/recipes/get_my_recipes")).data;
+export const getMyRecipes = async (filters: FilterConditions) => {
+  return (await API.post<Recipe[]>("/recipes/get_my_recipes", filters)).data ?? [];
 };
 
 export const register = async (data: {
