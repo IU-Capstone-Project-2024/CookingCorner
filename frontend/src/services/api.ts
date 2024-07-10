@@ -83,5 +83,10 @@ export const changeProfileData = async (data: User) => {
 }
 
 export const getCategories = async () => {
-  return (await API.get('/categories/get_all')).data
+  const response = (await API.get('/categories/get_all'))
+  if (response.status === 403) {
+    console.log('error status 403')
+  }
+
+  return [];
 }

@@ -11,7 +11,6 @@ const SearchResult = () => {
   const { filters, setFilters } = useFilters();
   const [search, setSearch] = useState("");
   const recipes = useSearch(params.query ?? "", filters);
-  console.log(recipes.data);
 
   if (recipes.isError) {
     return <p>Error</p>;

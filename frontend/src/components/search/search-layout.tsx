@@ -17,7 +17,7 @@ const SearchLayout = ({ children, cancelSearch }: SearchLayoutProps) => {
         {cancelSearch && (
           <FaXmark
             size={28}
-            className="rounded-full border-2 border-mainBlack p-1"
+            className="cursor-pointer rounded-full border-2 border-mainBlack p-1"
             onClick={() => navigate("/recipes")}
           />
         )}
