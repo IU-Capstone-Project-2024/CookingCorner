@@ -1,5 +1,6 @@
-import base64
-import io
+import json
+
+import requests
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
@@ -14,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import StreamingResponse
 
 from src.auth.utils import get_current_user
-from src.config import IMAGE_PATH_DIR
+from src.config import IMAGE_PATH_DIR, CHATBOT_KEY
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
@@ -479,18 +480,16 @@ async def get_file(db: AsyncSession = Depends(get_async_session), current_user: 
 
 @recipe_router.post("/generate")
 async def generate_text(prompt: str):
-    url = "http://localhost:11434/api/generate"
-    payload = {
-        "model": "llama3",
-        "prompt": prompt
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    try:
-        response = requests.post(url, json=payload, headers=headers)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Error communicating with Ollama: {str(e)}")
+    response = requests.post(
+        url="https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {CHATBOT_KEY}"
+        },
+        data=json.dumps({
+            "model": "meta-llama/llama-3-8b-instruct:free",
+            "messages": [
+                {"role": "user", "content": f"{prompt}"}
+            ]
+        })
+    )
+    return response.json()
