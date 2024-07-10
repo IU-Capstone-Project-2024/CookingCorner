@@ -25,7 +25,9 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
-        src={recipe.icon_path === null ? "no_image.svg" : recipe.icon_path}
+        src={
+          recipe.icon_path === null ? "/no_image.svg" : "/" + recipe.icon_path
+        }
         alt={"recipe picture"}
         className="w-fit"
       />

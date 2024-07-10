@@ -19,18 +19,19 @@ const Settings = ({ filters, setFilters }: SettingsProps) => {
       <Category />
       <FaArrowDownWideShort
         size={24}
+        className="cursor-pointer"
         onClick={() => handleFiltersChange("ascending_order")}
       />
       {!filters.is_favourite ? (
         <FaRegHeart
           size={24}
-          className="text-hover"
+          className="cursor-pointer text-hover"
           onClick={() => handleFiltersChange("is_favourite")}
         />
       ) : (
         <FaHeart
           size={24}
-          className="text-hover"
+          className="cursor-pointer text-hover"
           onClick={() => handleFiltersChange("is_favourite")}
         />
       )}
