@@ -73,7 +73,6 @@ async def get_recent_recipes(db: AsyncSession = Depends(get_async_session),
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             recipes.append(result_schema)
-    recipes.reverse()
     return recipes
 
 
