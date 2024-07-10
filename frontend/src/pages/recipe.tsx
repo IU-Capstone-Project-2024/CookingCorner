@@ -45,7 +45,7 @@ const RecipePage = () => {
       <img
         src={
           recipe.data.icon_path === null
-            ? "/no_image.png"
+            ? "/no_image.svg"
             : "/" + recipe.data.icon_path
         }
         alt="recipe picture"
