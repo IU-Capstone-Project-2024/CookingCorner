@@ -14,11 +14,7 @@ import { useNavigate } from "react-router-dom";
 const ProfileEdit = () => {
   const profileData = useAuth();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<User>({
+  const { register, handleSubmit } = useForm<User>({
     resolver: zodResolver(ProfileEditSchema),
   });
 

@@ -59,7 +59,7 @@ export function useAddFavourite() {
   return useMutation({
     mutationFn: (id: number) => addToFavourites(id),
 
-    onSettled: async (_, err, variables) => {
+    onSettled: async (_, err) => {
       if (err) {
         console.log(`Error occured while adding recipe to favourites. ${err}`)
       } else {
@@ -143,7 +143,7 @@ export function useProfileEdit() {
   return useMutation({
     mutationFn: (data: User) => changeProfileData(data),
 
-    onSettled: async (_, err, variables) => {
+    onSettled: async (_, err) => {
       if (err) {
         console.log(`Error occured while changing profile data. ${err}`)
       } else {

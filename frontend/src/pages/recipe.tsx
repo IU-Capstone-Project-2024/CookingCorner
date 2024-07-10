@@ -3,18 +3,17 @@ import RecipeSteps from "@/components/recipe/recipe-steps";
 import { useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { useRecipe } from "@/services/queries";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import RecipeLayout from "@/components/recipe/recipe-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const RecipePage = () => {
   const params = useParams();
   const recipe = useRecipe(+params.recipeId!);
-  const navigate = useNavigate();
   const [isSteps, setIsSteps] = useState(true);
 
   if (recipe.isError) {
-    return navigate("/recipes");
+    return <Navigate to="/recipes" />;
   }
 
   if (recipe.isPending) {

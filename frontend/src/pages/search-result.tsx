@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 const SearchResult = () => {
   const params = useParams();
+  //@ts-ignore
   const [search, setSearch] = useState("");
   const recipes = useSearch(params.query ?? "");
   console.log(recipes.data);
@@ -19,7 +20,7 @@ const SearchResult = () => {
   }
 
   return (
-    <SearchLayout setSearch={setSearch} cancelSearch={true}>
+    <SearchLayout cancelSearch={true}>
       {recipes.data === null || recipes.data.length === 0 ? (
         <div className="text-md font-inter font-semibold">Nothing found</div>
       ) : (

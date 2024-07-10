@@ -1,7 +1,5 @@
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
-import { getMe, getRecipeById } from "@/services/api";
-import { Recipe, User } from "@/types/types";
-import { useQueryClient } from "@tanstack/react-query";
+import {  User } from "@/types/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -62,7 +60,6 @@ export const API = axios.create({
 
 API.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
 
   // if (checkAuth()) {
     

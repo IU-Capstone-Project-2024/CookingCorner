@@ -1,24 +1,19 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import SearchBar from "../search-bar";
 import { FaXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 interface SearchLayoutProps {
   children: React.ReactNode;
-  setSearch: Dispatch<SetStateAction<string>>;
   cancelSearch?: boolean;
 }
 
-const SearchLayout = ({
-  children,
-  setSearch,
-  cancelSearch,
-}: SearchLayoutProps) => {
+const SearchLayout = ({ children, cancelSearch }: SearchLayoutProps) => {
   const navigate = useNavigate();
   return (
     <section className="flex flex-col items-center gap-4 px-2">
       <div className="flex w-full items-center justify-center gap-2">
-        <SearchBar setSearch={setSearch} />
+        <SearchBar />
         {cancelSearch && (
           <FaXmark
             size={28}

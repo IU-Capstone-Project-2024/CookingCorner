@@ -16,7 +16,7 @@ const Settings = ({ filters, setFilters }: SettingsProps) => {
   return (
     <section className="inline-flex h-12 w-full items-center justify-center gap-4 border-2 border-x-transparent border-y-mainBlack bg-hover-secondary">
       <NewRecipe />
-      <Category handleFilterChange={handleFiltersChange} />
+      <Category />
       <FaArrowDownWideShort
         size={24}
         onClick={() => handleFiltersChange("ascending_order")}

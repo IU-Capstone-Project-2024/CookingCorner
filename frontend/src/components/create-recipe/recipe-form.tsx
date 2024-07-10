@@ -2,9 +2,9 @@ import { RecipeSchema, RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RefObject, useState } from "react";
-import { useCreateRecipe, useUploadFile } from "@/services/mutations";
-import { Form, FormControl, FormField } from "@/components/ui/form";
+import { RefObject } from "react";
+import { useCreateRecipe } from "@/services/mutations";
+import { Form, FormField } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -13,8 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCategories, useFile } from "@/services/queries";
-import { Label } from "../ui/label";
+import { useCategories } from "@/services/queries";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;

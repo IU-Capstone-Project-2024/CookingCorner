@@ -1,4 +1,3 @@
-import { User } from "@/types/types";
 import { FaStar } from "react-icons/fa6";
 
 interface RecipeEvaluationsProps {

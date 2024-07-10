@@ -8,11 +8,12 @@ import { useState } from "react";
 const Search = () => {
   const bestRated = useBestRated();
   const recentRecipes = useRecent();
+  //@ts-ignore
   const [search, setSearch] = useState("");
 
   if (recentRecipes.isError || bestRated.isError) {
     return (
-      <SearchLayout setSearch={setSearch}>
+      <SearchLayout>
         <p className="col-span-2 flex text-center font-semibold">
           Something went wrong
         </p>
@@ -22,7 +23,7 @@ const Search = () => {
 
   if (recentRecipes.isPending || bestRated.isPending) {
     return (
-      <SearchLayout setSearch={setSearch}>
+      <SearchLayout>
         <Title className="mx-auto">Last recipes</Title>
         <div className="grid grid-cols-2 gap-2">
           <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
@@ -41,7 +42,7 @@ const Search = () => {
   }
 
   return (
-    <SearchLayout setSearch={setSearch}>
+    <SearchLayout>
       <Title className="mx-auto">Last recipes</Title>
       <div className="grid grid-cols-2 gap-2">
         {recentRecipes.data.length === 0 ? (

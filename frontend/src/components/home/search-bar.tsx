@@ -1,6 +1,5 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Dispatch, SetStateAction, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
   setSearch: Dispatch<SetStateAction<string>>;
