@@ -37,11 +37,11 @@ export function useRecipe(id: number) {
   });
 }
 
-export function useSearch(search: string) {
+export function useSearch(search: string, filters: FilterConditions) {
   const queryClient = useQueryClient()
   return useQuery({
     queryKey: ['search', search],
-    queryFn: () => findByRecipeName(search),
+    queryFn: () => findByRecipeName(search, filters),
     initialData: () => {
       return queryClient.getQueryData(['recipe', search])
     }

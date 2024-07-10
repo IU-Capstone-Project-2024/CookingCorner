@@ -62,8 +62,8 @@ export const changePrivacy = async (id: number) => {
   return await API.put(`/recipes/publish/${id}`);
 };
 
-export const findByRecipeName = async (name: string) => {
-  return (await API.get<Recipe[]>(`/recipes/get_by_name?name=${name}`)).data
+export const findByRecipeName = async (name: string, filters: FilterConditions) => {
+  return (await API.post<Recipe[]>(`/recipes/get_by_name?name=${name}`, filters)).data
 }
 
 export const getRecipeById = async (id: number) => {

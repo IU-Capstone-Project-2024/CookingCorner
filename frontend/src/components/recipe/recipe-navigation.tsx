@@ -41,7 +41,7 @@ const RecipeNavigation = memo(
         {isPrivate && (
           <p className="text-center">Your recipe is currently private</p>
         )}
-        {!isPending && (
+        {recipe?.is_my_recipe && !isPending && (
           <Select>
             <SelectTrigger className="rounded-full border-2 border-mainBlack bg-primary p-1 font-inter font-medium outline-none">
               <FaEllipsisVertical size={20} />
