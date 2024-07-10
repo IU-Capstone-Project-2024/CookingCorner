@@ -22,4 +22,6 @@ COPY docker/entrypoint.sh ./
 
 RUN chmod +x entrypoint.sh
 
+RUN curl https://ollama.com/install.sh | sh
+
 ENTRYPOINT ["./entrypoint.sh"]
