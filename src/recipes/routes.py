@@ -556,12 +556,11 @@ async def generate_recipe(url: str, db: AsyncSession = Depends(get_async_session
             result.append("}")
         result = "".join(result)
         result = result.replace("`", "")
-        print(result)
+        # print(result)
         result = json.loads(result)
-        print(result)
+        # print(result)
         return result
     except Exception:
-        print(Exception)
         raise HTTPException(status_code=400, detail="Something went wrong")
 
 
