@@ -478,6 +478,93 @@ async def get_file(db: AsyncSession = Depends(get_async_session), current_user: 
     return FileResponse(f"{IMAGE_PATH_DIR}/1.jpg")
 
 
+@recipe_router.get("/generate_recipe")
+async def generate_recipe(url: str, db: AsyncSession = Depends(get_async_session),
+                          current_user: User = Depends(get_current_user)):
+    prompt = ("Return ONLY JSON with filled data and WITHOUT ADDITIONAL WORDS LIKE I'll make "
+              "the HTTP request to the provided URL and extract the data. Here's the JSON response. "
+              "If the URL is wrong please return ONLY null."
+              "PLEASE DO NOT FORGET TO OPEN BRANCH { AT THE BEGINNING OF THE JSON"
+              "PLEASE DO NOT FORGET TO CLOSE BRANCH } AT THE END OF THE RESPONSE."
+              "PLEASE START JSON WITH ``` AND END WITH ```"
+              f"Given this url: {url} please fill the json below like in example provided below:"
+              "{name: Okroshka,"
+              "description: I call this Okroshka a summer soup because it’s served cold."
+              "preparing_time: 10,"
+              "cooking_time: 60,"
+              "waiting_time: 0,"
+              "total_time: 70",
+              "ingredients: ["
+              "{"
+              "title: Cold water,"
+              "portion: 8 cups"
+              "},"
+              "{"
+              "title: Sour cream,"
+              "portion: 1/3 cup"
+              "}"
+              "],"
+              "steps: ["
+              "{title: Step 1, description: Peel potatoes and dice them into 1/4 cubes (we used the Vidalia Chopper). "
+              "Place diced potatoes in a medium pot and cover with water. "
+              "Add 1 Tbsp vinegar and bring to a boil then continue boiling for 10 minutes or "
+              "until the potatoes are cooked, but not falling apart. Drain well and set aside to cool. "
+              "For quicker cooling, you can rinse potatoes with cold water.},"
+              "{title: Step 2, description: While potatoes are cooking, boil 3 eggs and cool them in ice water.},"
+              "{title: Step 3, description: Next, dice 3 eggs, 3-4 cucumbers, 1/2 lb of ham. "
+              "Also chop 3 Tbsp of dill and 1/2 cup of green onions. Place everything in a large pot.},"
+              "{title: Step 4, description: In a separate large bowl, whisk together 8 cups of cold water, "
+              "1/3 cup of sour cream, 2 1/2 Tbsp of vinegar, 2 1/2 tsp of salt until combined. "
+              "Pour the mixture in the pot with the rest of ingredients. Stir to combine and serve.}"
+              "],"
+              "source: https://natashaskitchen.com/okroshka-recipe-russian-summer-soup/,"
+              "portions: 1,"
+              "dishes: Pots and plates,"
+              "}"
+              )
+
+    try:
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {CHATBOT_KEY}"
+            },
+            data=json.dumps({
+                "model": "meta-llama/llama-3-8b-instruct:free",
+                "messages": [
+                    {"role": "user", "content": f"{prompt}"}
+                ]
+            })
+        )
+
+        response = response.json()["choices"][0]["message"]["content"]
+        # print(response)
+        response = response.split('\n')
+        result = []
+
+        is_json = False
+        for row in response:
+            if is_json and "```" in row:
+                break
+            if is_json:
+                result.append(row)
+            if not is_json and "```" in row:
+                is_json = True
+        if "{" not in result[0]:
+            result.insert(0, "{")
+        if "}" not in result[-1]:
+            result.append("}")
+        result = "".join(result)
+        result = result.replace("`", "")
+        print(result)
+        result = json.loads(result)
+        print(result)
+        return result
+    except Exception:
+        print(Exception)
+        raise HTTPException(status_code=400, detail="Something went wrong")
+
+
 @recipe_router.post("/generate")
 async def generate_text(prompt: str):
     response = requests.post(
