@@ -6,11 +6,9 @@ import useFilters from "@/hooks/useFilters";
 import MyRecipeCard from "@/components/home/my-recipe-card";
 
 const Home = memo(() => {
+  const [search, setSearch] = useState("");
   const { filters, setFilters } = useFilters();
   const recipes = useMyRecipes(filters);
-  // console.log(filters);
-  // console.log(recipes.data);
-  const [search, setSearch] = useState("");
 
   if (recipes.isError) {
     return (
