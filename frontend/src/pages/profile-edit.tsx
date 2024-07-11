@@ -54,15 +54,40 @@ const ProfileEdit = () => {
           {...register("username")}
           placeholder="Username"
           label="Username"
+          value={
+            profileData.data.username === null ? "" : profileData.data.username
+          }
         />
-        <Input {...register("name")} placeholder="Name" label="Name" />
-        <Input {...register("surname")} placeholder="Surname" label="Surname" />
-        <Input {...register("email")} placeholder="Email" label="Email" />
+        <Input
+          {...register("name")}
+          placeholder="Name"
+          label="Name"
+          value={profileData.data.name === null ? "" : profileData.data.name}
+        />
+        <Input
+          {...register("surname")}
+          placeholder="Surname"
+          label="Surname"
+          value={
+            profileData.data.surname === null ? "" : profileData.data.surname
+          }
+        />
+        <Input
+          {...register("email")}
+          placeholder="Email"
+          label="Email"
+          value={profileData.data.email === null ? "" : profileData.data.email}
+        />
         <Input
           type={"number"}
           {...register("cooking_experience")}
           placeholder="Cooking experience"
           label="Cooking experience"
+          value={
+            profileData.data.cooking_experience === null
+              ? ""
+              : profileData.data.cooking_experience
+          }
         />
       </form>
     </div>
