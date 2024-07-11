@@ -4,7 +4,16 @@ import { SignInFields } from "@/schemas/sign-in.schema";
 import { FilterConditions, Recipe, User } from "@/types/types";
 
 export const getMyRecipes = async (filters: FilterConditions) => {
-  return (await API.post<Recipe[]>("/recipes/get_my_recipes", filters)).data ?? [];
+  try {
+    return (await API.post<Recipe[]>("/recipes/get_my_recipes", filters)).data
+  } catch (error: any) {
+    if (error.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
+
+    return []
+  }
 };
 
 export const register = async (data: {
@@ -83,10 +92,14 @@ export const changeProfileData = async (data: User) => {
 }
 
 export const getCategories = async () => {
-  const response = (await API.get('/categories/get_all'))
-  if (response.status === 403) {
-    console.log('error status 403')
-  }
+  try {
+    return (await API.get('/categories/get_all')).data
+  } catch (err: any) {
+    if (err.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
 
-  return [];
+    return [];
+  }
 }
