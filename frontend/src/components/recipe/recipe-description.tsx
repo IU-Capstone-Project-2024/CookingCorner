@@ -22,7 +22,7 @@ const RecipeDescription = memo(({ recipe }: RecipeDescriptionProps) => {
       <RecipeTime
         cookingTime={recipe.cooking_time}
         preparationTime={recipe.preparing_time}
-        portions={0}
+        portions={recipe.portions}
       />
       <div className="text-center">
         <RecipeSwitchButton />

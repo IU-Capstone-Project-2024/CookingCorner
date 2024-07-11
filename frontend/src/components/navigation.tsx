@@ -8,7 +8,7 @@ const Navigation = () => {
   return pages.map((page, idx) => (
     <div
       key={`page-${idx}`}
-      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-[2px] font-inter ${page.path.includes(location.pathname) ? "text-hover" : "text-mainBlack"} `}
+      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-[2px] font-inter ${page.path.includes(location.pathname) && location.pathname !== "/" ? "text-hover" : "text-mainBlack"} `}
       onClick={() => navigate(page.path)}
     >
       <page.icon size={24} />

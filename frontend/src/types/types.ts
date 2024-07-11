@@ -20,14 +20,14 @@ export type Step = {
 };
 
 export type FilterConditions = {
-  [index: string]: string | boolean
-}
+  [index: string]: string | boolean;
+};
 
 export type ContextState = {
-  filters: FilterConditions,
+  filters: FilterConditions;
   setFilters: (value: FilterConditions) => void;
   handleFiltersChange: (name: string, value?: string | boolean) => void;
-}
+};
 
 export type Category = "warm_dishes" | "smoked" | "boiled" | "dessert";
 
@@ -52,6 +52,7 @@ export type Recipe = {
   preparing_time: number;
   proteins_value: number;
   rating: number;
+  portions: number;
   reviews: number;
   source: string;
   steps: Step[];
@@ -68,7 +69,7 @@ export type Ingredient = {
   title: string;
 };
 
-export type User = z.infer<typeof ProfileEditSchema>
+export type User = z.infer<typeof ProfileEditSchema>;
 
 export type RecipeResponse = {
   lastRecipes: Recipe[];
