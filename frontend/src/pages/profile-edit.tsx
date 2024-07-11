@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileEdit = () => {
   const profileData = useAuth();
+  console.log(profileData.data);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<User>({
     resolver: zodResolver(ProfileEditSchema),
@@ -54,7 +55,7 @@ const ProfileEdit = () => {
           {...register("username")}
           placeholder="Username"
           label="Username"
-          value={
+          defaultValue={
             profileData.data.username === null ? "" : profileData.data.username
           }
         />
@@ -62,13 +63,15 @@ const ProfileEdit = () => {
           {...register("name")}
           placeholder="Name"
           label="Name"
-          value={profileData.data.name === null ? "" : profileData.data.name}
+          defaultValue={
+            profileData.data.name === null ? "" : profileData.data.name
+          }
         />
         <Input
           {...register("surname")}
           placeholder="Surname"
           label="Surname"
-          value={
+          defaultValue={
             profileData.data.surname === null ? "" : profileData.data.surname
           }
         />
@@ -76,14 +79,16 @@ const ProfileEdit = () => {
           {...register("email")}
           placeholder="Email"
           label="Email"
-          value={profileData.data.email === null ? "" : profileData.data.email}
+          defaultValue={
+            profileData.data.email === null ? "" : profileData.data.email
+          }
         />
         <Input
           type={"number"}
           {...register("cooking_experience")}
           placeholder="Cooking experience"
           label="Cooking experience"
-          value={
+          defaultValue={
             profileData.data.cooking_experience === null
               ? ""
               : profileData.data.cooking_experience
