@@ -25,8 +25,6 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   const createRecipeMutation = useCreateRecipe();
   const data = useLocation().state;
   const navigate = useNavigate();
-  // const uploadFileMutation = useUploadFile();
-  // const data = useFile();
   const form = useForm<RecipeSchemaFields>({
     mode: "onChange",
     resolver: zodResolver(RecipeSchema),
