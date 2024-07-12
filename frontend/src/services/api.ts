@@ -67,8 +67,8 @@ export const createRecipe = async (data: RecipeSchemaFields) => {
   return await API.post("/recipes/create", data);
 };
 
-export const changePrivacy = async (id: number) => {
-  return await API.put(`/recipes/publish/${id}`);
+export const changePrivacy = async (data: {id: number}) => {
+  return await API.put(`/recipes/publish/${data.id}`);
 };
 
 export const findByRecipeName = async (name: string, filters: FilterConditions) => {
@@ -101,5 +101,31 @@ export const getCategories = async () => {
     }
 
     return [];
+  }
+}
+
+export const rateRecipe = async (data: {id: number, rating: number}) => {
+  try {
+    return await API.post(`/recipes/rate_recipe?recipe_id=${data.id}&rating=${data.rating}`, {})
+  } catch (err: any) {
+    if (err.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
+
+    return [];
+  }
+}
+
+export const uploadRecipe = async (url: string) => {
+  try {
+    return await API.get(`/recipes/generate_recipe?url=${url}`)
+  } catch (err: any) {
+    if (err.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
+
+    throw new Error("Can't upload recipe")
   }
 }

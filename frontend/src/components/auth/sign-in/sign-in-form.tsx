@@ -24,7 +24,6 @@ const SignInForm = () => {
 
   const processSignIn: SubmitHandler<SignInFields> = (data) => {
     loginMutation.mutate(data);
-    reset();
   };
 
   return (
@@ -38,6 +37,7 @@ const SignInForm = () => {
         type="text"
         register={register}
         label="Login"
+        isError={loginMutation.isError}
         error={errors.username}
       />
       <FormInput
@@ -46,6 +46,7 @@ const SignInForm = () => {
         type="password"
         register={register}
         label="Password"
+        isError={loginMutation.isError}
         error={errors.password}
       />
       <Button

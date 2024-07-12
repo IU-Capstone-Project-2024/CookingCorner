@@ -20,7 +20,7 @@ const HomeLayout = ({
     <section className="flex flex-col items-center gap-2">
       <SearchBar setSearch={setSearch} />
       <Settings filters={filters} setFilters={setFilters} />
-      <div className="grid grid-cols-2 gap-2">{children}</div>
+      <div className="grid grid-cols-2 gap-2 px-2">{children}</div>
     </section>
   );
 };

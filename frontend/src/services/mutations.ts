@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, login, register, removeFromFavourites, uploadFile } from "./api";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/types";
@@ -153,20 +153,49 @@ export function useProfileEdit() {
   })
 }
 
-export function usePublish() {
+export function useRating() {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: (id: number) => changePrivacy(id),
+    mutationFn: (data: {id: number, rating: number}) => rateRecipe(data),
+
+    onSettled: async (_, err, variables) => {
+      if (err) {        
+        console.log(`Error occured while changing profile data. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['recipe', variables.id]})
+      }
+    }
+  })
+}
+
+export function usePublish() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: {id: number}) => changePrivacy(data),
     
     onError: (err) =>
       console.log(`Error occured while publishing recipe. ${err}`),
     onSuccess: () => console.log("Recipe successfully published!"),
 
-    // onSettled: async (_, err, variables) => {
-    //   if (err) {
-    //     console.log(`Error occured while changing profile data. ${err}`)
-    //   } else {
-    //     await queryClient.invalidateQueries({queryKey: ['recipe', {id: variables.id}]})
-    //   }
-    // }
+    onSettled: async (_, err, variables) => {
+      if (err) {
+        console.log(`Error occured while changing profile data. ${err}`)
+      } else {
+        await queryClient.invalidateQueries({queryKey: ['recipe', variables.id]})
+      }
+    }
+  })
+}
+
+export function useUpload() {
+  return useMutation({
+    mutationKey: ['upload'],
+    mutationFn: (url: string) => uploadRecipe(url),
+
+    onError: (err) =>
+      console.log(`Error occured while uploading recipe. ${err}`),
+    onSuccess: () => console.log("Recipe successfully uploaded!"),
   })
 }
