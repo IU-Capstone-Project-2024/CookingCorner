@@ -17,12 +17,15 @@ const Upload = () => {
   } = useForm<UploadFields>({
     resolver: zodResolver(UploadSchema),
   });
-
   const uploadMutation = useUpload();
 
-  const submit: SubmitHandler<UploadFields> = (data) => {
-    uploadMutation.mutate("test");
+  const submit: SubmitHandler<UploadFields> = async (data) => {
+    const response = await uploadMutation.mutateAsync(data.link);
+    if (response.status === 200) {
+      navigate("/recipes/create", { state: response.data });
+    }
   };
+
   return (
     <div className="flex flex-col gap-2 px-4">
       <Button variant={"icon"} size={"icon"} onClick={() => navigate("/home")}>

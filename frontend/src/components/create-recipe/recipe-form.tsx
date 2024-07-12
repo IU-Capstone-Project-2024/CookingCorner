@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCategories } from "@/services/queries";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
@@ -22,6 +23,8 @@ interface RecipeFormProps {
 const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   const categories = useCategories();
   const createRecipeMutation = useCreateRecipe();
+  const data = useLocation().state;
+  const navigate = useNavigate();
   // const uploadFileMutation = useUploadFile();
   // const data = useFile();
   const form = useForm<RecipeSchemaFields>({
@@ -44,7 +47,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   // }
 
   function processRecipeCreation(data: RecipeSchemaFields) {
-    createRecipeMutation.mutate(data);
+    createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
     form.reset();
     // let formData = new FormData();
     // formData.append("file", data.icon_path[0]);
@@ -85,6 +88,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="name"
+          defaultValue={data?.name ?? ""}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -97,6 +101,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="description"
+          defaultValue={data?.description ?? ""}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Description" />
           )}
@@ -131,6 +136,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="preparing_time"
+          defaultValue={data?.preparing_time.toString() ?? ""}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -142,6 +148,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="cooking_time"
+          defaultValue={data?.cooking_time.toString() ?? ""}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Cooking time" />
           )}
@@ -149,6 +156,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="waiting_time"
+          defaultValue={data?.waiting_time.toString() ?? ""}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Rest time" />
           )}
@@ -156,6 +164,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="total_time"
+          defaultValue={data?.total_time.toString() ?? ""}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Total time" />
           )}
@@ -163,6 +172,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="portions"
+          defaultValue={data?.portions.toString() ?? ""}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Portions" />
           )}

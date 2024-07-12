@@ -191,6 +191,7 @@ export function usePublish() {
 
 export function useUpload() {
   return useMutation({
+    mutationKey: ['upload'],
     mutationFn: (url: string) => uploadRecipe(url),
 
     onError: (err) =>
