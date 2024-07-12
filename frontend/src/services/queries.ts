@@ -1,5 +1,5 @@
 import {  useQuery, useQueryClient } from "@tanstack/react-query";
-import { findByRecipeName, getBestRatedRecipes, getCategories, getFile, getMe, getMyRecipes, getRecentRecipes, getRecipeById, uploadRecipe } from "./api";
+import { findByRecipeName, getBestRatedRecipes, getCategories, getFile, getMe, getMyRecipes, getRecentRecipes, getRecipeById } from "./api";
 import { FilterConditions } from "@/types/types";
 
 export function useMyRecipes(filters: FilterConditions) {

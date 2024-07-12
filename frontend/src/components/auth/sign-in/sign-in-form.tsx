@@ -9,7 +9,6 @@ const SignInForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<SignInFields>({
     mode: "onChange",
