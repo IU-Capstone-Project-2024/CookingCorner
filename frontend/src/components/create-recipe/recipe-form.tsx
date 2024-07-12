@@ -28,6 +28,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   // const uploadFileMutation = useUploadFile();
   // const data = useFile();
   const form = useForm<RecipeSchemaFields>({
+    mode: "onChange",
     resolver: zodResolver(RecipeSchema),
   });
 
@@ -47,6 +48,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
   // }
 
   function processRecipeCreation(data: RecipeSchemaFields) {
+    console.log(data);
     createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
     form.reset();
     // let formData = new FormData();
@@ -88,7 +90,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="name"
-          defaultValue={data?.name ?? ""}
+          defaultValue={data?.name ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -101,7 +103,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="description"
-          defaultValue={data?.description ?? ""}
+          defaultValue={data?.description ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Description" />
           )}
@@ -136,7 +138,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="preparing_time"
-          defaultValue={data?.preparing_time.toString() ?? ""}
+          defaultValue={data?.preparing_time.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -148,7 +150,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="cooking_time"
-          defaultValue={data?.cooking_time.toString() ?? ""}
+          defaultValue={data?.cooking_time.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Cooking time" />
           )}
@@ -156,7 +158,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="waiting_time"
-          defaultValue={data?.waiting_time.toString() ?? ""}
+          defaultValue={data?.waiting_time.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Rest time" />
           )}
@@ -164,7 +166,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="total_time"
-          defaultValue={data?.total_time.toString() ?? ""}
+          defaultValue={data?.total_time.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Total time" />
           )}
@@ -172,7 +174,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="portions"
-          defaultValue={data?.portions.toString() ?? ""}
+          defaultValue={data?.portions.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} placeholder="Portions" />
           )}
