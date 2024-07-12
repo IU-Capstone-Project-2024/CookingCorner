@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, login, rateRecipe, register, removeFromFavourites, uploadFile } from "./api";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/types";
@@ -186,5 +186,15 @@ export function usePublish() {
         await queryClient.invalidateQueries({queryKey: ['recipe', variables.id]})
       }
     }
+  })
+}
+
+export function useUpload() {
+  return useMutation({
+    mutationFn: (url: string) => uploadRecipe(url),
+
+    onError: (err) =>
+      console.log(`Error occured while uploading recipe. ${err}`),
+    onSuccess: () => console.log("Recipe successfully uploaded!"),
   })
 }

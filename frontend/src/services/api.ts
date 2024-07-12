@@ -116,3 +116,14 @@ export const rateRecipe = async (data: {id: number, rating: number}) => {
     return [];
   }
 }
+
+export const uploadRecipe = async (url: string) => {
+  try {
+    return (await API.get(`/recipes/generate_recipe?url=${url}`)).data
+  } catch (err: any) {
+    if (err.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
+  }
+}
