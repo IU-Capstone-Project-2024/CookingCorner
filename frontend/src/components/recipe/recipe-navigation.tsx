@@ -21,7 +21,7 @@ const RecipeNavigation = memo(
     const deleteMutation = useDeleteRecipe();
 
     function handlePublish() {
-      publishMutation.mutate(+params.recipeId!);
+      publishMutation.mutate({ id: +params.recipeId! });
     }
 
     function handleDelete() {
