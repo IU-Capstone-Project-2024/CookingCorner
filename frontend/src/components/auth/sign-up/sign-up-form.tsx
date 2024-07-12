@@ -26,7 +26,6 @@ const SignUpForm = () => {
   const processSignUp: SubmitHandler<SignUpFields> = (data) => {
     const { username, password } = data;
     registerMutation.mutate({ username, password });
-    reset();
   };
 
   return (

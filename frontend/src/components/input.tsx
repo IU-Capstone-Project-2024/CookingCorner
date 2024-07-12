@@ -9,6 +9,7 @@ interface IFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
   error: FieldError | undefined;
+  isError?: boolean;
   register: UseFormRegister<any>;
 }
 
@@ -18,6 +19,7 @@ const FormInput = ({
   name,
   label,
   error,
+  isError,
   register,
 }: IFormInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +32,7 @@ const FormInput = ({
         type={isOpen ? "text" : type}
         name={name}
         placeholder={label}
-        className="border-b-[1px] border-black bg-transparent outline-none"
+        className={`border-b-[1px] border-mainBlack bg-transparent outline-none ${isError ? "text-rose-500" : "text-mainBlack"}`}
       />
       {type === "password" && (
         <Button

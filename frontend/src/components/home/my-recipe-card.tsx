@@ -25,7 +25,7 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
 
   return (
     <div
-      className="mx-1 flex min-h-64 max-w-full cursor-pointer flex-col items-center justify-between rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
+      className="flex min-h-64 max-w-44 cursor-pointer flex-col items-center justify-between gap-2 rounded-lg border-[3px] border-mainBlack p-2 hover:bg-hover-secondary"
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
@@ -42,14 +42,15 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
       <Button
         onClick={(e) => handleAddToFavourites(recipe.id, e, recipe.is_favorite)}
         variant={recipe.is_favorite ? "favourite" : "recipeCard"}
+        className="w-full"
       >
         {recipe.is_favorite ? (
           <p className="flex items-center gap-1 text-xs">
-            Remove from favourites <FaHeart size={18} className="text-hover" />
+            Remove from <FaHeart size={18} className="text-hover" />
           </p>
         ) : (
           <p className="flex items-center gap-1 text-xs">
-            Add to favourites <FaRegHeart size={18} className="text-hover" />
+            Add to <FaRegHeart size={18} className="text-hover" />
           </p>
         )}
       </Button>

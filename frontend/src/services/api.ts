@@ -67,8 +67,8 @@ export const createRecipe = async (data: RecipeSchemaFields) => {
   return await API.post("/recipes/create", data);
 };
 
-export const changePrivacy = async (id: number) => {
-  return await API.put(`/recipes/publish/${id}`);
+export const changePrivacy = async (data: {id: number}) => {
+  return await API.put(`/recipes/publish/${data.id}`);
 };
 
 export const findByRecipeName = async (name: string, filters: FilterConditions) => {
@@ -94,6 +94,19 @@ export const changeProfileData = async (data: User) => {
 export const getCategories = async () => {
   try {
     return (await API.get('/categories/get_all')).data
+  } catch (err: any) {
+    if (err.response.status === 403) {
+      localStorage.clear()
+      window.location.href = '/sign-in'
+    }
+
+    return [];
+  }
+}
+
+export const rateRecipe = async (data: {id: number, rating: number}) => {
+  try {
+    return await API.post(`/recipes/rate_recipe?recipe_id=${data.id}&rating=${data.rating}`, {})
   } catch (err: any) {
     if (err.response.status === 403) {
       localStorage.clear()
