@@ -19,7 +19,8 @@ from src.config import IMAGE_PATH_DIR, CHATBOT_KEY
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
-from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema, RecipeFiltersSchema
+from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema, RecipeFiltersSchema, \
+    RatingSchema
 from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recipe_exists, get_recipe, \
     check_my_recipe_exists, \
     recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query
@@ -228,6 +229,21 @@ async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(ge
     recipe.users_ratings_count += 1
     await db.commit()
     return {"status": "success"}
+
+
+@recipe_router.get("/get_user_rating", response_model=RatingSchema)
+async def get_user_rating(recipe_id: int, db: AsyncSession = Depends(get_async_session),
+                          current_user: User = Depends(get_current_user)):
+    query = select(Recipe).where(Recipe.id == recipe_id)
+    recipe = await db.execute(query)
+    recipe = recipe.first()
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    recipe = recipe[0]
+    users_ratings = recipe.users_ratings
+    if str(current_user.id) not in users_ratings:
+        return None
+    return {"rating": users_ratings[str(current_user.id)]}
 
 
 @recipe_router.post("/create")
