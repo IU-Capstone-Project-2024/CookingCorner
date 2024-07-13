@@ -140,6 +140,13 @@ async def get_result_schema(
     result_schema.creator_username = creator_username
     result_schema.tag_name = tag.name if tag is not None else None
     result_schema.category_name = category.name
+    if recipe.users_ratings is not None:
+        if str(current_user.id) in recipe.users_ratings:
+            result_schema.my_rating = recipe.users_ratings[str(current_user.id)]
+        else:
+            result_schema.my_rating = None
+    else:
+        result_schema.my_rating = None
     return result_schema
 
 
