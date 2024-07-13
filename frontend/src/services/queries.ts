@@ -8,6 +8,7 @@ export function useMyRecipes(filters: FilterConditions) {
   return useQuery({
     queryKey: ['my-recipes', filters],
     queryFn: () => getMyRecipes(filters),
+    staleTime: 60000,
     initialData: () => {
       return queryClient.getQueryData(['my-recipes'])
     }

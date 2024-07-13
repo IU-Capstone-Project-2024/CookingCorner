@@ -1,9 +1,5 @@
-import { RecipeSchema, RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { Input } from "../ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RefObject } from "react";
-import { useCreateRecipe } from "@/services/mutations";
+import { RefObject, useState } from "react";
 import { Form, FormField } from "@/components/ui/form";
 import {
   Select,
@@ -14,21 +10,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCategories } from "@/services/queries";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { RecipeSchemaFields } from "@/schemas/recipe.schema";
+import { UseFormReturn } from "react-hook-form";
+import { IngredientContainer, IngredientInput } from "../ingredient-input";
+import { Ingredient, Step } from "@/types/types";
+import { StepContainer, StepInput } from "../step-input";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
+  processRecipeCreation: (data: RecipeSchemaFields) => void;
+  form: UseFormReturn<RecipeSchemaFields>;
 }
 
-const RecipeForm = ({ submitRef }: RecipeFormProps) => {
+const RecipeForm = ({
+  submitRef,
+  form,
+  processRecipeCreation,
+}: RecipeFormProps) => {
   const categories = useCategories();
-  const createRecipeMutation = useCreateRecipe();
   const data = useLocation().state;
-  const navigate = useNavigate();
-  const form = useForm<RecipeSchemaFields>({
-    mode: "onChange",
-    resolver: zodResolver(RecipeSchema),
-  });
+  const [ingredients, setIngredients] = useState<Ingredient[]>(
+    data?.ingredients ?? [],
+  );
+  const [steps, setSteps] = useState<Step[]>(data?.steps ?? []);
 
   if (categories.isError) {
     return <p>Error</p>;
@@ -38,27 +43,11 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
     return <p>Loading</p>;
   }
 
-  // const fileRef = form.register("icon_path");
-
-  // function getFile() {
-  //   console.log(data.data.data);
-  //   setBinary(data?.data?.data);
-  // }
-
-  function processRecipeCreation(data: RecipeSchemaFields) {
-    console.log(data);
-    createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
-    form.reset();
-    // let formData = new FormData();
-    // formData.append("file", data.icon_path[0]);
-    // uploadFileMutation.mutate(formData);
-  }
-
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(processRecipeCreation)}
-        className="mt-2 flex flex-col gap-2 font-inter"
+        className="mt-2 flex flex-col gap-4 font-inter"
       >
         {/* <FormField
           control={form.control}
@@ -71,7 +60,6 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
               >
                 Add top image
               </Label>
-              {form.formState.errors.icon_path && <p>Error</p>}
               <FormControl>
                 <Input
                   {...fileRef}
@@ -92,9 +80,9 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           render={({ field }) => (
             <Input
               isize={"default"}
-              {...field}
-              placeholder="Name"
+              label="Name"
               error={form.formState.errors.name}
+              {...field}
             />
           )}
         />
@@ -103,7 +91,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="description"
           defaultValue={data?.description ?? undefined}
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Description" />
+            <Input isize={"default"} {...field} label="Description" />
           )}
         />
         <FormField
@@ -111,8 +99,11 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="category_name"
           render={({ field }) => (
             <Select onValueChange={field.onChange} {...field}>
-              <SelectTrigger className="h-12 w-full bg-primary px-4 py-2 font-inter font-medium text-mainBlack-secondary">
-                <SelectValue placeholder="Category" />
+              <SelectTrigger
+                label="Category"
+                className="h-12 w-full bg-primary px-4 py-2 font-inter font-medium text-mainBlack-secondary"
+              >
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-primary font-inter font-medium">
                 <SelectGroup>
@@ -130,7 +121,7 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           control={form.control}
           name="tag_name"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Tag" />
+            <Input isize={"default"} {...field} label="Tag" />
           )}
         />
         <FormField
@@ -140,8 +131,9 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           render={({ field }) => (
             <Input
               isize={"default"}
+              type="number"
               {...field}
-              placeholder="Preparation time"
+              label="Preparation time"
             />
           )}
         />
@@ -150,7 +142,12 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="cooking_time"
           defaultValue={data?.cooking_time.toString() ?? undefined}
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Cooking time" />
+            <Input
+              isize={"default"}
+              {...field}
+              type="number"
+              label="Cooking time"
+            />
           )}
         />
         <FormField
@@ -158,7 +155,12 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="waiting_time"
           defaultValue={data?.waiting_time.toString() ?? undefined}
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Rest time" />
+            <Input
+              isize={"default"}
+              {...field}
+              type="number"
+              label="Rest time"
+            />
           )}
         />
         <FormField
@@ -166,7 +168,12 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="total_time"
           defaultValue={data?.total_time.toString() ?? undefined}
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Total time" />
+            <Input
+              isize={"default"}
+              {...field}
+              type="number"
+              label="Total time"
+            />
           )}
         />
         <FormField
@@ -174,36 +181,48 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           name="portions"
           defaultValue={data?.portions.toString() ?? undefined}
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Portions" />
+            <Input isize={"default"} {...field} label="Portions" />
           )}
         />
         <FormField
           control={form.control}
           name="ingredients"
           render={({ field }) => (
-            <textarea
-              placeholder="Ingredients"
-              {...field}
-              className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
-            />
+            <IngredientContainer setIngredients={setIngredients} {...field}>
+              {ingredients.map((ingredient, idx) => (
+                <IngredientInput
+                  key={`${ingredient}-${idx}`}
+                  ingredient={ingredient}
+                  register={form.register}
+                  ingredientNumber={idx}
+                />
+              ))}
+            </IngredientContainer>
           )}
         />
         <FormField
           control={form.control}
           name="steps"
           render={({ field }) => (
-            <textarea
-              placeholder="Cooking steps"
-              {...field}
-              className="h-32 resize-none rounded-md border border-mainBlack bg-primary px-4 py-2 text-sm placeholder:text-sm placeholder:text-mainBlack-secondary"
-            />
+            <StepContainer setSteps={setSteps} {...field}>
+              {steps.map((step, idx) => (
+                <StepInput
+                  label="Description"
+                  labelPosition={"middle"}
+                  key={`${step}-${idx}`}
+                  cooking_step={step}
+                  register={form.register}
+                  stepNumber={idx}
+                />
+              ))}
+            </StepContainer>
           )}
         />
         <FormField
           control={form.control}
           name="comments"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Comments" />
+            <Input isize={"default"} {...field} label="Comments" />
           )}
         />
         <FormField
@@ -212,8 +231,9 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           render={({ field }) => (
             <Input
               isize={"default"}
+              type="number"
               {...field}
-              placeholder="Nutritional value"
+              label="Nutritional value"
             />
           )}
         />
@@ -221,14 +241,24 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           control={form.control}
           name="proteins_value"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Proteins value" />
+            <Input
+              isize={"default"}
+              type="number"
+              {...field}
+              label="Proteins value"
+            />
           )}
         />
         <FormField
           control={form.control}
           name="fats_value"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Fats value" />
+            <Input
+              isize={"default"}
+              type="number"
+              {...field}
+              label="Fats value"
+            />
           )}
         />
         <FormField
@@ -237,8 +267,9 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           render={({ field }) => (
             <Input
               isize={"default"}
+              type="number"
               {...field}
-              placeholder="Carbohydrates value"
+              label="Carbohydrates value"
             />
           )}
         />
@@ -246,21 +277,21 @@ const RecipeForm = ({ submitRef }: RecipeFormProps) => {
           control={form.control}
           name="dishes"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Dishes" />
+            <Input isize={"default"} {...field} label="Dishes" />
           )}
         />
         <FormField
           control={form.control}
           name="video_link"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Video link" />
+            <Input isize={"default"} {...field} label="Video link" />
           )}
         />
         <FormField
           control={form.control}
           name="source"
           render={({ field }) => (
-            <Input isize={"default"} {...field} placeholder="Source" />
+            <Input isize={"default"} {...field} label="Source" />
           )}
         />
         <button ref={submitRef} className="hidden" />

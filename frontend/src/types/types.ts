@@ -14,9 +14,7 @@ export type Page = {
 };
 
 export type Step = {
-  image_path: string;
   description: string;
-  title: string;
 };
 
 export type FilterConditions = {
