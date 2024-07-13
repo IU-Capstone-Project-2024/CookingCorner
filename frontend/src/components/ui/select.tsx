@@ -15,7 +15,7 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, label, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -24,11 +24,6 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
-    {label && (
-      <label className="pointer-events-none absolute left-[17px] top-[0%] -translate-y-[50%] border-none bg-primary p-1 font-inter text-sm font-normal text-mainBlack">
-        {label}
-      </label>
-    )}
     {children}
     <SelectPrimitive.Icon asChild>
       <ChevronDown className="h-5 w-5" />

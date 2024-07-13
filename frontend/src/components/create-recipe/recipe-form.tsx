@@ -98,23 +98,25 @@ const RecipeForm = ({
           control={form.control}
           name="category_name"
           render={({ field }) => (
-            <Select onValueChange={field.onChange} {...field}>
-              <SelectTrigger
-                label="Category"
-                className="h-12 w-full bg-primary px-4 py-2 font-inter font-medium text-mainBlack-secondary"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-primary font-inter font-medium">
-                <SelectGroup>
-                  {categories.data.map((item: string) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <Select onValueChange={field.onChange} {...field}>
+                <label className="pointer-events-none absolute left-[17px] top-[0%] z-10 -translate-y-[50%] border-none bg-primary p-1 font-inter text-sm font-normal text-mainBlack">
+                  Categories
+                </label>
+                <SelectTrigger className="h-12 w-full bg-primary px-4 py-2 font-inter font-medium text-mainBlack-secondary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-primary font-inter font-medium">
+                  <SelectGroup>
+                    {categories.data.map((item: string) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         />
         <FormField
