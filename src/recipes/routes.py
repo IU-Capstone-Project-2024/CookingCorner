@@ -118,8 +118,10 @@ async def get_my_recipes(body: RecipeFiltersSchema, db: AsyncSession = Depends(g
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user,
                                                     my_recipe=my_recipe[0])
             recipes.append(result_schema)
-    if not body.ascending_order:
-        recipes.reverse()
+    if body.ascending_order:
+        recipes.sort(key=lambda x: x.name)
+    else:
+        recipes.sort(key=lambda x: x.name, reverse=True)
     return recipes
 
 
@@ -155,7 +157,6 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
-    result.reverse()
     return result
 
 
@@ -182,8 +183,10 @@ async def get_by_name(name: str, body: RecipeFiltersSchema, db: AsyncSession = D
             result.append(result_schema)
     if len(result) == 0:
         return None
-    if not body.ascending_order:
-        result.reverse()
+    if body.ascending_order:
+        result.sort(key=lambda x: x.name)
+    else:
+        result.sort(key=lambda x: x.name, reverse=True)
     return result
 
 
@@ -229,21 +232,6 @@ async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(ge
     recipe.users_ratings_count += 1
     await db.commit()
     return {"status": "success"}
-
-
-@recipe_router.get("/get_user_rating", response_model=RatingSchema)
-async def get_user_rating(recipe_id: int, db: AsyncSession = Depends(get_async_session),
-                          current_user: User = Depends(get_current_user)):
-    query = select(Recipe).where(Recipe.id == recipe_id)
-    recipe = await db.execute(query)
-    recipe = recipe.first()
-    if recipe is None:
-        raise HTTPException(status_code=404, detail="Recipe not found")
-    recipe = recipe[0]
-    users_ratings = recipe.users_ratings
-    if str(current_user.id) not in users_ratings:
-        return None
-    return {"rating": users_ratings[str(current_user.id)]}
 
 
 @recipe_router.post("/create")

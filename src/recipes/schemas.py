@@ -41,6 +41,7 @@ class RecipeWithAdditionalDataSchema(RecipePaginationSchema):
     creator_username: bool | None = None
     category_name: str | None = None
     tag_name: str | None = None
+    my_rating: float | None = None
 
 
 class RecipeFiltersSchema(BaseModel):
