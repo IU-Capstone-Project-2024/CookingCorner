@@ -19,7 +19,8 @@ from src.config import IMAGE_PATH_DIR, CHATBOT_KEY
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
-from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema, RecipeFiltersSchema
+from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalDataSchema, RecipeFiltersSchema, \
+    RatingSchema
 from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recipe_exists, get_recipe, \
     check_my_recipe_exists, \
     recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query
@@ -117,8 +118,10 @@ async def get_my_recipes(body: RecipeFiltersSchema, db: AsyncSession = Depends(g
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user,
                                                     my_recipe=my_recipe[0])
             recipes.append(result_schema)
-    if not body.ascending_order:
-        recipes.reverse()
+    if body.ascending_order:
+        recipes.sort(key=lambda x: x.name)
+    else:
+        recipes.sort(key=lambda x: x.name, reverse=True)
     return recipes
 
 
@@ -154,7 +157,6 @@ async def get_by_category(category_name: str, db: AsyncSession = Depends(get_asy
         if recipe is not None:
             result_schema = await get_result_schema(db=db, recipe=recipe[0], current_user=current_user)
             result.append(result_schema)
-    result.reverse()
     return result
 
 
@@ -181,8 +183,10 @@ async def get_by_name(name: str, body: RecipeFiltersSchema, db: AsyncSession = D
             result.append(result_schema)
     if len(result) == 0:
         return None
-    if not body.ascending_order:
-        result.reverse()
+    if body.ascending_order:
+        result.sort(key=lambda x: x.name)
+    else:
+        result.sort(key=lambda x: x.name, reverse=True)
     return result
 
 
