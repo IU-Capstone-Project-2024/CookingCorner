@@ -11,6 +11,7 @@ import CreateRecipe from "@/pages/create-recipe";
 import Upload from "@/pages/upload";
 import ProfileEdit from "@/pages/profile-edit";
 import SearchResult from "@/pages/search-result";
+import RecipeEdit from "@/pages/recipe-edit";
 
 const routes: RouteObject[] = [
   {
@@ -33,6 +34,10 @@ const routes: RouteObject[] = [
       {
         path: "recipes/:recipeId",
         element: <Recipe />,
+      },
+      {
+        path: "recipes/:recipeId/edit",
+        element: <RecipeEdit />,
       },
       {
         path: "recipes/create",

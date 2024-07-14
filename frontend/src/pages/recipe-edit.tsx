@@ -1,23 +1,27 @@
 import Navigation from "@/components/create-recipe/navigation";
 import RecipeForm from "@/components/create-recipe/recipe-form";
 import { RecipeSchema, RecipeSchemaFields } from "@/schemas/recipe.schema";
-import { useCreateRecipe } from "@/services/mutations";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEditRecipe } from "@/services/mutations";
 
-const CreateRecipe = () => {
+const RecipeEdit = () => {
   const submitRef = useRef<HTMLButtonElement>(null);
-  const createRecipeMutation = useCreateRecipe();
+  const editRecipeMutation = useEditRecipe();
   const navigate = useNavigate();
+  const recipeData = useLocation().state;
   const form = useForm<RecipeSchemaFields>({
     mode: "onChange",
     resolver: zodResolver(RecipeSchema),
   });
 
-  function createRecipe(data: RecipeSchemaFields) {
-    createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
+  function editRecipe(data: RecipeSchemaFields) {
+    editRecipeMutation.mutate(
+      { ...data, id: recipeData.id },
+      { onSuccess: () => navigate("/home") },
+    );
     form.reset();
   }
 
@@ -30,13 +34,9 @@ const CreateRecipe = () => {
   return (
     <section className="container px-4">
       <Navigation submitForm={submitClick} />
-      <RecipeForm
-        submitRef={submitRef}
-        form={form}
-        recipeAction={createRecipe}
-      />
+      <RecipeForm submitRef={submitRef} form={form} recipeAction={editRecipe} />
     </section>
   );
 };
 
-export default CreateRecipe;
+export default RecipeEdit;

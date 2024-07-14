@@ -1,4 +1,4 @@
-import { Step } from "@/types/types";
+import { Step } from "@/services/types/types";
 import StepCard from "./step-card";
 
 interface StepsProps {

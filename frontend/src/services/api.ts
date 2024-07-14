@@ -126,3 +126,8 @@ export const uploadRecipe = async (url: string) => {
   verifyToken()
   return await API.get(`/recipes/generate_recipe?url=${url}`)
 }
+
+export const editRecipe = async (data: RecipeSchemaFields & {id: number}) => {
+  verifyToken()
+  return await API.put(`/recipes/update`, data)
+}

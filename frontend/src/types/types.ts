@@ -60,6 +60,7 @@ export type Recipe = {
   user_id: number;
   video_link: string;
   waiting_time: number;
+  my_rating: number;
 };
 
 export type Ingredient = {

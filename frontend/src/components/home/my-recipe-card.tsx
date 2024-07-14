@@ -1,4 +1,4 @@
-import { Recipe } from "@/types/types";
+import { Recipe } from "@/services/types/types";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";

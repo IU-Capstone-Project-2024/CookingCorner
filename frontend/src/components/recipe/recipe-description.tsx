@@ -20,7 +20,7 @@ const RecipeDescription = memo(({ recipe }: RecipeDescriptionProps) => {
         author={recipe.creator_username}
         reviews={recipe.reviews}
       />
-      <Rating id={recipe.id} />
+      <Rating id={recipe.id} myRating={recipe.my_rating} />
       <RecipeTime
         cookingTime={recipe.cooking_time}
         preparationTime={recipe.preparing_time}

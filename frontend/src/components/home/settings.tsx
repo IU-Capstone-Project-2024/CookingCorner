@@ -1,7 +1,7 @@
 import { FaArrowDownWideShort, FaRegHeart, FaHeart } from "react-icons/fa6";
 import Category from "./category";
 import NewRecipe from "./new-recipe";
-import { FilterConditions } from "@/types/types";
+import { FilterConditions } from "@/services/types/types";
 
 interface SettingsProps {
   filters: FilterConditions;

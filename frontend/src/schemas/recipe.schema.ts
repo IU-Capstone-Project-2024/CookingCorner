@@ -1,12 +1,12 @@
 import z from "zod";
 
 const IngredientsSchema = z.object({
-  title: z.string().min(0),
-  portion: z.string().min(0),
+  title: z.string().min(1),
+  portion: z.string().min(1),
 })
 
 const StepSchema = z.object({
-  description: z.string().min(0),
+  description: z.string().min(1),
 })
 
 export const RecipeSchema = z.object({
@@ -19,7 +19,6 @@ export const RecipeSchema = z.object({
     .max(50),
   description: z.string().min(1),
   category_name: z.string().min(0),
-  tag_name: z.string().min(0).optional().or(z.literal(undefined)),
   preparing_time: z.string().min(0).optional().or(z.literal(undefined)),
   cooking_time: z.string().min(0).optional().or(z.literal(undefined)),
   waiting_time: z.string().min(0).optional().or(z.literal(undefined)),

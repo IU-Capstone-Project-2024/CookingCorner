@@ -1,4 +1,4 @@
-import { Recipe } from "@/types/types";
+import { Recipe } from "@/services/types/types";
 import Steps from "./steps/steps";
 import Ingredients from "./ingredients/ingredients";
 import { TabsContent } from "../ui/tabs";

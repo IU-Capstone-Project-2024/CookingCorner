@@ -1,4 +1,4 @@
-import { Ingredient } from "@/types/types";
+import { Ingredient } from "@/services/types/types";
 import IngredientCard from "./ingredient-card";
 
 interface IngredientsProps {

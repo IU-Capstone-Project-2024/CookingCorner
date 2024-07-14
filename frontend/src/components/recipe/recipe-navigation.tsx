@@ -15,6 +15,7 @@ const RecipeNavigation = memo(
   ({ isPrivate, isPending }: RecipeNavigationProps) => {
     const navigate = useNavigate();
     const params = useParams();
+
     const userData = useAuth().data;
     const recipe = useRecipe(+params.recipeId!).data;
     const publishMutation = usePublish();
@@ -57,7 +58,14 @@ const RecipeNavigation = memo(
                   </Button>
                 )}
                 {userData?.username === recipe?.creator_username && (
-                  <Button className="rounded-md border-none">
+                  <Button
+                    className="rounded-md border-none"
+                    onClick={() =>
+                      navigate(`/recipes/${params.recipeId}/edit`, {
+                        state: recipe,
+                      })
+                    }
+                  >
                     Edit your recipe
                   </Button>
                 )}
