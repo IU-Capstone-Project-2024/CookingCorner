@@ -1,4 +1,4 @@
-import { Step } from "@/services/types/types";
+import { Step } from "@/types/types";
 import { Button } from "./ui/button";
 import { FaPlus } from "react-icons/fa6";
 import { UseFormRegister } from "react-hook-form";

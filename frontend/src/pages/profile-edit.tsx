@@ -5,7 +5,7 @@ import { prepareDataForEdit } from "@/lib/utils";
 import { ProfileEditSchema } from "@/schemas/profile-edit.schema";
 import { useProfileEdit } from "@/services/mutations";
 import { useAuth } from "@/services/queries";
-import { User } from "@/services/types/types";
+import { User } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaPen } from "react-icons/fa6";
