@@ -48,7 +48,7 @@ const Search = () => {
       <div className="grid grid-cols-2 gap-2">
         {recentRecipes.data.length === 0 ? (
           <div className="col-span-2 flex max-w-[390px] flex-col items-center text-center font-inter font-semibold text-mainBlack">
-            <img src="/home_page_image.svg" alt="home page image" />
+            <img src="/home_page_image.svg" alt="home page image" width={200} />
             <p className="text-balance text-center">
               Apparently you haven't looked any recipes yet. You can use the
               <span className="mx-1 inline-flex">

@@ -2,7 +2,7 @@ import { Recipe } from "@/types/types";
 import RecipeTitle from "../search/recipe-card-title";
 import RecipeEvaluations from "./recipe-evaluations";
 import RecipeTime from "./recipe-time";
-import { memo } from "react";
+import { memo, useState } from "react";
 import RecipeSwitchButton from "./recipe-switch-button";
 import Rating from "./rating";
 
@@ -12,20 +12,21 @@ interface RecipeDescriptionProps {
 }
 
 const RecipeDescription = memo(({ recipe }: RecipeDescriptionProps) => {
+  const [isOpenRating, setIsOpenRating] = useState(false);
+
   return (
-    <div className="sticky top-12 flex flex-col gap-4 bg-primary p-2 text-left">
+    <div className="sticky top-12 flex max-w-[335px] flex-col gap-4 bg-primary p-2 text-left">
       <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeEvaluations
         rating={recipe.rating}
         author={recipe.creator_username}
         reviews={recipe.reviews}
+        setIsOpenRating={setIsOpenRating}
       />
-      <Rating id={recipe.id} myRating={recipe.my_rating} />
-      <RecipeTime
-        cookingTime={recipe.cooking_time}
-        preparationTime={recipe.preparing_time}
-        portions={recipe.portions}
-      />
+      {isOpenRating && !recipe.is_private && (
+        <Rating id={recipe.id} myRating={recipe.my_rating} />
+      )}
+      <RecipeTime recipe={recipe} />
       <div className="text-center">
         <RecipeSwitchButton />
       </div>

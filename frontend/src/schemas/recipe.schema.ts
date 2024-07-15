@@ -22,7 +22,6 @@ export const RecipeSchema = z.object({
   preparing_time: z.string().min(0).optional().or(z.literal(undefined)),
   cooking_time: z.string().min(0).optional().or(z.literal(undefined)),
   waiting_time: z.string().min(0).optional().or(z.literal(undefined)),
-  total_time: z.string().min(0).optional().or(z.literal(undefined)),
   portions: z.string().min(0).optional().or(z.literal(undefined)),
   ingredients: z.array(IngredientsSchema).optional().or(z.literal(undefined)),
   steps: z.array(StepSchema).optional().or(z.literal(undefined)),

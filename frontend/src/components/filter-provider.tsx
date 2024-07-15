@@ -1,4 +1,4 @@
-import { ContextState, FilterConditions } from "@/services/types/types";
+import { ContextState, FilterConditions } from "@/types/types";
 import { createContext, useState } from "react";
 
 export const FilterContext = createContext<ContextState | null>(null);

@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import Settings from "./settings";
 import SearchBar from "./search-bar";
-import { FilterConditions } from "@/services/types/types";
+import { FilterConditions } from "@/types/types";
 
 interface HomeLayoutProps {
   children?: React.ReactNode;

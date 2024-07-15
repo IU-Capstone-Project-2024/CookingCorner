@@ -156,19 +156,6 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         />
         <FormField
           control={form.control}
-          name="total_time"
-          defaultValue={data?.total_time.toString() ?? undefined}
-          render={({ field }) => (
-            <Input
-              isize={"default"}
-              {...field}
-              type="number"
-              label="Total time"
-            />
-          )}
-        />
-        <FormField
-          control={form.control}
           name="portions"
           defaultValue={data?.portions.toString() ?? undefined}
           render={({ field }) => (

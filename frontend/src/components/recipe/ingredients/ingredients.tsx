@@ -1,4 +1,4 @@
-import { Ingredient } from "@/services/types/types";
+import { Ingredient } from "@/types/types";
 import IngredientCard from "./ingredient-card";
 
 interface IngredientsProps {
@@ -8,7 +8,7 @@ const Ingredients = ({ ingredients }: IngredientsProps) => {
   return (
     <div className="space-y-2">
       {ingredients === null ? (
-        <div className="w-full rounded-[25px] border-2 border-mainBlack">
+        <div className="w-full rounded-[25px] border-2 border-mainBlack p-2">
           <h2 className="text-center text-lg font-bold">
             No ingredients provided
           </h2>
