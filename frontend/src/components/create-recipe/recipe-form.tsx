@@ -19,15 +19,11 @@ import { StepContainer, StepInput } from "../step-input";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
-  processRecipeCreation: (data: RecipeSchemaFields) => void;
+  recipeAction: (data: RecipeSchemaFields) => void;
   form: UseFormReturn<RecipeSchemaFields>;
 }
 
-const RecipeForm = ({
-  submitRef,
-  form,
-  processRecipeCreation,
-}: RecipeFormProps) => {
+const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
   const categories = useCategories();
   const data = useLocation().state;
   const [ingredients, setIngredients] = useState<Ingredient[]>(
@@ -46,7 +42,7 @@ const RecipeForm = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(processRecipeCreation)}
+        onSubmit={form.handleSubmit(recipeAction)}
         className="mt-2 flex flex-col gap-4 font-inter"
       >
         {/* <FormField
@@ -121,13 +117,6 @@ const RecipeForm = ({
         />
         <FormField
           control={form.control}
-          name="tag_name"
-          render={({ field }) => (
-            <Input isize={"default"} {...field} label="Tag" />
-          )}
-        />
-        <FormField
-          control={form.control}
           name="preparing_time"
           defaultValue={data?.preparing_time.toString() ?? undefined}
           render={({ field }) => (
@@ -162,19 +151,6 @@ const RecipeForm = ({
               {...field}
               type="number"
               label="Rest time"
-            />
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="total_time"
-          defaultValue={data?.total_time.toString() ?? undefined}
-          render={({ field }) => (
-            <Input
-              isize={"default"}
-              {...field}
-              type="number"
-              label="Total time"
             />
           )}
         />

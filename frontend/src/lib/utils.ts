@@ -1,5 +1,5 @@
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
-import {  User } from "@/types/types";
+import {  User } from "@/services/types/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";

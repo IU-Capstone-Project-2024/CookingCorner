@@ -16,25 +16,27 @@ const Settings = ({ filters, setFilters }: SettingsProps) => {
   return (
     <section className="inline-flex h-12 w-full items-center justify-center gap-4 border-2 border-x-transparent border-y-mainBlack bg-hover-secondary">
       <NewRecipe />
-      <Category />
-      <FaArrowDownWideShort
-        size={24}
-        className="cursor-pointer"
-        onClick={() => handleFiltersChange("ascending_order")}
-      />
-      {!filters.is_favourite ? (
-        <FaRegHeart
+      <form>
+        <Category />
+        <FaArrowDownWideShort
           size={24}
-          className="cursor-pointer text-hover"
-          onClick={() => handleFiltersChange("is_favourite")}
+          className="cursor-pointer"
+          onClick={() => handleFiltersChange("ascending_order")}
         />
-      ) : (
-        <FaHeart
-          size={24}
-          className="cursor-pointer text-hover"
-          onClick={() => handleFiltersChange("is_favourite")}
-        />
-      )}
+        {!filters.is_favourite ? (
+          <FaRegHeart
+            size={24}
+            className="cursor-pointer text-hover"
+            onClick={() => handleFiltersChange("is_favourite")}
+          />
+        ) : (
+          <FaHeart
+            size={24}
+            className="cursor-pointer text-hover"
+            onClick={() => handleFiltersChange("is_favourite")}
+          />
+        )}
+      </form>
     </section>
   );
 };

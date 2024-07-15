@@ -5,10 +5,11 @@ import { useRating } from "@/services/mutations";
 
 interface RatingProps {
   id: number;
+  myRating: number;
 }
 
-const Rating = ({ id }: RatingProps) => {
-  const [rate, setRate] = useState(0);
+const Rating = ({ id, myRating }: RatingProps) => {
+  const [rate, setRate] = useState(myRating ?? 0);
   const ratingMutation = useRating();
 
   function handleRatingChange(id: number, rating: number) {
