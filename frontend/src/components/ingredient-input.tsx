@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { FaPlus } from "react-icons/fa6";
-import { Ingredient } from "@/services/types/types";
+import { Ingredient } from "@/types/types";
 import { UseFormRegister } from "react-hook-form";
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 

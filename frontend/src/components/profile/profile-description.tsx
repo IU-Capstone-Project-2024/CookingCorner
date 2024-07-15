@@ -1,4 +1,4 @@
-import { User } from "@/services/types/types";
+import { User } from "@/types/types";
 
 interface ProfileDescriptionProps {
   data: Omit<User, "img">;
