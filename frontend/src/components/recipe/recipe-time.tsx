@@ -9,7 +9,7 @@ const RecipeTime = ({ recipe }: RecipeTimeProps) => {
   const [isOpenDesc, setIsOpenDesc] = useState(false);
 
   return (
-    <div>
+    <div className="space-y-4">
       <div
         className="flex cursor-pointer items-center justify-between gap-4 text-center"
         onClick={() => setIsOpenDesc((prev) => !prev)}

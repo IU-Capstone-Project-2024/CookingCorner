@@ -11,7 +11,7 @@ interface SearchLayoutProps {
 const SearchLayout = ({ children, cancelSearch }: SearchLayoutProps) => {
   const navigate = useNavigate();
   return (
-    <section className="flex flex-col items-center gap-4 px-2">
+    <section className="container flex flex-col items-center gap-4 px-2">
       <div className="flex w-full items-center justify-center gap-2">
         <SearchBar />
         {cancelSearch && (
@@ -22,7 +22,7 @@ const SearchLayout = ({ children, cancelSearch }: SearchLayoutProps) => {
           />
         )}
       </div>
-      <div className="flex flex-col items-center gap-4">{children}</div>
+      <div className="flex w-full flex-col items-center gap-4">{children}</div>
     </section>
   );
 };
