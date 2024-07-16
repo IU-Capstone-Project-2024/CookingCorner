@@ -471,6 +471,9 @@ async def remove_from_favourites(recipe_id: int, db: AsyncSession = Depends(get_
 @recipe_router.post("/upload_file")
 async def upload_file(file: UploadFile, db: AsyncSession = Depends(get_async_session),
                       current_user: User = Depends(get_current_user)):
+    response = requests.post(
+        url="storage.yandexcloud.net/"
+    )
     with open(f"{IMAGE_PATH_DIR}/1.jpg", mode="wb") as f:
         f.write(await file.read())
     return file
