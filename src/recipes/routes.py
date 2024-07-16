@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 from datetime import datetime
@@ -15,7 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import StreamingResponse
 
 from src.auth.utils import get_current_user
-from src.config import IMAGE_PATH_DIR, CHATBOT_KEY
+from src.aws_init import s3
+from src.config import IMAGE_PATH_DIR, CHATBOT_KEY, BUCKET_NAME
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
@@ -473,6 +475,9 @@ async def upload_file(file: UploadFile, db: AsyncSession = Depends(get_async_ses
                       current_user: User = Depends(get_current_user)):
     with open(f"{IMAGE_PATH_DIR}/1.jpg", mode="wb") as f:
         f.write(await file.read())
+    file_path = os.path.join(IMAGE_PATH_DIR, "1.jpg")
+    file_name = "1.jpg"
+    s3.upload_file(file_path, BUCKET_NAME, file_name)
     return file
 
 
