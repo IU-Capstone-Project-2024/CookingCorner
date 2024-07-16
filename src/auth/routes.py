@@ -1,7 +1,8 @@
+import os
 from datetime import timedelta, datetime
 
 import pytz
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlalchemy import update, select
@@ -10,7 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.schemas import UserCreate, TokenSchema, UserSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, \
     get_user_data, get_current_user, verify_token
-from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
+from src.aws_init import s3
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES, IMAGE_PATH_DIR, BUCKET_NAME
 from src.database import get_async_session
 from src.models import User
 
@@ -73,7 +75,7 @@ async def get_user_me(db: AsyncSession = Depends(get_async_session), current_use
 
 
 @auth_router.post("/edit_user_data")
-async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_session),
+async def edit_user_data(body: UserSchema, file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
     if body.username is not None:
         if current_user.username != body.username:
@@ -88,8 +90,21 @@ async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_
         surname=body.surname if body.name is not None else current_user.surname,
         cooking_experience=body.cooking_experience if body.cooking_experience is not None
         else current_user.cooking_experience,
-        image_path=body.image_path if body.image_path is not None else current_user.image_path,
+        image_path=body.image_path if file is not None else current_user.image_path,
     )
     await db.execute(query)
+    await db.commit()
+    return {"status": "success"}
+
+
+@auth_router.post("/edit_user_image")
+async def edit_user_image(file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
+                         current_user: User = Depends(get_current_user)):
+    with open(f"{IMAGE_PATH_DIR}/{current_user.id}.jpg", mode="wb") as f:
+        f.write(await file.read())
+    file_path = os.path.join(IMAGE_PATH_DIR, f"{current_user.id}.jpg")
+    file_name = f"users/{current_user.id}.jpg"
+    s3.upload_file(file_path, BUCKET_NAME, file_name)
+    current_user.image_path = file_name
     await db.commit()
     return {"status": "success"}
