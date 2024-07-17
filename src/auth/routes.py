@@ -76,7 +76,7 @@ async def get_user_me(db: AsyncSession = Depends(get_async_session), current_use
 
 
 @auth_router.post("/edit_user_data")
-async def edit_user_data(body: UserSchema, file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
+async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
     if body.username is not None:
         if current_user.username != body.username:
@@ -90,8 +90,7 @@ async def edit_user_data(body: UserSchema, file: UploadFile = File(...), db: Asy
         name=body.name if body.name is not None else current_user.name,
         surname=body.surname if body.name is not None else current_user.surname,
         cooking_experience=body.cooking_experience if body.cooking_experience is not None
-        else current_user.cooking_experience,
-        image_path=body.image_path if file is not None else current_user.image_path,
+        else current_user.cooking_experience
     )
     await db.execute(query)
     await db.commit()
