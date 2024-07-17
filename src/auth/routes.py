@@ -15,6 +15,7 @@ from src.aws_init import s3
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES, IMAGE_PATH_DIR, BUCKET_NAME
 from src.database import get_async_session
 from src.models import User
+from src.utils import upload_image
 
 auth_router = APIRouter(tags=["Auth"])
 
@@ -100,11 +101,7 @@ async def edit_user_data(body: UserSchema, file: UploadFile = File(...), db: Asy
 @auth_router.post("/edit_user_image")
 async def edit_user_image(file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
-    with open(f"{IMAGE_PATH_DIR}/{current_user.id}.jpg", mode="wb") as f:
-        f.write(await file.read())
-    file_path = os.path.join(IMAGE_PATH_DIR, f"{current_user.id}.jpg")
-    file_name = f"users/{current_user.id}.jpg"
-    s3.upload_file(file_path, BUCKET_NAME, file_name)
+    file_name = await upload_image(current_user=current_user, file=file)
     current_user.image_path = file_name
     await db.commit()
     return {"status": "success"}
