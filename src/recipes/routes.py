@@ -25,7 +25,8 @@ from src.recipes.schemas import RecipePaginationSchema, RecipeWithAdditionalData
     RatingSchema
 from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recipe_exists, get_recipe, \
     check_my_recipe_exists, \
-    recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query
+    recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query, \
+    generate_recipe_func
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
@@ -532,44 +533,14 @@ async def generate_recipe(url: str, db: AsyncSession = Depends(get_async_session
               )
 
     try:
-        response = requests.post(
-            url="https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {CHATBOT_KEY}"
-            },
-            data=json.dumps({
-                "model": "meta-llama/llama-3-8b-instruct:free",
-                "messages": [
-                    {"role": "user", "content": f"{prompt}"}
-                ]
-            })
-        )
-
-        response = response.json()["choices"][0]["message"]["content"]
-        # print(response)
-        response = response.split('\n')
-        result = []
-
-        is_json = False
-        for row in response:
-            if is_json and "```" in row:
-                break
-            if is_json:
-                result.append(row)
-            if not is_json and "```" in row:
-                is_json = True
-        if "{" not in result[0]:
-            result.insert(0, "{")
-        if "}" not in result[-1]:
-            result.append("}")
-        result = "".join(result)
-        result = result.replace("`", "")
-        # print(result)
-        result = json.loads(result)
-        # print(result)
+        result = await generate_recipe_func(prompt=prompt)
         return result
     except Exception:
-        raise HTTPException(status_code=400, detail="Something went wrong")
+        try:
+            result = await generate_recipe_func(prompt=prompt)
+            return result
+        except Exception:
+            raise HTTPException(status_code=400, detail="Something went wrong")
 
 
 @recipe_router.post("/generate")
