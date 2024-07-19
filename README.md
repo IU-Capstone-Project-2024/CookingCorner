@@ -23,7 +23,7 @@ share recipes with other users. In the future, we plan to implement AI functions
 smart search, and recipe generation on request.
 
 
-### Demo
+## Demo
 <a href=""></a>
 
 ## Installation
