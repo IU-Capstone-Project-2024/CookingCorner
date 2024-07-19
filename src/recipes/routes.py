@@ -363,24 +363,6 @@ async def update_recipe(body: RecipeUpdateSchema,
     return {"status": "success"}
 
 
-# @recipe_router.delete("/delete")
-# async def delete_recipe(recipe_id: int, db: AsyncSession = Depends(get_async_session),
-#                         current_user: User = Depends(get_current_user)):
-#     if not await check_recipe_exists(recipe_id=recipe_id, db=db, user_id=current_user.id):
-#         raise HTTPException(status_code=404, detail="Recipe not found or it belongs to another user")
-#     query = select(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
-#     recipe = await db.execute(query)
-#     recipe = recipe.first()
-#     if not recipe[0].is_private:
-#         raise HTTPException(status_code=400, detail="Recipe is published, so it cannot be deleted")
-#     query = delete(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == recipe_id)
-#     await db.execute(query)
-#     query = delete(MyRecipe).where(MyRecipe.user_id == current_user.id).where(MyRecipe.id == recipe_id)
-#     await db.execute(query)
-#     await db.commit()
-#     return {"status": "success"}
-
-
 @recipe_router.put("/publish/{recipe_id}")
 async def publish(recipe_id: int, db: AsyncSession = Depends(get_async_session),
                   current_user: User = Depends(get_current_user)):
