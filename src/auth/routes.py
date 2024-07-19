@@ -12,7 +12,8 @@ from src.auth.schemas import UserCreate, TokenSchema, UserSchema
 from src.auth.utils import get_user_by_username, create_user, authenticate_user, create_access_token, \
     get_user_data, get_current_user, verify_token
 from src.aws_init import s3
-from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES, IMAGE_PATH_DIR, BUCKET_NAME
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES, IMAGE_PATH_DIR, BUCKET_NAME, \
+    IMAGE_USER_PATH_DIR
 from src.database import get_async_session
 from src.models import User
 from src.utils import upload_image
@@ -101,7 +102,7 @@ async def edit_user_data(body: UserSchema, db: AsyncSession = Depends(get_async_
 @auth_router.post("/edit_user_image")
 async def edit_user_image(file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
                          current_user: User = Depends(get_current_user)):
-    file_name = await upload_image(current_user=current_user, file=file)
+    file_name = await upload_image(folder=IMAGE_USER_PATH_DIR, file=file)
     current_user.image_path = file_name
     await db.commit()
     return {"status": "success"}
