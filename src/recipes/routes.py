@@ -1,10 +1,11 @@
 import json
 import os
+from typing import Optional
 
 import requests
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form
 from fastapi.responses import FileResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -173,7 +174,7 @@ async def get_by_name(name: str, body: RecipeFiltersSchema, db: AsyncSession = D
         raise HTTPException(status_code=404, detail="Recipes with such name not found")
     result = []
     for recipe in recipes:
-        query = select(Recipe)
+        query = select(Recipe).where(Recipe.id == recipe[0].id)
         query = await filter_query(db=db, recipe_id=recipe[0].id, body=body, query=query,
                                    current_user=current_user)
         if query is None:
