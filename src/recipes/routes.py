@@ -5,7 +5,7 @@ from typing import Optional
 import requests
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form, File
 from fastapi.responses import FileResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -18,7 +18,7 @@ from starlette.responses import StreamingResponse
 
 from src.auth.utils import get_current_user
 from src.aws_init import s3
-from src.config import IMAGE_PATH_DIR, CHATBOT_KEY, BUCKET_NAME
+from src.config import IMAGE_PATH_DIR, CHATBOT_KEY, BUCKET_NAME, IMAGE_RECIPE_PATH_DIR
 from src.database import get_async_session
 from src.models import User, Recipe, Category
 from src.models.recipes import MyRecipe, Tag
@@ -29,6 +29,7 @@ from src.recipes.utils import get_category_by_name, get_tag_by_name, check_recip
     recipe_to_schema, get_category_by_recipe, get_tag_by_recipe, get_creator_username, get_result_schema, filter_query, \
     generate_recipe_func
 from src.tags.schemas import RecipeSchema, RecipeUpdateSchema
+from src.utils import upload_image
 
 recipe_router = APIRouter(prefix="/recipes", tags=["Recipe"])
 
@@ -236,6 +237,13 @@ async def rate_recipe(recipe_id: int, rating: int, db: AsyncSession = Depends(ge
     recipe.users_ratings_count += 1
     await db.commit()
     return {"status": "success"}
+
+
+@recipe_router.post("/upload_recipe_image")
+async def upload_recipe_image(file: UploadFile = File(...), db: AsyncSession = Depends(get_async_session),
+                       current_user: User = Depends(get_current_user)):
+    file_name = await upload_image(folder=IMAGE_RECIPE_PATH_DIR, file=file)
+    return {"file_name": file_name}
 
 
 @recipe_router.post("/create")
