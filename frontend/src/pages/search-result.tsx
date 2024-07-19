@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Category from "@/components/home/category";
 import { FaArrowDownWideShort } from "react-icons/fa6";
 import { SettingsContainer, SettingsItem } from "@/components/settings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const SearchResult = () => {
   const params = useParams();
@@ -13,16 +14,41 @@ const SearchResult = () => {
   const recipes = useSearch(params.query ?? "", filters);
 
   if (recipes.isError) {
-    return <p>Error</p>;
+    return (
+      <SearchLayout cancelSearch={true}>
+        <p>Error</p>
+      </SearchLayout>
+    );
   }
 
   if (recipes.isPending) {
-    return <p>Loading...</p>;
+    return (
+      <SearchLayout cancelSearch={true}>
+        <SettingsContainer className="w-full max-w-[390px]">
+          <SettingsItem className="w-full">
+            <Category handleFiltersChange={handleFiltersChange} />
+          </SettingsItem>
+          <SettingsItem>
+            <FaArrowDownWideShort
+              size={24}
+              className="cursor-pointer"
+              onClick={() => handleFiltersChange("ascending_order")}
+            />
+          </SettingsItem>
+        </SettingsContainer>
+        <div className="grid grid-cols-2 gap-2">
+          <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
+          <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
+          <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
+          <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
+        </div>
+      </SearchLayout>
+    );
   }
 
   return (
     <SearchLayout cancelSearch={true}>
-      <SettingsContainer className="w-full">
+      <SettingsContainer className="w-full max-w-[390px]">
         <SettingsItem className="w-full">
           <Category handleFiltersChange={handleFiltersChange} />
         </SettingsItem>

@@ -1,6 +1,6 @@
 import { Input } from "../ui/input";
 import { RefObject, useState } from "react";
-import { Form, FormField } from "@/components/ui/form";
+import { Form, FormControl, FormField } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -16,6 +16,7 @@ import { UseFormReturn } from "react-hook-form";
 import { IngredientContainer, IngredientInput } from "../ingredient-input";
 import { Ingredient, Step } from "@/types/types";
 import { StepContainer, StepInput } from "../step-input";
+import ImageInput from "../image-input";
 
 interface RecipeFormProps {
   submitRef: RefObject<HTMLButtonElement>;
@@ -45,30 +46,21 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         onSubmit={form.handleSubmit(recipeAction)}
         className="mt-2 flex flex-col gap-4 font-inter"
       >
-        {/* <FormField
+        <FormField
           control={form.control}
           name="icon_path"
           render={({ field }) => (
-            <div className="inline-flex items-center justify-center">
-              <Label
-                className="text-md flex h-12 items-center justify-center rounded-md border border-mainBlack bg-hover-switch px-4 py-2 font-bold"
-                htmlFor="image-file"
-              >
-                Add top image
-              </Label>
+            <div className="inline-flex flex-col items-center justify-center gap-2">
               <FormControl>
-                <Input
-                  {...fileRef}
-                  id="image-file"
-                  variant={"image"}
-                  isize={"image"}
-                  className="mx-auto hidden text-center"
-                  type="file"
+                <ImageInput
+                  register={form.register}
+                  label="Add top image"
+                  stepNumber={-1}
                 />
               </FormControl>
             </div>
           )}
-        /> */}
+        />
         <FormField
           control={form.control}
           name="name"

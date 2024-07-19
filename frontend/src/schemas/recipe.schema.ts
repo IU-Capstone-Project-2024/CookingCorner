@@ -5,14 +5,20 @@ const IngredientsSchema = z.object({
   portion: z.string().min(1),
 })
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"]
+
 const StepSchema = z.object({
+  image: z.instanceof(FileList).optional()
+    .refine((file) => file?.length == 1 ? file[0].size <= MAX_FILE_SIZE ? true : false : true)
+    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true),
   description: z.string().min(1),
 })
 
 export const RecipeSchema = z.object({
-  // icon_path: z.instanceof(FileList)
-  //   .refine((file) => file[0].size <= MAX_FILE_SIZE)
-  //   .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file[0].type)),
+  icon_path: z.instanceof(FileList).optional()
+    .refine((file) => file?.length == 1 ? file[0].size <= MAX_FILE_SIZE ? true : false : true)
+    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true),
   name: 
     z.string({message: "You need to name your recipe!"})
     .min(1, {message: "You need to name your recipe!"})

@@ -93,7 +93,7 @@ export const findByRecipeName = async (
   verifyToken();
   return (
     await API.post<Recipe[]>(`/recipes/get_by_name?name=${name}`, filters)
-  ).data;
+  ).data ?? [];
 };
 
 export const getRecipeById = async (id: number) => {
@@ -113,7 +113,7 @@ export const getRecentRecipes = async () => {
 
 export const changeProfileData = async (data: User) => {
   verifyToken();
-  return await API.post("/edit_user_data", data);
+  return await API.post("/edit_user_data", data)
 };
 
 export const getCategories = async () => {
@@ -138,3 +138,8 @@ export const editRecipe = async (data: RecipeSchemaFields & { id: number }) => {
   verifyToken();
   return await API.put(`/recipes/update`, data);
 };
+
+export const editUserImage = async (data: FormData) => {
+  verifyToken();
+  return await API.post("/edit_user_image", data)
+}

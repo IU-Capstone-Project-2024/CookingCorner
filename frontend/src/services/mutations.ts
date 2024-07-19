@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, editRecipe, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe } from "./api";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, editRecipe, editUserImage, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/types";
@@ -201,19 +201,21 @@ export function useUpload() {
 }
 
 export function useEditRecipe() {
-  // const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: RecipeSchemaFields & {id: number}) => editRecipe(data),
 
     onError: (err) =>
       console.log(`Error occured while editing recipe. ${err}`),
     onSuccess: () => console.log("Recipe successfully edited!"),
-    // onSettled: async (_, err, variables) => {
-    //   if (err) {
-    //     console.log(`Error occured while changing profile data. ${err}`)
-    //   } else {
-    //     await queryClient.invalidateQueries({queryKey: ['recipe', variables.]})
-    //   }
-    // }
+  })
+}
+
+export function useEditUserImage() {
+  return useMutation({
+    mutationFn: (data: FormData) => editUserImage(data),
+
+    onError: (err) =>
+      console.log(`Error occured while editing user image. ${err}`),
+    onSuccess: () => console.log("Image successfully edited!"),
   })
 }

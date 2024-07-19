@@ -28,7 +28,7 @@ const Category = ({ handleFiltersChange }: CategoryProps) => {
       onValueChange={(value) => handleFiltersChange("category_name", value)}
     >
       <SelectTrigger className="h-8 max-w-[290px] bg-primary font-inter font-medium">
-        <SelectValue placeholder="Category" defaultValue={"all"} />
+        <SelectValue placeholder="All" defaultValue={"all"} />
       </SelectTrigger>
       <SelectContent className="bg-primary font-inter font-medium">
         <SelectGroup>

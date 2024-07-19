@@ -1,9 +1,9 @@
-import ProfileImage from "@/components/profile/profile-image";
+import ProfileEditImage from "@/components/profile/profile-edit-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { prepareDataForEdit } from "@/lib/utils";
 import { ProfileEditSchema } from "@/schemas/profile-edit.schema";
-import { useProfileEdit } from "@/services/mutations";
+import { useEditUserImage, useProfileEdit } from "@/services/mutations";
 import { useAuth } from "@/services/queries";
 import { User } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,15 +13,21 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileEdit = () => {
   const profileData = useAuth();
-  console.log(profileData.data);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<User>({
     resolver: zodResolver(ProfileEditSchema),
   });
 
   const profileEditMutation = useProfileEdit();
+  const editUserImageMutation = useEditUserImage();
 
   const submit: SubmitHandler<User> = (data) => {
+    if (data.image_path?.length == 1) {
+      const formData = new FormData();
+      console.log(data.image_path[0]);
+      formData.append("file", data.image_path[0]);
+      editUserImageMutation.mutate(formData);
+    }
     const newData = prepareDataForEdit(data);
     profileEditMutation.mutate(newData);
     navigate("/profile");
@@ -31,22 +37,25 @@ const ProfileEdit = () => {
     return <p>Error</p>;
   }
 
-  if (profileData.isPending) {
+  if (profileData.isFetching || profileData.isLoading) {
     return <p>Loading</p>;
   }
 
   return (
     <div className="px-4">
-      <ProfileImage img={profileData.data.image_path} />
       <form
         className="flex flex-col items-center gap-4 py-4"
         onSubmit={handleSubmit(submit)}
       >
+        <ProfileEditImage
+          img={profileData.data.image_path}
+          register={register}
+        />
         <Button
           variant="recipeCard"
           size={"lg"}
           type="submit"
-          className="flex w-72 items-center gap-2 font-inter text-lg"
+          className="mb-4 flex w-72 items-center gap-2 font-inter text-lg"
         >
           Save
           <FaPen size={20} />

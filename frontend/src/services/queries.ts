@@ -29,7 +29,6 @@ export function useAuth() {
   return useQuery({
     queryKey: ["userMe"],
     queryFn: getMe,
-    staleTime: Infinity,
     initialData: () => {
       return queryClient.getQueryData(["userMe"]);
     },

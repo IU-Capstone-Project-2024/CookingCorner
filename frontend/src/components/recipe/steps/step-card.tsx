@@ -6,7 +6,7 @@ interface StepCardProps {
 
 const StepCard = ({ step, img, description }: StepCardProps) => {
   return (
-    <div className="flex w-screen max-w-[335px] flex-col items-center gap-2 text-wrap rounded-lg border-2 border-mainBlack p-1">
+    <div className="flex w-screen max-w-[330px] flex-col items-center gap-2 text-wrap rounded-lg border-2 border-mainBlack p-1">
       <h2 className="font-bold">Step {step}</h2>
       <img
         src={`${img === null || img === undefined ? "/no_image.svg" : "/" + img}`}

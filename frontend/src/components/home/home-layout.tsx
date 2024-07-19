@@ -22,7 +22,7 @@ const HomeLayout = ({
   return (
     <section className="flex flex-col items-center gap-2">
       <SearchBar setSearch={setSearch} />
-      <SettingsContainer className="w-full">
+      <SettingsContainer className="w-full max-w-[390px]">
         <SettingsItem>
           <NewRecipe />
         </SettingsItem>

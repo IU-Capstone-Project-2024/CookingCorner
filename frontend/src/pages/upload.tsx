@@ -27,7 +27,7 @@ const Upload = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 px-4">
+    <div className="flex max-w-[390px] flex-col gap-2 px-4">
       <Button variant={"icon"} size={"icon"} onClick={() => navigate("/home")}>
         <FaArrowLeft size={20} />
       </Button>

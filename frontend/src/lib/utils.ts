@@ -44,7 +44,7 @@ export function checkAuth() {
 export function prepareDataForEdit(data: User) {
   let res: any = {}
   for (let [key, value] of Object.entries(data)) {
-    if (value === '') {
+    if (value === '' || value.length == 0) {
       res[key] = null;
     } else {
       res[key] = value;

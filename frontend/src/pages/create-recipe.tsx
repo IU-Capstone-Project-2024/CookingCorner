@@ -17,8 +17,9 @@ const CreateRecipe = () => {
   });
 
   function createRecipe(data: RecipeSchemaFields) {
-    createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
-    form.reset();
+    console.log(data);
+    // createRecipeMutation.mutate(data, { onSuccess: () => navigate("/home") });
+    // form.reset();
   }
 
   const submitClick = () => {
@@ -28,7 +29,7 @@ const CreateRecipe = () => {
   };
 
   return (
-    <section className="container px-4">
+    <section className="w-full max-w-[390px] px-4">
       <Navigation submitForm={submitClick} />
       <RecipeForm
         submitRef={submitRef}
