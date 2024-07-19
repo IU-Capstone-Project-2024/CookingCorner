@@ -162,8 +162,9 @@ async def filter_query(
         current_user: User
 ) -> Select[tuple[Recipe]] | None:
     if body.category_name:
-        category = await get_category_by_name(db=db, category_name=body.category_name)
-        query = query.where(Recipe.category_id == category.id)
+        if body.category_name != "All":
+            category = await get_category_by_name(db=db, category_name=body.category_name)
+            query = query.where(Recipe.category_id == category.id)
     if body.is_favourite:
         my_recipe_query = select(MyRecipe).where(MyRecipe.user_id == current_user.id).where(
             MyRecipe.recipe_id == recipe_id)
