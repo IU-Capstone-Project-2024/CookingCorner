@@ -17,7 +17,7 @@ async def upload_image(folder: str, file: UploadFile = File(...)) -> str:
         file_path = os.path.join(IMAGE_PATH_DIR, f"{image_id}.png")
         file_name = f"{folder}/{image_id}.png"
     else:
-        with open(f"{IMAGE_PATH_DIR}/{image_id}.png", mode="wb") as f:
+        with open(f"{IMAGE_PATH_DIR}/{image_id}.jpg", mode="wb") as f:
             f.write(await file.read())
         file_path = os.path.join(IMAGE_PATH_DIR, f"{image_id}.jpg")
         file_name = f"{folder}/{image_id}.jpg"
