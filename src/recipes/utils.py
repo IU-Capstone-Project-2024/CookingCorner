@@ -1,6 +1,10 @@
+import json
+
+import requests
 from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.config import CHATBOT_KEY
 from src.models import Category, Tag, Recipe, User
 from src.models.recipes import MyRecipe
 from src.recipes.schemas import RecipeWithAdditionalDataSchema, RecipeFiltersSchema
@@ -169,3 +173,39 @@ async def filter_query(
             if not my_recipe[0].is_favourite:
                 return None
     return query
+
+
+async def generate_recipe_func(prompt: tuple[str, str]):
+    response = requests.post(
+        url="https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {CHATBOT_KEY}"
+        },
+        data=json.dumps({
+            "model": "meta-llama/llama-3-8b-instruct:free",
+            "messages": [
+                {"role": "user", "content": f"{prompt}"}
+            ]
+        })
+    )
+
+    response = response.json()["choices"][0]["message"]["content"]
+    response = response.split('\n')
+    result = []
+
+    is_json = False
+    for row in response:
+        if is_json and "```" in row:
+            break
+        if is_json:
+            result.append(row)
+        if not is_json and "```" in row:
+            is_json = True
+    if "{" not in result[0]:
+        result.insert(0, "{")
+    if "}" not in result[-1]:
+        result.append("}")
+    result = "".join(result)
+    result = result.replace("`", "")
+    result = json.loads(result)
+    return result
