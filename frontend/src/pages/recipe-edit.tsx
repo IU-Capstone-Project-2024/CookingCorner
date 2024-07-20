@@ -5,11 +5,13 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEditRecipe } from "@/services/mutations";
+import { useEditRecipe, useUploadRecipeImage } from "@/services/mutations";
+import { compareImages, getDataWithImages } from "@/lib/utils";
 
 const RecipeEdit = () => {
   const submitRef = useRef<HTMLButtonElement>(null);
   const editRecipeMutation = useEditRecipe();
+  const uploadImageMutation = useUploadRecipeImage();
   const navigate = useNavigate();
   const recipeData = useLocation().state;
   const form = useForm<RecipeSchemaFields>({
@@ -17,9 +19,27 @@ const RecipeEdit = () => {
     resolver: zodResolver(RecipeSchema),
   });
 
-  function editRecipe(data: RecipeSchemaFields) {
+  async function editRecipe(data: RecipeSchemaFields) {
+    const images = compareImages(recipeData, data);
+
+    let results = await Promise.all(
+      images.map((image) =>
+        !image.hasOwnProperty("file_name")
+          ? uploadImageMutation.mutateAsync(image)
+          : undefined,
+      ),
+    );
+
+    results = images.map((image, idx) => {
+      if (!image.hasOwnProperty("file_name")) {
+        return results[idx];
+      } else {
+        return image;
+      }
+    });
+
     editRecipeMutation.mutate(
-      { ...data, id: recipeData.id },
+      { ...getDataWithImages(results, data), id: recipeData.id },
       { onSuccess: () => navigate("/home") },
     );
     form.reset();
@@ -32,7 +52,7 @@ const RecipeEdit = () => {
   };
 
   return (
-    <section className="container px-4">
+    <section className="container max-w-[390px] px-4">
       <Navigation submitForm={submitClick} />
       <RecipeForm submitRef={submitRef} form={form} recipeAction={editRecipe} />
     </section>

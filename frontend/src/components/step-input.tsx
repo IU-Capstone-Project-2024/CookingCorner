@@ -5,6 +5,7 @@ import { UseFormRegister } from "react-hook-form";
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import ImageInput from "./image-input";
 
 interface StepContainerProps {
   setSteps: React.Dispatch<React.SetStateAction<Step[]>>;
@@ -58,6 +59,7 @@ interface StepInputProps
   register: UseFormRegister<RecipeSchemaFields>;
   className?: string;
   label?: string;
+  image?: string;
   cooking_step: Step;
 }
 
@@ -69,17 +71,18 @@ const StepInput = ({
   labelPosition,
   label,
   cooking_step,
+  image,
   ...props
 }: StepInputProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border-2 border-mainBlack bg-primary py-2">
       <h3 className="font-inter font-semibold">Step {stepNumber + 1}</h3>
-      <label
-        className="text-md flex h-12 items-center justify-center rounded-md border border-mainBlack bg-hover-switch px-4 py-2 font-bold"
-        htmlFor="step-file"
-      >
-        Add top image
-      </label>
+      <ImageInput
+        register={register}
+        stepNumber={stepNumber}
+        label={`Step ${stepNumber + 1} image`}
+        img={image}
+      />
       <div className="relative">
         {label && (
           <label className={cn(labelVariants({ labelPosition, className }))}>

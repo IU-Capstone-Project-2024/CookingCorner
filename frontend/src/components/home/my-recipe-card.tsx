@@ -29,9 +29,13 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <img
-        src={recipe.icon_path === null ? "no_image.png" : recipe.icon_path}
+        src={
+          recipe.icon_path === null
+            ? "no_image.png"
+            : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.icon_path}`
+        }
         alt={recipe.name}
-        className="w-fit"
+        className={`w-fit rounded-md ${recipe.icon_path !== null && "border-2 border-mainBlack"}`}
       />
       <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription

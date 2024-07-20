@@ -26,10 +26,12 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
     >
       <img
         src={
-          recipe.icon_path === null ? "/no_image.svg" : "/" + recipe.icon_path
+          recipe.icon_path === null
+            ? "/no_image.svg"
+            : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.icon_path}`
         }
         alt={"recipe picture"}
-        className="w-fit"
+        className={`w-fit ${recipe.icon_path !== null && "border-2 border-mainBlack"} rounded-md`}
       />
       <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription

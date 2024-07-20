@@ -6,9 +6,9 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <main className="min-w-screen relative min-h-screen bg-primary pb-20 pt-10">
+    <main className="min-w-screen relative flex min-h-screen flex-col items-center bg-primary pb-20 pt-10">
       {children}
-      <nav className="fixed bottom-0 z-10 flex h-16 w-full items-center justify-evenly rounded-t-xl border-2 border-mainBlack bg-primary">
+      <nav className="fixed bottom-0 z-10 flex h-16 w-full max-w-[390px] items-center justify-evenly rounded-t-xl border-2 border-mainBlack bg-primary">
         <Navigation />
       </nav>
     </main>

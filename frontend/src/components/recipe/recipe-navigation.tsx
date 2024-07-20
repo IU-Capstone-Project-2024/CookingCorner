@@ -27,16 +27,12 @@ const RecipeNavigation = memo(
 
     function handleDelete() {
       deleteMutation.mutate(+params.recipeId!);
-      navigate("/home");
+      navigate(-1);
     }
 
     return (
       <div className="sticky top-0 flex w-full items-center justify-between gap-2 bg-primary p-2">
-        <Button
-          variant={"icon"}
-          size={"icon"}
-          onClick={() => navigate("/recipes")}
-        >
+        <Button variant={"icon"} size={"icon"} onClick={() => navigate(-1)}>
           <FaArrowLeft size={20} />
         </Button>
         {isPrivate && (

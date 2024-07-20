@@ -9,7 +9,7 @@ export const pages: Page[] = [
   },
   {
     icon: FaBook,
-    description: "Home",
+    description: "My Recipes",
     path: "/home",
   },
   {

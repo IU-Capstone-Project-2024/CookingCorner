@@ -18,7 +18,7 @@ const RecipeLayout = ({
   return (
     <section
       className={cn(
-        "container flex flex-col items-center gap-4 px-7 font-inter",
+        "flex w-full max-w-[390px] flex-col items-center gap-4 px-7 font-inter",
         className,
       )}
     >

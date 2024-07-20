@@ -46,10 +46,10 @@ const RecipePage = () => {
         src={
           recipe.data.icon_path === null
             ? "/no_image.svg"
-            : "/" + recipe.data.icon_path
+            : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.data.icon_path}`
         }
         alt="recipe picture"
-        className="max-h-[200px] w-full max-w-[320px] object-cover"
+        className={`max-h-[200px] w-full max-w-[320px] rounded-md object-cover ${recipe.data.icon_path !== null && "border-2 border-mainBlack"} `}
       />
       <Tabs defaultValue="steps" className="font-inter">
         <RecipeDescription recipe={recipe.data} setIsSteps={setIsSteps} />

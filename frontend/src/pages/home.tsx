@@ -8,7 +8,7 @@ import { FaArrowDownLong, FaMagnifyingGlass, FaPlus } from "react-icons/fa6";
 
 const Home = memo(() => {
   const [search, setSearch] = useState("");
-  const { filters, setFilters } = useFilters();
+  const { filters, handleFiltersChange } = useFilters();
   const recipes = useMyRecipes(filters);
 
   if (recipes.isError) {
@@ -16,7 +16,7 @@ const Home = memo(() => {
       <HomeLayout
         setSearch={setSearch}
         filters={filters}
-        setFilters={setFilters}
+        handleFiltersChange={handleFiltersChange}
       >
         <p className="col-span-2 flex text-center font-semibold">
           Something went wrong
@@ -30,7 +30,7 @@ const Home = memo(() => {
       <HomeLayout
         setSearch={setSearch}
         filters={filters}
-        setFilters={setFilters}
+        handleFiltersChange={handleFiltersChange}
       >
         <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
         <Skeleton className="h-32 w-44 rounded-xl border-2 border-mainBlack bg-hover-secondary" />
@@ -45,7 +45,11 @@ const Home = memo(() => {
   }
 
   return (
-    <HomeLayout setSearch={setSearch} filters={filters} setFilters={setFilters}>
+    <HomeLayout
+      setSearch={setSearch}
+      filters={filters}
+      handleFiltersChange={handleFiltersChange}
+    >
       {recipes.data.length ? (
         recipes.data
           .filter((recipe) => recipe.name.toLowerCase().startsWith(search))
