@@ -22,7 +22,7 @@ services:
     volumes:
       - ./static:/static
     container_name: cooking_corner_app
-    command: uvicorn main:app --host 0.0.0.0 --workers 1
+    command: uvicorn main:app --host 0.0.0.0 --workers 5
     ports:
       - "8000:8000"
     depends_on:
