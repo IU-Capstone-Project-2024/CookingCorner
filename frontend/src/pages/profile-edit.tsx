@@ -21,19 +21,16 @@ const ProfileEdit = () => {
   const profileEditMutation = useProfileEdit();
   const editUserImageMutation = useEditUserImage();
 
-  const submit: SubmitHandler<User> = (data) => {
+  const submit: SubmitHandler<User> = async (data) => {
     if (data.image_path?.length == 1) {
       const formData = new FormData();
-      console.log(data.image_path[0]);
       formData.append("file", data.image_path[0]);
-      editUserImageMutation.mutate(formData);
+      await editUserImageMutation.mutateAsync(formData);
     }
-    if (editUserImageMutation.isSuccess) {
-      const newData = prepareDataForEdit(data);
-      profileEditMutation.mutate(newData, {
-        onSettled: () => navigate("/profile"),
-      });
-    }
+    const newData = prepareDataForEdit(data);
+    await profileEditMutation.mutateAsync(newData, {
+      onSettled: () => navigate("/profile"),
+    });
   };
 
   if (profileData.isError) {
