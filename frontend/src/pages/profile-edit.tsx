@@ -28,9 +28,12 @@ const ProfileEdit = () => {
       formData.append("file", data.image_path[0]);
       editUserImageMutation.mutate(formData);
     }
-    const newData = prepareDataForEdit(data);
-    profileEditMutation.mutate(newData);
-    navigate("/profile");
+    if (editUserImageMutation.isSuccess) {
+      const newData = prepareDataForEdit(data);
+      profileEditMutation.mutate(newData, {
+        onSettled: () => navigate("/profile"),
+      });
+    }
   };
 
   if (profileData.isError) {

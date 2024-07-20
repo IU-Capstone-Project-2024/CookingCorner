@@ -5,7 +5,6 @@ import { UseFormRegister } from "react-hook-form";
 import { RecipeSchemaFields } from "@/schemas/recipe.schema";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useImperativeHandle, useRef, useState } from "react";
 import ImageInput from "./image-input";
 
 interface StepContainerProps {
@@ -60,6 +59,7 @@ interface StepInputProps
   register: UseFormRegister<RecipeSchemaFields>;
   className?: string;
   label?: string;
+  image?: string;
   cooking_step: Step;
 }
 
@@ -71,6 +71,7 @@ const StepInput = ({
   labelPosition,
   label,
   cooking_step,
+  image,
   ...props
 }: StepInputProps) => {
   return (
@@ -80,6 +81,7 @@ const StepInput = ({
         register={register}
         stepNumber={stepNumber}
         label={`Step ${stepNumber + 1} image`}
+        img={image}
       />
       <div className="relative">
         {label && (

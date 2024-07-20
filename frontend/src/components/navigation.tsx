@@ -1,9 +1,14 @@
 import { pages } from "@/lib/constants";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/") navigate("/home");
+  }, [location]);
 
   return pages.map((page, idx) => (
     <div

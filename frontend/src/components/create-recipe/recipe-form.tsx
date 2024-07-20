@@ -49,13 +49,14 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="icon_path"
-          render={({ field }) => (
+          render={() => (
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <FormControl>
                 <ImageInput
                   register={form.register}
                   label="Add top image"
                   stepNumber={-1}
+                  img={data?.icon_path ?? undefined}
                 />
               </FormControl>
             </div>
@@ -110,7 +111,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="preparing_time"
-          defaultValue={data?.preparing_time.toString() ?? undefined}
+          defaultValue={data?.preparing_time?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -123,7 +124,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="cooking_time"
-          defaultValue={data?.cooking_time.toString() ?? undefined}
+          defaultValue={data?.cooking_time?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -136,7 +137,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="waiting_time"
-          defaultValue={data?.waiting_time.toString() ?? undefined}
+          defaultValue={data?.waiting_time?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -149,7 +150,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="portions"
-          defaultValue={data?.portions.toString() ?? undefined}
+          defaultValue={data?.portions?.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} label="Portions" />
           )}
@@ -183,6 +184,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
                   cooking_step={step}
                   register={form.register}
                   stepNumber={idx}
+                  image={step.image_path}
                 />
               ))}
             </StepContainer>
@@ -191,6 +193,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="comments"
+          defaultValue={data?.comments?.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} label="Comments" />
           )}
@@ -198,6 +201,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="nutritional_value"
+          defaultValue={data?.nutritional_value?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -210,6 +214,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="proteins_value"
+          defaultValue={data?.proteins_value?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -222,6 +227,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="fats_value"
+          defaultValue={data?.fats_value?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -234,6 +240,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="carbohydrates_value"
+          defaultValue={data?.carbohydrates_value?.toString() ?? undefined}
           render={({ field }) => (
             <Input
               isize={"default"}
@@ -246,6 +253,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="dishes"
+          defaultValue={data?.dishes?.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} label="Dishes" />
           )}
@@ -253,6 +261,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="video_link"
+          defaultValue={data?.video_link?.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} label="Video link" />
           )}
@@ -260,6 +269,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="source"
+          defaultValue={data?.source?.toString() ?? undefined}
           render={({ field }) => (
             <Input isize={"default"} {...field} label="Source" />
           )}

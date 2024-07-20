@@ -143,3 +143,8 @@ export const editUserImage = async (data: FormData) => {
   verifyToken();
   return await API.post("/edit_user_image", data)
 }
+
+export const uploadRecipeImage = async (image: FormData) => {
+  verifyToken()
+  return (await API.post("/recipes/upload_recipe_image", image)).data
+}

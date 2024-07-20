@@ -33,7 +33,13 @@ const Category = ({ handleFiltersChange }: CategoryProps) => {
       <SelectContent className="bg-primary font-inter font-medium">
         <SelectGroup>
           {categories.data.map((item: string) => (
-            <SelectItem key={item} value={item}>
+            <SelectItem
+              key={item}
+              value={item}
+              ref={(ref) =>
+                ref?.addEventListener("touchend", (e) => e.preventDefault())
+              }
+            >
               {item}
             </SelectItem>
           ))}

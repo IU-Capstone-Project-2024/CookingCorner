@@ -14,7 +14,7 @@ const Profile = () => {
     return <div>Error occured</div>;
   }
 
-  if (profileData.isFetching) {
+  if (profileData.isFetching || profileData.isLoading) {
     return <LoadingPage />;
   }
 

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, editRecipe, editUserImage, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe } from "./api";
+import { addToFavourites, addToMyRecipes, changePrivacy, changeProfileData, createRecipe, deleteRecipe, editRecipe, editUserImage, login, rateRecipe, register, removeFromFavourites, uploadFile, uploadRecipe, uploadRecipeImage } from "./api";
 import { SignInFields } from "@/schemas/sign-in.schema";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/types";
@@ -217,5 +217,15 @@ export function useEditUserImage() {
     onError: (err) =>
       console.log(`Error occured while editing user image. ${err}`),
     onSuccess: () => console.log("Image successfully edited!"),
+  })
+}
+
+export function useUploadRecipeImage() {
+  return useMutation({
+    mutationFn: (image: FormData) => uploadRecipeImage(image),
+
+    onError: (err) =>
+      console.log(`Error occured while uploading recipe image. ${err}`),
+    onSuccess: () => console.log("Image successfully uploaded!"),
   })
 }

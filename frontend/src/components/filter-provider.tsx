@@ -11,11 +11,7 @@ const FilterProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   function handleFiltersChange(name: string, value?: string | boolean) {
-    if (name == "category_name" && value == "All") {
-      setFilters({ ...filters, category_name: "" });
-    } else {
-      setFilters({ ...filters, [name]: value ?? !filters[name] });
-    }
+    setFilters({ ...filters, [name]: value ?? !filters[name] });
   }
 
   return (

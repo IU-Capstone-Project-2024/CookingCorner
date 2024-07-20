@@ -9,20 +9,36 @@ const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"]
 
 const StepSchema = z.object({
-  image: z.instanceof(FileList).optional()
+  image_path: z.preprocess(
+    (fileList) => {
+      if (fileList instanceof FileList && fileList.length === 0) {
+        return undefined;
+      }
+      return fileList;
+    },
+    z.instanceof(FileList).optional()
     .refine((file) => file?.length == 1 ? file[0].size <= MAX_FILE_SIZE ? true : false : true)
-    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true),
+    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true)
+  ),
   description: z.string().min(1),
 })
 
 export const RecipeSchema = z.object({
-  icon_path: z.instanceof(FileList).optional()
+  icon_path: z.preprocess(
+    (fileList) => {
+      if (fileList instanceof FileList && fileList.length === 0) {
+        return undefined;
+      }
+      return fileList;
+    },
+    z.instanceof(FileList).optional()
     .refine((file) => file?.length == 1 ? file[0].size <= MAX_FILE_SIZE ? true : false : true)
-    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true),
+    .refine((file) => file?.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) ? true : false: true)
+  ),
   name: 
     z.string({message: "You need to name your recipe!"})
     .min(1, {message: "You need to name your recipe!"})
-    .max(50),
+    .max(50, ""),
   description: z.string().min(1),
   category_name: z.string().min(0),
   preparing_time: z.string().min(0).optional().or(z.literal(undefined)),
@@ -42,3 +58,4 @@ export const RecipeSchema = z.object({
 });
 
 export type RecipeSchemaFields = z.infer<typeof RecipeSchema>;
+export type StepSchemaFields = z.infer<typeof StepSchema>

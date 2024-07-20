@@ -20,6 +20,7 @@ const Steps = ({ steps }: StepsProps) => {
         steps.map((step, idx) => (
           <StepCard
             key={`step-card-${idx}`}
+            img={step.image_path}
             step={idx + 1}
             description={step.description}
           />
