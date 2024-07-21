@@ -86,6 +86,7 @@ const RecipeForm = ({ submitRef, form, recipeAction }: RecipeFormProps) => {
         <FormField
           control={form.control}
           name="category_name"
+          defaultValue={data?.category_name ?? undefined}
           render={({ field }) => (
             <div className="relative">
               <Select onValueChange={field.onChange} {...field}>
