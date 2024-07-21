@@ -49,7 +49,10 @@ const RecipeTime = ({ recipe }: RecipeTimeProps) => {
               </span>
             </div>
             <div className="flex flex-col font-inter font-normal">
-              Rest time <span className="font-bold">{0} mins</span>
+              Rest time{" "}
+              <span className="font-bold">
+                {recipe.waiting_time ? recipe.waiting_time : 0} mins
+              </span>
             </div>
           </div>
           <div className="flex w-full flex-col items-start">
