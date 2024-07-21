@@ -12,7 +12,9 @@ interface ImageInput {
 const ImageInput = ({ register, label, stepNumber, img }: ImageInput) => {
   const imageRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState(
-    img ? `https://storage.yandexcloud.net/cooking-corner-backet/${img}` : "",
+    img
+      ? `https://storage.yandexcloud.net/cooking-corner-backet/${img}`
+      : undefined,
   );
   const { ref, onChange, ...rest } = register(
     stepNumber == -1 ? "icon_path" : `steps.${stepNumber}.image_path`,
@@ -21,7 +23,11 @@ const ImageInput = ({ register, label, stepNumber, img }: ImageInput) => {
   useImperativeHandle(ref, () => imageRef.current);
 
   function handleImageUpload(e: any) {
-    setImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      console.log(1);
+      setImage(URL.createObjectURL(e.target.files[0]));
+    }
   }
 
   return (

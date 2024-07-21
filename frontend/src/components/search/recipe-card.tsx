@@ -4,6 +4,7 @@ import RecipeDescription from "./recipe-card-description";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAddRecipe } from "@/services/mutations";
+import { imageRegex } from "@/lib/utils";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -26,12 +27,12 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
     >
       <img
         src={
-          recipe.icon_path === null
+          !imageRegex.test(recipe.icon_path)
             ? "/no_image.svg"
             : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.icon_path}`
         }
         alt={"recipe picture"}
-        className={`w-fit ${recipe.icon_path !== null && "border-2 border-mainBlack"} rounded-md`}
+        className={`w-fit ${imageRegex.test(recipe.icon_path) && "border-2 border-mainBlack"} rounded-md`}
       />
       <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription

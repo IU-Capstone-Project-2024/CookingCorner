@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import SearchBar from "./search-bar";
 import { FilterConditions } from "@/types/types";
 import { SettingsContainer, SettingsItem } from "../settings";
-import { FaArrowDownWideShort, FaHeart, FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import Category from "./category";
 import NewRecipe from "./new-recipe";
 
@@ -30,9 +30,9 @@ const HomeLayout = ({
           <Category handleFiltersChange={handleFiltersChange} />
         </SettingsItem>
         <SettingsItem>
-          <FaArrowDownWideShort
-            size={24}
-            className="cursor-pointer"
+          <img
+            src={filters.ascending_order ? "asc_order.svg" : "des_order.svg"}
+            className="w-10 cursor-pointer"
             onClick={() => handleFiltersChange("ascending_order")}
           />
         </SettingsItem>
