@@ -96,16 +96,18 @@ const RecipeTime = ({ recipe }: RecipeTimeProps) => {
             <p>{recipe.dishes ? recipe.dishes : "No dishes were added"}</p>
           </div>
           <div className="flex w-full items-start">
-            <h3 className="font-inter font-semibold">Video link: </h3>
-            <p>{recipe.video_link ? recipe.video_link : "..."}</p>
+            <h3 className="font-inter font-semibold">Video: </h3>
+            <a
+              href={recipe.video_link && recipe.video_link}
+              className="line-clamp-1"
+            >
+              {recipe.video_link ? recipe.video_link : "No video"}
+            </a>
           </div>
           <div className="flex w-full items-start">
             <h3 className="font-inter font-semibold">Source: </h3>
-            <a
-              href={recipe.source ? recipe.source : ""}
-              className="line-clamp-1"
-            >
-              {recipe.source ? recipe.source : "..."}
+            <a href={recipe.source && recipe.source} className="line-clamp-1">
+              {recipe.source ? recipe.source : "No source"}
             </a>
           </div>
         </div>
