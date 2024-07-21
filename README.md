@@ -2,7 +2,6 @@
 
 # Cooking Corner
 
-Mobile repository:
 [Mobile repository][mobile-repository]
 
 ## Agenda
