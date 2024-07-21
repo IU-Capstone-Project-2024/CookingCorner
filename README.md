@@ -24,17 +24,17 @@ smart search, and recipe generation on request.
 
 
 ## Demo
-<a href=""></a>
+[Demo][demo]
 
 ## Installation
 
 You can install our app by downloading the following APK file:
 
-<a href=""></a>
+[Mobile installer][mobile-installer]
 
 Or use our website:
 
-<a href=""></a>
+[Website][website]
 
 ## Features
 
@@ -73,4 +73,7 @@ For any questions or suggestions, contact:
 
 
 [cookingcorner-logo]: readme_files/logo.png
+[mobile-installer]: https://github.com/dinaraparanid/Cooking-Corner-KMP/releases
+[website]: http://cookingcorner.ru/
+[demo]: https://youtu.be/E3vYDSHEvSY?si=Uvb8gkH7D9IL7QJp
 
