@@ -6,6 +6,8 @@ import { twMerge } from "tailwind-merge";
 
 const BASE_URL = "http://51.250.112.178:8000";
 
+export const imageRegex = /^recipes\/.*/;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

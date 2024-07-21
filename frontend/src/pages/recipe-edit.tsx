@@ -40,7 +40,7 @@ const RecipeEdit = () => {
 
     editRecipeMutation.mutate(
       { ...getDataWithImages(results, data), id: recipeData.id },
-      { onSuccess: () => navigate("/home") },
+      { onSuccess: () => navigate(`/recipes/${recipeData.id}`) },
     );
     form.reset();
   }
@@ -53,7 +53,7 @@ const RecipeEdit = () => {
 
   return (
     <section className="container max-w-[390px] px-4">
-      <Navigation submitForm={submitClick} />
+      <Navigation submitForm={submitClick} id={recipeData.id} />
       <RecipeForm submitRef={submitRef} form={form} recipeAction={editRecipe} />
     </section>
   );

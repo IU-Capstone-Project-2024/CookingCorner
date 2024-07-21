@@ -1,3 +1,5 @@
+import { imageRegex } from "@/lib/utils";
+
 interface StepCardProps {
   step: number;
   img: string | null;
@@ -10,11 +12,11 @@ const StepCard = ({ step, img, description }: StepCardProps) => {
       <h2 className="font-bold">Step {step}</h2>
       <img
         src={
-          img === undefined || img === null
+          !imageRegex.test(img ?? "")
             ? "/no_image.svg"
             : `https://storage.yandexcloud.net/cooking-corner-backet/${img}`
         }
-        className={`max-h-[200px] w-full max-w-[300px] rounded-md object-cover ${img !== undefined && img !== null && "border-2 border-mainBlack"}`}
+        className={`max-h-[200px] w-full max-w-[300px] rounded-md object-cover ${imageRegex.test(img ?? "") && "border-2 border-mainBlack"}`}
       />
       <p className="max-w-[320px] text-center">{description}</p>
     </div>

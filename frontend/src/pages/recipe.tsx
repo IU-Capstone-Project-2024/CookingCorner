@@ -6,6 +6,7 @@ import { useRecipe } from "@/services/queries";
 import { Navigate, useParams } from "react-router-dom";
 import RecipeLayout from "@/components/recipe/recipe-layout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { imageRegex } from "@/lib/utils";
 
 const RecipePage = () => {
   const params = useParams();
@@ -44,12 +45,12 @@ const RecipePage = () => {
     <RecipeLayout isPrivate={recipe.data.is_private}>
       <img
         src={
-          recipe.data.icon_path === null
+          !imageRegex.test(recipe.data.icon_path)
             ? "/no_image.svg"
             : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.data.icon_path}`
         }
         alt="recipe picture"
-        className={`max-h-[200px] w-full max-w-[320px] rounded-md object-cover ${recipe.data.icon_path !== null && "border-2 border-mainBlack"} `}
+        className={`max-h-[200px] w-full max-w-[320px] rounded-md object-cover ${imageRegex.test(recipe.data.icon_path) && "border-2 border-mainBlack"} `}
       />
       <Tabs defaultValue="steps" className="font-inter">
         <RecipeDescription recipe={recipe.data} setIsSteps={setIsSteps} />
