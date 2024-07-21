@@ -2,6 +2,9 @@
 
 # Cooking Corner
 
+Mobile repository:
+[Mobile repository][mobile-repository]
+
 ## Agenda
 * [About the project](#about-the-project)
 * [Demo](#demo)
@@ -73,6 +76,7 @@ For any questions or suggestions, contact:
 
 
 [cookingcorner-logo]: readme_files/logo.png
+[mobile-repository]: https://github.com/dinaraparanid/Cooking-Corner-KMP
 [mobile-installer]: https://github.com/dinaraparanid/Cooking-Corner-KMP/releases
 [website]: http://cookingcorner.ru/
 [demo]: https://youtu.be/E3vYDSHEvSY?si=Uvb8gkH7D9IL7QJp
