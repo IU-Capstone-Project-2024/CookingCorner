@@ -10,7 +10,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -30,7 +32,10 @@ jobs:
           pip install pytest pytest-cov
           cd src/tests
           pytest test_app.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        
+        env:
+          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+          REFRESH_TOKEN_EXPIRE_MINUTES: ${{ secrets.REFRESH_TOKEN_EXPIRE_MINUTES }}
+      
   deploy:
     runs-on: ubuntu-latest
     needs: test
