@@ -5,6 +5,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import RecipeDescription from "../search/recipe-card-description";
 import RecipeTitle from "../search/recipe-card-title";
 import { useAddFavourite, useRemoveFavourite } from "@/services/mutations";
+import { imageRegex } from "@/lib/utils";
 
 interface MyRecipeCardProps {
   recipe: Recipe;
@@ -30,12 +31,12 @@ const MyRecipeCard = ({ recipe }: MyRecipeCardProps) => {
     >
       <img
         src={
-          recipe.icon_path === null
+          !imageRegex.test(recipe.icon_path)
             ? "no_image.png"
             : `https://storage.yandexcloud.net/cooking-corner-backet/${recipe.icon_path}`
         }
         alt={recipe.name}
-        className={`w-fit rounded-md ${recipe.icon_path !== null && "border-2 border-mainBlack"}`}
+        className={`w-fit rounded-md ${imageRegex.test(recipe.icon_path) && "border-2 border-mainBlack"}`}
       />
       <RecipeTitle>{recipe.name}</RecipeTitle>
       <RecipeDescription
