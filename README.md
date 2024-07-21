@@ -2,7 +2,7 @@
 
 # Cooking Corner
 
-![Pipeline badge][badge-pipeline]
+[![Workflow Status](https://github.com/IU-Capstone-Project-2024/CookingCorner/actions/workflows/main.yml/badge.svg)](https://github.com/IU-Capstone-Project-2024/CookingCorner/actions)
 [![GitHub release](https://img.shields.io/github/v/release/IU-Capstone-Project-2024/CookingCorner)]([https://github.com/octocat/Hello-World/releases](https://github.com/IU-Capstone-Project-2024/CookingCorner/releases))
 
 [Mobile repository][mobile-repository]
@@ -78,7 +78,6 @@ For any questions or suggestions, contact:
 
 
 [cookingcorner-logo]: readme_files/logo.png
-[badge-pipeline]: https://github.com/IU-Capstone-Project-2024/CookingCorner/actions/workflows/.github/workflows/docker-image.yml/badge.svg
 [mobile-repository]: https://github.com/dinaraparanid/Cooking-Corner-KMP
 [mobile-installer]: https://github.com/dinaraparanid/Cooking-Corner-KMP/releases
 [website]: http://cookingcorner.ru/
