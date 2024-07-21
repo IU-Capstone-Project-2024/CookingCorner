@@ -19,8 +19,13 @@ jobs:
         # This is the version of the action for setting up Python, not the Python version.
         uses: actions/setup-python@v5
         with:
+          context: .
           python-version: '3.12.3'
           architecture: 'x64'
+          platforms: linux/amd64,linux/arm64
+          secrets: |
+            "ACCESS_TOKEN_EXPIRE_MINUTES=${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}"
+            "REFRESH_TOKEN_EXPIRE_MINUTES:=${{ secrets.REFRESH_TOKEN_EXPIRE_MINUTES }}"
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
       - name: Install dependencies
@@ -32,9 +37,7 @@ jobs:
           pip install pytest pytest-cov
           cd src/tests
           pytest test_app.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        env:
-          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
-          REFRESH_TOKEN_EXPIRE_MINUTES: ${{ secrets.REFRESH_TOKEN_EXPIRE_MINUTES }}
+        
       
   deploy:
     runs-on: ubuntu-latest
