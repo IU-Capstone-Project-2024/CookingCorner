@@ -78,7 +78,7 @@ For any questions or suggestions, contact:
 
 
 [cookingcorner-logo]: readme_files/logo.png
-[pipeline-badge]: https://github.com/IU-Capstone-Project-2024/CookingCorner/actions/workflows/.github/workflows/docker-image.yml/badge.svg
+[badge-pipeline]: https://github.com/IU-Capstone-Project-2024/CookingCorner/actions/workflows/.github/workflows/docker-image.yml/badge.svg
 [mobile-repository]: https://github.com/dinaraparanid/Cooking-Corner-KMP
 [mobile-installer]: https://github.com/dinaraparanid/Cooking-Corner-KMP/releases
 [website]: http://cookingcorner.ru/
