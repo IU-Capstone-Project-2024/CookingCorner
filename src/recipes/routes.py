@@ -260,6 +260,10 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         tag = None
 
     creation_time = datetime.now()
+    total_time = 0
+    total_time += body.preparing_time if body.preparing_time is not None else 0
+    total_time += body.cooking_time if body.cooking_time is not None else 0
+    total_time += body.waiting_time if body.waiting_time is not None else 0
     query = insert(Recipe).values(
         name=body.name,
         description=body.description,
@@ -271,7 +275,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         preparing_time=body.preparing_time,
         cooking_time=body.cooking_time,
         waiting_time=body.waiting_time,
-        total_time=body.total_time,
+        total_time=total_time,
         ingredients=body.ingredients.copy() if body.ingredients is not None else None,
         steps=body.steps.copy() if body.steps is not None else None,
         portions=body.portions if body.portions is not None else None,
@@ -297,7 +301,7 @@ async def create_recipe(body: RecipeSchema, db: AsyncSession = Depends(get_async
         Recipe.preparing_time == body.preparing_time,
         Recipe.cooking_time == body.cooking_time,
         Recipe.waiting_time == body.waiting_time,
-        Recipe.total_time == body.total_time,
+        Recipe.total_time == total_time,
         Recipe.portions == body.portions,
         Recipe.comments == body.comments,
         Recipe.nutritional_value == body.nutritional_value,
@@ -342,6 +346,12 @@ async def update_recipe(body: RecipeUpdateSchema,
         tag_id = tag.id
     else:
         tag_id = recipe.tag_id
+
+    total_time = 0
+    total_time += body.preparing_time if body.preparing_time is not None else 0
+    total_time += body.cooking_time if body.cooking_time is not None else 0
+    total_time += body.waiting_time if body.waiting_time is not None else 0
+
     query = update(Recipe).where(Recipe.user_id == current_user.id).where(Recipe.id == body.id).values(
         name=body.name if body.name is not None else recipe.name,
         description=body.description if body.description is not None else recipe.description,
@@ -352,7 +362,7 @@ async def update_recipe(body: RecipeUpdateSchema,
         preparing_time=body.preparing_time if body.preparing_time is not None else recipe.preparing_time,
         cooking_time=body.cooking_time if body.cooking_time is not None else recipe.cooking_time,
         waiting_time=body.waiting_time if body.waiting_time is not None else recipe.waiting_time,
-        total_time=body.total_time if body.total_time is not None else recipe.total_time,
+        total_time=total_time,
         ingredients=body.ingredients if body.ingredients is not None else recipe.ingredients,
         steps=body.steps if body.steps is not None else recipe.steps,
         portions=body.portions if body.portions is not None else recipe.portions,
