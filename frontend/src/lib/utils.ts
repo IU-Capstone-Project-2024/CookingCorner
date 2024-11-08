@@ -4,7 +4,7 @@ import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const BASE_URL = "http://51.250.112.178:8000";
+const BASE_URL = "http://51.250.114.168:8000";
 
 export const imageRegex = /^recipes\/.*/;
 
